@@ -1,4 +1,4 @@
-const CACHE_NAME = "kuroha-v81";
+const CACHE_NAME = "kuroha-v82";
 const OFFLINE_URL = "./offline.html";
 
 const PRECACHE_URLS = [

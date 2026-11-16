@@ -1026,7 +1026,7 @@ button { color: inherit; }
 }
 .footer h4 {
   margin: 0 0 10px;
-  color: var(--kh-text-faint);
+  color: var(--kh-text-muted);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.1em;
@@ -1048,7 +1048,7 @@ button { color: inherit; }
   gap: 12px;
   padding-block: 16px 24px;
   border-top: 1px solid var(--kh-border);
-  color: var(--kh-text-faint);
+  color: var(--kh-text-muted);
   font-size: 10px;
 }
 .footer__bottom span { line-height: 1.5; }
