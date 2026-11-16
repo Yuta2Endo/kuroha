@@ -201,9 +201,19 @@ axe 4.12.1 — 0 violations на 1280 paper и 360 paper; консоль чис�
 - Открытое меню «В список» на 360 проверено снимком: left 126,
   right 340, `scrollWidth` 360.
 
-Axe 4.12.1, 1280 night и graphite: 0 color-contrast; остаётся
-1 critical `aria-allowed-attr` — `aria-selected` на кнопках вкладок
-без `role="tab"`. Это разметка и JS, отдельная a11y-задача.
+Axe 4.12.1, 1280 night, paper и graphite: 0 color-contrast.
+
+**Открытый пункт (владелец: разметка/JS, не дизайн-цикл):** critical
+`aria-allowed-attr` — у кнопок `.title-tab` стоит `aria-selected` без
+`role="tab"`. Нужно добавить `role="tablist"` на `.title-tabs`,
+`role="tab"` и `aria-controls` на кнопки, `role="tabpanel"` на панели.
+JS уже переключает `aria-selected` и `hidden`, его менять не нужно.
+Это блокер a11y-приёмки, но не визуального цикла.
+
+Замечено, не блокер: `.title-cover-caption` 8 px на ≤760;
+`.review-form__label` и `.review-form__foot > span` 9 px;
+`.stats-bar-row` и `.stats-status-percent` 10 px; на 320 px вкладки
+могут уйти в скрытую горизонтальную прокрутку.
 
 Версии: `detail.css?v=age3`, `ratings.css?v=brand5`,
 `reports.css?v=report2`, `CACHE_NAME` — `kuroha-v85`.
