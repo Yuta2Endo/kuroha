@@ -108,9 +108,9 @@
 }
 
 .review-score button.is-active {
-  border-color: var(--kh-brass);
+  border-color: var(--kh-accent);
   background: rgba(230, 57, 70, 0.1);
-  color: var(--kh-brass);
+  color: var(--kh-link);
 }
 
 .review-score button:focus-visible {
@@ -203,7 +203,7 @@
   border: 1px solid var(--kh-border);
   border-radius: 50%;
   background: var(--kh-surface);
-  color: var(--kh-brass);
+  color: var(--kh-link);
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -236,7 +236,7 @@
   padding: 0 7px;
   border-radius: var(--kh-radius-pill);
   background: rgba(230, 57, 70, 0.1);
-  color: var(--kh-brass);
+  color: var(--kh-link);
   font-size: 10px;
   font-weight: 600;
   line-height: 1;
@@ -386,9 +386,9 @@
 }
 
 [data-theme="paper"] .review-score button.is-active {
-  border-color: #b52d38;
+  border-color: var(--kh-accent);
   background: rgba(181, 45, 56, 0.09);
-  color: #6d5224;
+  color: var(--kh-link);
 }
 
 [data-theme="paper"] .review-text {
@@ -416,7 +416,7 @@
 
 [data-theme="paper"] .review-score-badge {
   background: rgba(181, 45, 56, 0.1);
-  color: #6d5224;
+  color: var(--kh-ink-950);
 }
 
 [data-theme="paper"] .review-card__remove:hover,
@@ -463,7 +463,7 @@
   }
 
   .review-score button {
-    height: 28px;
+    height: 44px;
   }
 
   .review-card {
