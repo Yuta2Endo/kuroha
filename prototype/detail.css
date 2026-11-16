@@ -1064,7 +1064,7 @@ body[data-page="reader"] { background: var(--kh-bg-deep); }
 }
 .shelf-picker.has-status > summary {
   border-color: var(--kh-accent);
-  background: rgba(230, 57, 70, 0.09);
+  background: var(--kh-surface);
   color: var(--kh-link);
 }
 .shelf-picker[open] > summary::after {

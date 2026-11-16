@@ -447,6 +447,10 @@
   .reviews-score {
     align-items: flex-start;
   }
+
+  .review-score button {
+    height: 44px;
+  }
 }
 
 @media (max-width: 760px) {
@@ -460,10 +464,6 @@
 
   .review-score {
     gap: 3px;
-  }
-
-  .review-score button {
-    height: 44px;
   }
 
   .review-card {

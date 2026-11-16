@@ -13,9 +13,9 @@
 }
 .side-report p {
   margin: 0 0 12px;
-  color: var(--kh-text-faint);
-  font-size: 10px;
-  line-height: 1.6;
+  color: var(--kh-text-muted);
+  font-size: 12px;
+  line-height: 1.55;
 }
 .side-report__open {
   padding: 0;

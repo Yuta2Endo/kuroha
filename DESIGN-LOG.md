@@ -118,7 +118,7 @@ focus-visible виден на всех; поиск открывается Enter,
 
 ## title.html — цикл 1 · 17.11.2026
 
-Статус: реализовано, проверено; ждёт ревью Haiku.
+Статус: принято Haiku после ревью; две правки внесены.
 Бриф и скриншоты baseline — `briefs/title-baseline/`.
 В отчёте страница называлась `detail.html`; реальный файл — `title.html`,
 стили — `detail.css` и `ratings.css`.
@@ -137,9 +137,9 @@ focus-visible виден на всех; поиск открывается Enter,
 4. `.title-tab` — `min-height: 44px`, `padding-top: 10px`; transition
    переведён с несуществующего `--kh-motion-fast` на `--kh-duration-fast`.
    Тап-цель 33 → 44 px.
-5. `.review-score button` — высота 44 px на ≤760. Пять колонок оставлены
+5. `.review-score button` — высота 44 px на ≤980. Пять колонок оставлены
    на ≤480: на 768 форма отзывов уже во всю ширину, десять колонок
-   по 68 px читаются лучше двух рядов по 140 px.
+   по ~61 px читаются лучше двух рядов по 140 px.
 6. Мелкий текст — `--kh-text-xs` и `--kh-text-muted`: breadcrumb, meta,
    rating, chapters-count, side h3, side-progress empty, similar meta,
    stats labels/note. Night 3,84 → 7,88; paper 4,26 → 5,42.
@@ -183,3 +183,27 @@ axe 4.12.1 — 0 violations на 1280 paper и 360 paper; консоль чис�
 
 Версии: `detail.css?v=age2`, `ratings.css?v=brand4`,
 `CACHE_NAME` — `kuroha-v83`.
+
+### Ревью Haiku · 17.11.2026
+
+Принято с двумя правками:
+
+- `.shelf-picker.has-status > summary` — заливка `--kh-surface`, как
+  у нажатой закладки. Раньше оставалась `rgba(230, 57, 70, 0.09)`:
+  в paper полка была розовой, закладка серой при одном смысле.
+- `.review-score button` — `height: 44px` перенесена из `≤760` в `≤980`.
+  На 768 форма отзывов уже одна колонка, но кнопки оставались 28 px.
+
+Попутно по axe:
+
+- `.side-report p` — 12 px, `--kh-text-muted` вместо 10 px faint
+  (3,2:1 на night). Единственный contrast-violation на 1280.
+- Открытое меню «В список» на 360 проверено снимком: left 126,
+  right 340, `scrollWidth` 360.
+
+Axe 4.12.1, 1280 night и graphite: 0 color-contrast; остаётся
+1 critical `aria-allowed-attr` — `aria-selected` на кнопках вкладок
+без `role="tab"`. Это разметка и JS, отдельная a11y-задача.
+
+Версии: `detail.css?v=age3`, `ratings.css?v=brand5`,
+`reports.css?v=report2`, `CACHE_NAME` — `kuroha-v85`.
