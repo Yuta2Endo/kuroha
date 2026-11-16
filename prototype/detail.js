@@ -895,6 +895,7 @@
       const active = tab.dataset.titleTab === name;
       tab.classList.toggle("is-active", active);
       tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
     });
     $$("[data-title-panel]").forEach((panel) => {
       panel.hidden = panel.dataset.titlePanel !== name;
@@ -904,8 +905,27 @@
   function bindDiscussions() {
     if (!$("#title-discussions")) return;
 
-    $$("[data-title-tab]").forEach((tab) => {
+    const tabs = $$("[data-title-tab]");
+    tabs.forEach((tab) => {
       tab.addEventListener("click", () => setTitleTab(tab.dataset.titleTab));
+    });
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("keydown", (event) => {
+        let target = null;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          target = tabs[(index + 1) % tabs.length];
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          target = tabs[(index - 1 + tabs.length) % tabs.length];
+        } else if (event.key === "Home") {
+          target = tabs[0];
+        } else if (event.key === "End") {
+          target = tabs[tabs.length - 1];
+        }
+        if (!target) return;
+        event.preventDefault();
+        target.focus();
+        setTitleTab(target.dataset.titleTab);
+      });
     });
 
     const form = $("#discussion-form");

@@ -230,22 +230,22 @@
 
       <div class="title-layout container">
         <div class="title-main">
-          <nav class="title-tabs" aria-label="Разделы тайтла">
-            <button class="title-tab is-active" type="button" data-title-tab="chapters" aria-selected="true">
+          <nav class="title-tabs" role="tablist" aria-label="Разделы тайтла">
+            <button class="title-tab is-active" type="button" id="tab-chapters" role="tab" data-title-tab="chapters" aria-selected="true" aria-controls="title-chapters" tabindex="0">
               Главы <span id="chapter-tab-count">48</span>
             </button>
-            <button class="title-tab" type="button" data-title-tab="discussions" aria-selected="false">
+            <button class="title-tab" type="button" id="tab-discussions" role="tab" data-title-tab="discussions" aria-selected="false" aria-controls="title-discussions" tabindex="-1">
               Обсуждения <span id="discussion-count">0</span>
             </button>
-            <button class="title-tab" type="button" data-title-tab="stats" aria-selected="false">
+            <button class="title-tab" type="button" id="tab-stats" role="tab" data-title-tab="stats" aria-selected="false" aria-controls="title-stats" tabindex="-1">
               Статистика
             </button>
-            <button class="title-tab" type="button" data-title-tab="reviews" aria-selected="false">
+            <button class="title-tab" type="button" id="tab-reviews" role="tab" data-title-tab="reviews" aria-selected="false" aria-controls="title-reviews" tabindex="-1">
               Отзывы <span id="review-count">0</span>
             </button>
           </nav>
 
-          <section class="chapters" id="title-chapters" data-title-panel="chapters" aria-labelledby="chapters-title">
+          <section class="chapters" id="title-chapters" role="tabpanel" data-title-panel="chapters" aria-labelledby="tab-chapters">
             <div class="section-head">
               <div>
                 <p class="eyebrow">Главы</p>
@@ -258,7 +258,7 @@
             <button class="btn btn--secondary chapter-more" type="button" id="chapter-more" hidden>Показать все главы</button>
           </section>
 
-          <section class="discussions" id="title-discussions" data-title-panel="discussions" aria-labelledby="discussions-title" hidden>
+          <section class="discussions" id="title-discussions" role="tabpanel" data-title-panel="discussions" aria-labelledby="tab-discussions" hidden>
             <div class="section-head">
               <div>
                 <p class="eyebrow">Обсуждения</p>
@@ -283,7 +283,7 @@
             </div>
           </section>
 
-          <section class="title-stats" id="title-stats" data-title-panel="stats" aria-labelledby="stats-title" hidden>
+          <section class="title-stats" id="title-stats" role="tabpanel" data-title-panel="stats" aria-labelledby="tab-stats" hidden>
             <div class="section-head stats-head">
               <div>
                 <p class="eyebrow">Статистика</p>
@@ -324,7 +324,7 @@
             <p class="stats-note" id="stats-note">Демо-статистика прототипа. Не реальные данные.</p>
           </section>
 
-          <section class="reviews" id="title-reviews" data-title-panel="reviews" aria-labelledby="reviews-title" hidden>
+          <section class="reviews" id="title-reviews" role="tabpanel" data-title-panel="reviews" aria-labelledby="tab-reviews" hidden>
             <div class="section-head reviews-head">
               <div>
                 <p class="eyebrow">Отзывы</p>
@@ -519,7 +519,7 @@
   <script src="lists.js?v=brand3" defer></script>
   <script src="teams-data.js?v=teams3" defer></script>
   <script src="age-gate.js?v=age1" defer></script>
-  <script src="detail.js?v=age1" defer></script>
+  <script src="detail.js?v=age2" defer></script>
   <script src="reports.js?v=report1" defer></script>
   <script src="notifications.js?v=notif1" defer></script>
   <script src="pwa.js" defer></script>

@@ -203,17 +203,32 @@ axe 4.12.1 — 0 violations на 1280 paper и 360 paper; консоль чис�
 
 Axe 4.12.1, 1280 night, paper и graphite: 0 color-contrast.
 
-**Открытый пункт (владелец: разметка/JS, не дизайн-цикл):** critical
-`aria-allowed-attr` — у кнопок `.title-tab` стоит `aria-selected` без
-`role="tab"`. Нужно добавить `role="tablist"` на `.title-tabs`,
-`role="tab"` и `aria-controls` на кнопки, `role="tabpanel"` на панели.
-JS уже переключает `aria-selected` и `hidden`, его менять не нужно.
-Это блокер a11y-приёмки, но не визуального цикла.
+A11y-блокер `aria-allowed-attr` закрыт отдельным коммитом: у `.title-tabs`
+теперь `role="tablist"`, у кнопок — `role="tab"`, `aria-controls` и roving
+`tabindex`; панели — `role="tabpanel"`. Стрелки, Home/End переключают
+вкладки, Tab входит в активную и уходит в панель.
 
 Замечено, не блокер: `.title-cover-caption` 8 px на ≤760;
 `.review-form__label` и `.review-form__foot > span` 9 px;
 `.stats-bar-row` и `.stats-status-percent` 10 px; на 320 px вкладки
 могут уйти в скрытую горизонтальную прокрутку.
 
-Версии: `detail.css?v=age3`, `ratings.css?v=brand5`,
-`reports.css?v=report2`, `CACHE_NAME` — `kuroha-v85`.
+Версии: `detail.css?v=age3`, `detail.js?v=age2`, `ratings.css?v=brand5`,
+`reports.css?v=report2`, `CACHE_NAME` — `kuroha-v86`.
+
+## title.html — a11y closeout · 17.11.2026
+
+Вкладки получили полную семантику: `role="tablist"` на `.title-tabs`;
+у кнопок `role="tab"`, `id="tab-*"`, `aria-controls="title-*"` и
+roving `tabindex` (0 у активной, -1 у остальных); панели —
+`role="tabpanel"` и `aria-labelledby="tab-*"`. В `detail.js` `setTitleTab`
+синхронизирует `tabIndex`; добавлены ArrowLeft/Right/Up/Down, Home/End
+с переводом фокуса и активацией.
+
+Проверено: axe 4.12.1 — 0 violations на 1280 night/paper и 360 paper; остаются
+только incomplete color-contrast на градиентах. Клавиатура: Tab входит
+в активную вкладку и уходит в панель, стрелки и Home/End переключают,
+фокус виден. `scrollWidth` на 360 равен ширине, консоль чистая.
+
+Версии: `detail.js?v=age2` в title.html и reader.html,
+`CACHE_NAME` — `kuroha-v86`.
