@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="kuroha-symbol-title">
+  <title id="kuroha-symbol-title">Kuroha — перо и искра</title>
+  <defs>
+    <linearGradient id="kuroha-brass" x1="24" y1="8" x2="96" y2="114" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#EBD9B0"/>
+      <stop offset="0.55" stop-color="#C9A25E"/>
+      <stop offset="1" stop-color="#A98445"/>
+    </linearGradient>
+    <mask id="kuroha-cuts">
+      <rect width="120" height="120" fill="#fff"/>
+      <path d="M78 8 C72 34 66 64 58 114" fill="none" stroke="#000" stroke-width="4.4" stroke-linecap="round"/>
+      <path d="M74 28 C82 34 90 42 96 52" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M70 46 C78 52 86 60 92 70" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M66 64 C74 70 82 78 86 88" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M62 82 C68 88 74 96 76 102" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M72 34 C64 38 58 44 52 52" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M68 52 C60 56 54 62 48 70" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M64 70 C56 74 50 80 46 88" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+      <path d="M60 88 C54 92 50 96 48 100" fill="none" stroke="#000" stroke-width="2.8" stroke-linecap="round"/>
+    </mask>
+  </defs>
+  <path d="M78 8 C94 20 104 40 102 60 C100 82 86 100 58 114 C60 94 62 76 58 58 C54 40 60 22 78 8 Z" fill="url(#kuroha-brass)" mask="url(#kuroha-cuts)"/>
+  <path d="M105 10 L107 16.2 L113 18.2 L107 20.2 L105 26.4 L103 20.2 L97 18.2 L103 16.2 Z" fill="#EBD9B0"/>
+</svg>

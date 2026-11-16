@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Профиль — Kuroha</title>
+  <meta name="description" content="Профиль читателя Kuroha: полка, оценки, закладки, история чтения и сохранённый прогресс.">
+  <meta name="theme-color" content="#17171b">
+  <meta property="og:title" content="Профиль — Kuroha">
+  <meta property="og:description" content="Полка, оценки, закладки и история чтения в Kuroha.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=search1">
+  <link rel="stylesheet" href="profile.css?v=profile3">
+  <link rel="stylesheet" href="goal.css?v=goal1">
+  <link rel="stylesheet" href="profile-card.css?v=card1">
+  <link rel="stylesheet" href="ratings.css?v=brand3">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body data-page="profile">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html" aria-current="page">Профиль</a>
+        </nav>
+
+                <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html" aria-current="page">Профиль</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Profile hero -->
+      <section class="profile-hero container" aria-labelledby="profile-title">
+        <div class="profile-hero__main">
+          <div class="profile-avatar" aria-hidden="true">
+            <img src="assets/logo-symbol-ink.svg" alt="" width="44" height="44">
+          </div>
+          <p class="eyebrow">Профиль читателя</p>
+          <h1 id="profile-title">Ночной читатель</h1>
+          <p class="profile-bio">Читаю между строк. Собираю истории, которые не отпускают, и возвращаюсь к ним, когда город засыпает.</p>
+          <div class="profile-badges">
+            <span class="chip">с нами с 2026</span>
+            <span class="chip">18+</span>
+            <a class="chip" href="recommendations.html">Рекомендации</a>
+            <a class="chip" href="lists.html">списки</a>
+            <a class="chip" href="clubs.html">клубы</a>
+            <a class="chip" href="readers.html">читатели</a>
+            <a class="chip" href="letters.html">письма</a>
+            <a class="chip" href="quotes.html">цитаты</a>
+            <a class="chip" href="bingo.html">девять вечеров</a>
+            <a class="chip" href="evening.html">мой вечер</a>
+            <a class="chip" href="taste.html">твой вкус</a>
+            <a class="chip" href="backup.html">мои данные</a>
+            <a class="chip" href="notes.html">заметки на полях</a>
+            <span class="profile-demo-badge" id="profile-mode">демо-профиль</span>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn--secondary btn--small" type="button" data-profile-edit>Редактировать профиль</button>
+            <button class="btn btn--ghost btn--small" type="button" data-profile-card>Поделиться профилем</button>
+            <button class="profile-reset" type="button" data-profile-reset>Сбросить демо-данные</button>
+          </div>
+        </div>
+
+        <aside class="profile-stats" aria-label="Статистика профиля">
+          <div class="profile-stat"><b id="stat-shelf">0</b><span>на полке</span></div>
+          <div class="profile-stat"><b id="stat-bookmarks">0</b><span>в закладках</span></div>
+          <div class="profile-stat"><b id="stat-history">0</b><span>историй начато</span></div>
+          <div class="profile-stat"><b id="stat-chapters">0</b><span>глав прочитано</span></div>
+          <div class="profile-stat"><b id="stat-ratings">0</b><span>оценок</span></div>
+        </aside>
+      </section>
+
+      <!-- Year in review teaser -->
+      <section class="year-teaser container" aria-labelledby="year-teaser-title">
+        <div class="year-teaser__copy">
+          <p class="eyebrow">Итоги года</p>
+          <h2 id="year-teaser-title">Твой год в Kuroha</h2>
+          <p>Главы, истории и цитаты, которые остались после этого года.</p>
+        </div>
+        <div class="year-teaser__counts" aria-label="Краткие итоги">
+          <div><b id="year-teaser-chapters">0</b><span>глав</span></div>
+          <div><b id="year-teaser-titles">0</b><span>историй</span></div>
+          <div><b id="year-teaser-notes">0</b><span>заметок</span></div>
+        </div>
+        <a class="btn btn--secondary year-teaser__link" href="year.html">Смотреть итоги</a>
+      </section>
+
+      <!-- Quiet yearly goal -->
+      <section class="goal-card container" id="profile-goal" aria-labelledby="goal-title">
+        <div class="goal-card__copy">
+          <p class="eyebrow">Цель года</p>
+          <h2 id="goal-title">Тихая цель</h2>
+          <p class="goal-card__lead">Не гонка и не рейтинг. Просто ориентир, к которому можно возвращаться без спешки.</p>
+          <div class="goal-card__numbers"><b id="goal-current">0</b><span>/ <span id="goal-target">500</span> глав</span></div>
+          <div class="goal-card__bar" aria-hidden="true"><span id="goal-progress"></span></div>
+          <p class="goal-card__status" id="goal-status">Осталось 500 глав до конца года.</p>
+          <button class="btn btn--secondary btn--small" type="button" data-goal-edit>Изменить цель</button>
+        </div>
+        <div class="goal-card__ring" aria-hidden="true"><span id="goal-percent">0%</span></div>
+      </section>
+
+      <!-- My shelf -->
+      <section class="profile-section" aria-labelledby="shelf-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Моя полка</p>
+              <h2 id="shelf-title">Твои истории</h2>
+              <p>Читаю, в планах, прочитано — всё в одном месте. Статус меняется на странице тайтла.</p>
+            </div>
+            <a class="section-link" href="feed.html">Лента обновлений</a>
+          </div>
+
+          <div class="shelf-toolbar">
+            <div class="shelf-tabs" aria-label="Фильтр по статусу чтения">
+              <button class="shelf-tab is-active" type="button" data-shelf-filter="all" aria-pressed="true">Все <span id="shelf-count-all">0</span></button>
+              <button class="shelf-tab" type="button" data-shelf-filter="reading" aria-pressed="false">Читаю <span id="shelf-count-reading">0</span></button>
+              <button class="shelf-tab" type="button" data-shelf-filter="planned" aria-pressed="false">В планах <span id="shelf-count-planned">0</span></button>
+              <button class="shelf-tab" type="button" data-shelf-filter="completed" aria-pressed="false">Прочитано <span id="shelf-count-completed">0</span></button>
+              <button class="shelf-tab" type="button" data-shelf-filter="paused" aria-pressed="false">Отложено <span id="shelf-count-paused">0</span></button>
+              <button class="shelf-tab" type="button" data-shelf-filter="dropped" aria-pressed="false">Брошено <span id="shelf-count-dropped">0</span></button>
+            </div>
+          </div>
+
+          <div class="profile-book-grid" id="profile-shelf"></div>
+
+          <div class="profile-empty" id="shelf-empty" hidden>
+            <img src="assets/logo-symbol.svg" alt="" width="44" height="44">
+            <h3 id="shelf-empty-title">Полка пока пуста</h3>
+            <p id="shelf-empty-copy">Добавь историю со страницы тайтла — она появится здесь.</p>
+            <a class="btn btn--secondary" href="catalog.html">Открыть каталог</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Bookmarks -->
+      <section class="profile-section" aria-labelledby="bookmarks-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Закладки</p>
+              <h2 id="bookmarks-title">На потом</h2>
+              <p>Истории, к которым хочется вернуться. Всё хранится в этом браузере.</p>
+            </div>
+            <a class="section-link" href="catalog.html">Весь каталог</a>
+          </div>
+
+          <div class="profile-book-grid" id="profile-bookmarks"></div>
+
+          <div class="profile-empty" id="bookmarks-empty" hidden>
+            <img src="assets/logo-symbol.svg" alt="" width="44" height="44">
+            <h3>Пока пусто. Первая история уже близко.</h3>
+            <p>Открой каталог и добавь то, что захочешь прочитать.</p>
+            <a class="btn btn--secondary" href="catalog.html">Открыть каталог</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Reading history -->
+      <section class="profile-section" aria-labelledby="history-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">История чтения</p>
+              <h2 id="history-title">Ты остановился здесь</h2>
+              <p>Kuroha помнит главу, на которой ты закрыл вкладку.</p>
+            </div>
+            <a class="section-link" href="catalog.html">Найти историю</a>
+          </div>
+
+          <div class="history-list" id="profile-history"></div>
+
+          <div class="profile-empty" id="history-empty" hidden>
+            <img src="assets/logo-symbol.svg" alt="" width="44" height="44">
+            <h3>Ты ещё не открыл ни одной главы. Самое время начать.</h3>
+            <p>Выбери историю в каталоге — прогресс сохранится сам.</p>
+            <a class="btn btn--secondary" href="catalog.html">Открыть каталог</a>
+          </div>
+
+          <p class="profile-note">Прогресс и закладки хранятся локально в этом браузере. Это демо-профиль, не аккаунт.</p>
+        </div>
+      </section>
+
+      <!-- My ratings -->
+      <section class="profile-section" aria-labelledby="ratings-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Оценки</p>
+              <h2 id="ratings-title">Что ты оценил</h2>
+              <p>Твои оценки остаются на полях — без рейтингов и гонки.</p>
+            </div>
+            <span class="chapters-count" id="profile-ratings-count">0</span>
+          </div>
+
+          <div class="rating-list" id="profile-ratings"></div>
+
+          <div class="profile-empty" id="ratings-empty" hidden>
+            <img src="assets/logo-symbol.svg" alt="" width="44" height="44">
+            <h3>Пока ни одной оценки</h3>
+            <p>Открой историю и поставь балл — он появится здесь.</p>
+            <a class="btn btn--secondary" href="catalog.html">Открыть каталог</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- My comments -->
+      <section class="profile-section" aria-labelledby="comments-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Обсуждения</p>
+              <h2 id="comments-title">Что ты сказал</h2>
+              <p>Реплики под тайтлами и главами — тихий след в историях.</p>
+            </div>
+            <span class="chapters-count" id="profile-comments-count">0</span>
+          </div>
+
+          <div class="comment-list" id="profile-comments"></div>
+
+          <div class="profile-empty" id="comments-empty" hidden>
+            <img src="assets/logo-symbol.svg" alt="" width="44" height="44">
+            <h3>Ты пока молчишь</h3>
+            <p>Открой главу и оставь первую реплику — она появится здесь.</p>
+            <a class="btn btn--secondary" href="reader.html?slug=pepel-i-luna&chapter=12#chapter-discussion">К главе 12</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Milestones -->
+      <section class="profile-section" id="milestones" aria-labelledby="milestones-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Вехи</p>
+              <h2 id="milestones-title">Тихие победы</h2>
+              <p>Небольшие отметки на полях. Они появляются сами — без гонки и уровней.</p>
+            </div>
+            <span class="milestone-count" id="milestones-count">0 / 10</span>
+          </div>
+
+          <div class="milestone-grid" id="profile-milestones"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="profile.html">Профиль</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="notes.html">Заметки</a>
+
+            <a href="quotes.html">Цитаты</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="rules.html#dmca">DMCA</a>
+            <a href="rules.html#privacy">Конфиденциальность</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <dialog class="profile-edit-dialog" id="profile-edit-dialog" aria-labelledby="profile-edit-title">
+    <form class="profile-edit-panel" id="profile-edit-form">
+      <header class="profile-edit__head">
+        <div>
+          <p class="eyebrow">Профиль</p>
+          <h2 id="profile-edit-title">Настрой свой профиль</h2>
+        </div>
+        <button class="profile-edit__close" type="button" data-profile-edit-close aria-label="Закрыть">×</button>
+      </header>
+      <label class="profile-edit__field">
+        <span>Как тебя зовут</span>
+        <input id="profile-edit-name" name="name" type="text" maxlength="32" autocomplete="nickname" placeholder="Ночной читатель">
+      </label>
+      <label class="profile-edit__field">
+        <span>О себе</span>
+        <textarea id="profile-edit-bio" name="bio" rows="3" maxlength="160" placeholder="Читаю между строк..."></textarea>
+      </label>
+      <fieldset class="profile-edit__avatars">
+        <legend>Аватар</legend>
+        <label class="avatar-choice">
+          <input type="radio" name="avatar" value="ink">
+          <span class="avatar-choice__art avatar-choice__art--ink"><img src="assets/logo-symbol-ink.svg" alt="" width="28" height="28"></span>
+          <span>Чернила</span>
+        </label>
+        <label class="avatar-choice">
+          <input type="radio" name="avatar" value="paper">
+          <span class="avatar-choice__art avatar-choice__art--paper"><img src="assets/logo-symbol-ink.svg" alt="" width="28" height="28"></span>
+          <span>Бумага</span>
+        </label>
+        <label class="avatar-choice">
+          <input type="radio" name="avatar" value="red">
+          <span class="avatar-choice__art avatar-choice__art--red"><img src="assets/logo-symbol.svg" alt="" width="28" height="28"></span>
+          <span>Красный</span>
+        </label>
+      </fieldset>
+      <footer class="profile-edit__foot">
+        <button class="btn btn--ghost btn--small" type="button" data-profile-edit-cancel>Отмена</button>
+        <button class="btn btn--primary btn--small" type="submit">Сохранить</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog class="profile-card-dialog" id="profile-card-dialog" aria-labelledby="profile-card-title">
+    <div class="profile-card-panel">
+      <header class="profile-card__head">
+        <div>
+          <p class="eyebrow">Карточка читателя</p>
+          <h2 id="profile-card-title">Поделиться профилем</h2>
+        </div>
+        <button class="profile-card__close" type="button" data-profile-card-close aria-label="Закрыть">×</button>
+      </header>
+      <div class="profile-card__body">
+        <div class="profile-card__stage" id="profile-card-stage">
+          <canvas id="profile-card-canvas" width="1080" height="1350" aria-label="Предпросмотр карточки читателя"></canvas>
+        </div>
+        <div class="profile-card__side">
+          <p class="profile-card__lead">Тихая открытка о тебе: полка, главы, жанры и любимые истории.</p>
+          <dl class="profile-card__meta">
+            <div><dt>Формат</dt><dd>PNG</dd></div>
+            <div><dt>Размер</dt><dd>1080 × 1350</dd></div>
+            <div><dt>Профиль</dt><dd id="profile-card-name">Ночной читатель</dd></div>
+          </dl>
+          <div class="profile-card__actions">
+            <button class="btn btn--primary" type="button" data-profile-card-download>Скачать PNG</button>
+            <button class="btn btn--secondary" type="button" data-profile-card-copy>Скопировать текст</button>
+          </div>
+          <p class="profile-card__hint">Всё собирается в браузере. Ничего не отправляется на сервер.</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="goal-dialog" id="goal-dialog" aria-labelledby="goal-dialog-title">
+    <form class="goal-dialog__panel" id="goal-form">
+      <header class="goal-dialog__head">
+        <div>
+          <p class="eyebrow">Цель года</p>
+          <h2 id="goal-dialog-title">Сколько глав?</h2>
+        </div>
+        <button class="goal-dialog__close" type="button" data-goal-close aria-label="Закрыть">×</button>
+      </header>
+      <p class="goal-dialog__lead">Выбери спокойный ориентир. Его можно изменить в любой момент.</p>
+      <div class="goal-presets" role="group" aria-label="Быстрый выбор цели">
+        <button class="goal-preset" type="button" data-goal-preset="100" aria-pressed="false">100 глав</button>
+        <button class="goal-preset" type="button" data-goal-preset="250" aria-pressed="false">250 глав</button>
+        <button class="goal-preset" type="button" data-goal-preset="500" aria-pressed="true">500 глав</button>
+        <button class="goal-preset" type="button" data-goal-preset="1000" aria-pressed="false">1000 глав</button>
+      </div>
+      <label class="goal-custom">
+        <span>Своя цель, от 50 до 5000</span>
+        <input id="goal-input" type="number" min="50" max="5000" step="10" inputmode="numeric" value="500">
+      </label>
+      <footer class="goal-dialog__foot">
+        <button class="btn btn--ghost btn--small" type="button" data-goal-cancel>Отмена</button>
+        <button class="btn btn--primary btn--small" type="submit">Сохранить</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="uploads.js" defer></script>
+  <script src="library.js?v=brand3" defer></script>
+  <script src="discussions.js?v=comments1" defer></script>
+  <script src="notes.js?v=brand3" defer></script>
+  <script src="ratings.js?v=brand3" defer></script>
+  <script src="profile.js?v=quotes1" defer></script>
+  <script src="profile-edit.js?v=profile1" defer></script>
+  <script src="profile-card.js?v=card2" defer></script>
+  <script src="goal.js?v=goal1" defer></script>
+  <script src="notifications.js?v=notif1" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>

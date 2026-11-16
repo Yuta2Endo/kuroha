@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-labelledby="kuro-mark-ink-title">
+  <title id="kuro-mark-ink-title">Куро — тёмная версия знака</title>
+  <path d="M89 26c7 2 12 8 15 17-6-1-11-5-14-11-2-2-2-4-1-6Z" fill="#8A6A2F"/>
+  <path d="M60 18c-6 0-12 2-17 6L32 15l-2 18c-5 7-5 19 1 29l-6 16 17-4c5 8 11 13 18 16 7-3 13-8 18-16l17 4-6-16c6-10 6-22 1-29l-2-18-11 9c-5-4-11-6-17-6Z" fill="#1B1712" stroke="#8A6A2F" stroke-width="3.2" stroke-linejoin="round"/>
+  <path d="M43 48c2.5-3 6.5-3 9 0-2.5 3-6.5 3-9 0Z" fill="#C9A25E"/>
+  <path d="M68 48c2.5-3 6.5-3 9 0-2.5 3-6.5 3-9 0Z" fill="#C9A25E"/>
+  <path d="M60 64l3 4-3 3-3-3 3-4Z" fill="#C9A25E"/>
+</svg>

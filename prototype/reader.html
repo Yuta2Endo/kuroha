@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Дом на краю ночи — Kuroha</title>
+  <meta name="description" content="Читать главу 12 «Дом на краю ночи» манхвы «Пепел и луна» в Kuroha.">
+  <meta name="theme-color" content="#17171b">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=search1">
+  <link rel="stylesheet" href="detail.css?v=age1">
+  <link rel="stylesheet" href="age-gate.css?v=age1">
+  <link rel="stylesheet" href="reports.css?v=report1">
+  <link rel="stylesheet" href="ambience.css?v=brand3">
+  <link rel="stylesheet" href="listen.css?v=listen1">
+  <link rel="stylesheet" href="pages.css?v=pages1">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body data-page="reader">
+  <div class="reader-shell">
+    <header class="reader-bar" aria-label="Панель чтения">
+      <div class="reader-bar__left">
+        <a class="reader-bar__back" id="reader-back" href="title.html?slug=pepel-i-luna" aria-label="К странице тайтла">←</a>
+        <div class="reader-bar__title">
+          <span id="reader-bar-title">Пепел и луна</span>
+          <small id="reader-bar-chapter">Глава 12</small>
+        </div>
+        <button class="reader-icon reader-settings-btn" id="reader-settings" type="button" aria-haspopup="dialog" aria-controls="reader-settings-dialog" aria-expanded="false" aria-label="Настройки чтения" title="Настройки чтения">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 7h10M18 7h2M4 17h2M10 17h10"></path>
+            <circle cx="16" cy="7" r="2"></circle>
+            <circle cx="8" cy="17" r="2"></circle>
+          </svg>
+        </button>
+      </div>
+
+      <div class="reader-bar__chapter">
+        <label class="sr-only" for="chapter-select">Выбрать главу</label>
+        <select id="chapter-select" aria-label="Выбрать главу">
+          <option value="12">12. Дом на краю ночи</option>
+        </select>
+      </div>
+
+      <div class="reader-bar__actions">
+        <button class="reader-icon reader-font-btn" id="font-minus" type="button" aria-label="Уменьшить шрифт" title="Уменьшить шрифт">A−</button>
+        <button class="reader-icon reader-font-btn" id="font-plus" type="button" aria-label="Увеличить шрифт" title="Увеличить шрифт">A+</button>
+        <button class="reader-icon" type="button" data-theme-toggle aria-label="Сменить тему" title="Сменить тему">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+          </svg>
+        </button>
+        <button class="reader-icon" type="button" data-ambience-toggle aria-expanded="false" aria-controls="ambience-panel" aria-label="Ночная читальня" title="Ночная читальня">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 14v-2a8 8 0 0 1 16 0v2"></path>
+            <path d="M4 14h3v6H6a2 2 0 0 1-2-2v-4Z"></path>
+            <path d="M20 14h-3v6h1a2 2 0 0 0 2-2v-4Z"></path>
+          </svg>
+        </button>
+        <a class="reader-icon" id="reader-notes" href="notes.html" aria-label="Заметки на полях" title="Заметки">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 5h14v10H9l-4 4V5Z"></path>
+            <path d="M9 9h6M9 12h4"></path>
+          </svg>
+        </a>
+        <button class="reader-icon" type="button" data-bookmark aria-pressed="false" aria-label="Добавить в закладки" title="Добавить в закладки">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 4h12v16l-6-4-6 4V4Z"/>
+          </svg>
+        </button>
+        <a class="reader-icon" id="reader-close" href="title.html?slug=pepel-i-luna" aria-label="Закрыть ридер" title="Закрыть">×</a>
+      </div>
+    </header>
+
+    <div class="reader-progress" aria-hidden="true"><span id="reader-progress"></span></div>
+    <button class="reader-top" id="reader-top" type="button" aria-label="К началу главы" hidden>↑</button>
+
+    <main class="reader-main">
+      <article class="reader-article">
+        <header class="reader-head">
+          <p class="eyebrow" id="reader-chapter-label">Глава 12</p>
+          <h1 id="reader-title">Дом на краю ночи</h1>
+          <p class="reader-meta" id="reader-meta">Пепел и луна · манхва · 8 минут</p>
+        </header>
+
+        <div class="reader-text" id="reader-text"></div>
+        <noscript>
+          <p style="color:var(--kh-text-muted);font-size:14px;">Включи JavaScript, чтобы прочитать главу.</p>
+        </noscript>
+
+        <footer class="reader-end">
+          <div class="reader-end__mark" aria-hidden="true">✦</div>
+          <p>Конец главы</p>
+          <div class="reader-nav">
+            <a class="btn btn--secondary" id="reader-prev" href="reader.html?slug=pepel-i-luna&amp;chapter=11">← Предыдущая</a>
+            <a class="btn btn--primary" id="reader-next" href="reader.html?slug=pepel-i-luna&amp;chapter=13">Следующая →</a>
+          </div>
+          <a class="reader-to-title" id="reader-to-title" href="title.html?slug=pepel-i-luna">К странице тайтла</a>
+          <p class="reader-hint">← → листать главы · Esc закрыть настройки · звук — в верхней панели</p>
+        </footer>
+
+        <section class="chapter-discussion" id="chapter-discussion" aria-labelledby="chapter-discussion-title">
+          <div class="chapter-discussion__head">
+            <div>
+              <p class="eyebrow">После главы</p>
+              <h2 id="chapter-discussion-title">Обсуждение</h2>
+            </div>
+            <span class="chapter-discussion__count" id="chapter-discussion-count">0 реплик</span>
+          </div>
+          <p class="chapter-discussion__lead">Что осталось после этой главы? Напиши пару строк — без спойлеров для тех, кто ещё не дочитал.</p>
+          <form class="discussion-form chapter-discussion__form" id="chapter-discussion-form">
+            <label class="sr-only" for="chapter-discussion-text">Твоя реплика</label>
+            <textarea id="chapter-discussion-text" maxlength="500" placeholder="Пара слов после главы..."></textarea>
+            <div class="discussion-form__foot">
+              <span id="chapter-discussion-hint">До 500 символов</span>
+              <button class="btn btn--primary btn--small" type="submit">Отправить</button>
+            </div>
+          </form>
+          <div class="discussion-list" id="chapter-discussion-list"></div>
+          <div class="discussion-empty" id="chapter-discussion-empty" hidden>
+            <b>Пока тихо.</b>
+            <p>Начни обсуждение — первая реплика всегда самая смелая.</p>
+          </div>
+          <a class="chapter-discussion__all" id="chapter-discussion-all" href="title.html?slug=pepel-i-luna#discussions">Все обсуждения тайтла</a>
+        </section>
+      </article>
+
+      <p class="reader-signature">Kuroha · читай между строк</p>
+    </main>
+  </div>
+
+  <dialog class="reader-settings" id="reader-settings-dialog" aria-labelledby="reader-settings-title">
+    <div class="reader-settings__panel">
+      <header class="reader-settings__head">
+        <div>
+          <p class="eyebrow">Чтение</p>
+          <h2 id="reader-settings-title">Настройки чтения</h2>
+        </div>
+        <button class="reader-settings__close" type="button" data-reader-settings-close aria-label="Закрыть настройки">×</button>
+      </header>
+      <div class="reader-settings__rows">
+        <div class="reader-setting">
+          <div class="reader-setting__label">
+            <label for="reader-size-range">Размер шрифта</label>
+            <output id="reader-size-value" for="reader-size-range">19 px</output>
+          </div>
+          <input id="reader-size-range" type="range" min="17" max="24" step="1" value="19">
+        </div>
+        <div class="reader-setting">
+          <div class="reader-setting__label">
+            <label for="reader-line-range">Интерлиньяж</label>
+            <output id="reader-line-value" for="reader-line-range">1.80</output>
+          </div>
+          <input id="reader-line-range" type="range" min="1.55" max="2.05" step="0.05" value="1.8">
+        </div>
+        <div class="reader-setting">
+          <div class="reader-setting__label">
+            <label for="reader-width-range">Ширина строки</label>
+            <output id="reader-width-value" for="reader-width-range">64ch</output>
+          </div>
+          <input id="reader-width-range" type="range" min="52" max="76" step="4" value="64">
+        </div>
+      </div>
+      <p class="reader-settings__sample" id="reader-settings-sample">Тихая история начинается с одной страницы.</p>
+      <footer class="reader-settings__foot">
+        <button class="btn btn--ghost" type="button" id="reader-settings-reset">Сбросить</button>
+        <button class="btn btn--primary" type="button" data-reader-settings-close>Готово</button>
+      </footer>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="uploads.js" defer></script>
+  <script src="library.js?v=brand3" defer></script>
+  <script src="notes.js?v=brand3" defer></script>
+  <script src="discussions.js?v=comments1" defer></script>
+  <script src="age-gate.js?v=age1" defer></script>
+  <script src="detail.js?v=age1" defer></script>
+  <script src="ambience.js?v=brand3" defer></script>
+  <script src="listen.js?v=listen2" defer></script>
+  <script src="pages.js?v=pages2" defer></script>
+  <script src="reports.js?v=report1" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>

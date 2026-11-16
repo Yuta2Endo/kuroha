@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Мой вечер — Kuroha</title>
+  <meta name="description" content="Мой вечер в Kuroha: продолжить чтение, проверить письма, увидеть встречу клуба и события читателей.">
+  <meta name="theme-color" content="#17171b">
+  <meta property="og:title" content="Мой вечер — Kuroha">
+  <meta property="og:description" content="Продолжить чтение, письма, встреча клуба и события читателей — в одном тихом месте.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=search1">
+  <link rel="stylesheet" href="evening.css?v=evening2">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body data-page="evening">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html">Профиль</a>
+        </nav>
+
+                <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html">Профиль</a>
+        <a href="evening.html">Мой вечер</a>
+        <a href="notes.html">Заметки</a>
+
+        <a href="quotes.html">Цитаты</a>
+        <a href="bingo.html">Девять вечеров</a>
+        <a href="year.html">Итоги года</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+        <main id="main">
+  <section class="evening-hero container" aria-labelledby="evening-title">
+    <div class="evening-hero__copy">
+      <nav class="evening-breadcrumb" aria-label="Хлебные крошки">
+        <a href="profile.html">Профиль</a>
+        <span aria-hidden="true">/</span>
+        <span>Мой вечер</span>
+      </nav>
+      <p class="eyebrow">Мой вечер</p>
+      <h1 id="evening-title">Твой вечер<br>уже начался.</h1>
+      <p class="evening-lead">Продолжить с той же строки, проверить письма и вспомнить о встрече клуба. Без спешки и лишних кликов.</p>
+      <div class="evening-actions">
+        <a class="btn btn--primary" id="evening-continue-link" href="reader.html?slug=pepel-i-luna&amp;chapter=12">Продолжить чтение</a>
+        <a class="btn btn--ghost" href="profile.html">Моя полка</a>
+        <a class="btn btn--ghost" href="catalog.html">Каталог</a>
+      </div>
+    </div>
+    <aside class="evening-card" aria-label="Вечер в цифрах">
+      <div class="evening-card__top"><span>Сегодня</span><span id="evening-date">воскресенье, 16 ноября</span></div>
+      <div class="evening-card__mark">
+        <img src="assets/logo-symbol-ink.svg" alt="" width="42" height="42">
+        <span>KUROHA<small>ночная библиотека</small></span>
+      </div>
+      <p class="evening-greeting" id="evening-greeting">Вечер. Самое время читать.</p>
+      <dl class="evening-card__stats">
+        <div><dt>письма</dt><dd id="evening-letters">0</dd></div>
+        <div><dt>события</dt><dd id="evening-notifications">0</dd></div>
+        <div><dt>встречи</dt><dd id="evening-meetings">0</dd></div>
+      </dl>
+      <p class="evening-card__note">Всё, что важно, уже собрано здесь. Остальное подождёт до утра.</p>
+    </aside>
+  </section>
+
+  <section class="evening-section container" aria-labelledby="evening-continue-title">
+    <div class="section-head">
+      <div><p class="eyebrow">Продолжить</p><h2 id="evening-continue-title">История уже открыта.</h2></div>
+      <a class="section-link" href="profile.html#profile-history">История чтения →</a>
+    </div>
+    <article class="evening-continue">
+      <div class="evening-continue__cover" id="evening-cover"></div>
+      <div class="evening-continue__body">
+        <p class="paper-label" id="evening-label">Продолжить чтение</p>
+        <h3 id="evening-book">Пепел и луна</h3>
+        <p class="evening-continue__meta" id="evening-meta">манхва · 48 глав · ★ 8,9</p>
+        <p class="evening-continue__chapter" id="evening-chapter">Ты остановился на 12 главе</p>
+        <div class="progress" id="evening-progress" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"><span style="width:25%"></span></div>
+        <div class="evening-continue__foot"><span id="evening-count">12 / 48 глав</span><span class="evening-continue__percent" id="evening-percent">25%</span></div>
+      </div>
+      <a class="btn btn--primary evening-continue__cta" id="evening-read-link" href="reader.html?slug=pepel-i-luna&amp;chapter=12">Продолжить</a>
+    </article>
+  </section>
+
+  <section class="evening-section container" aria-labelledby="evening-rhythm-title">
+    <div class="section-head">
+      <div><p class="eyebrow">Рядом</p><h2 id="evening-rhythm-title">Тихо, но не один.</h2></div>
+    </div>
+    <div class="evening-tiles">
+      <article class="evening-goal">
+        <div class="evening-goal__copy">
+          <p class="eyebrow">Цель года</p>
+          <h3>Читать без спешки.</h3>
+          <p class="evening-goal__line"><b id="evening-goal-current">39</b> из <span id="evening-goal-target">500</span> глав</p>
+          <p id="evening-goal-note">Осталось 461 глава. Без спешки.</p>
+          <a class="evening-goal__link" href="profile.html#profile-goal">Изменить цель</a>
+        </div>
+        <div class="evening-goal__ring" aria-hidden="true"><span id="evening-goal-percent">8%</span></div>
+      </article>
+      <article class="evening-tile evening-tile--letters">
+        <p class="eyebrow">Письма</p>
+        <h3 id="evening-letters-title">3 переписки</h3>
+        <p id="evening-letters-copy">1 непрочитанное письмо.</p>
+        <a class="evening-tile__link" href="letters.html">Открыть письма →</a>
+      </article>
+      <article class="evening-tile evening-tile--notif">
+        <p class="eyebrow">Уведомления</p>
+        <h3 id="evening-notif-title">3 новых</h3>
+        <p id="evening-notif-copy">Главы, ответы и вехи ждут.</p>
+        <a class="evening-tile__link" href="notifications.html">Смотреть события →</a>
+      </article>
+    </div>
+  </section>
+
+  <section class="evening-section container" id="evening-club-section" aria-labelledby="evening-club-title">
+    <div class="section-head">
+      <div><p class="eyebrow">Клуб</p><h2 id="evening-club-title">Ближайшая встреча.</h2></div>
+      <a class="section-link" href="clubs.html">Все клубы →</a>
+    </div>
+    <article class="evening-club" id="evening-club" aria-live="polite"></article>
+  </section>
+
+  <section class="evening-section container" aria-labelledby="evening-updates-title">
+    <div class="section-head">
+      <div><p class="eyebrow">Читатели</p><h2 id="evening-updates-title">Что нового рядом.</h2></div>
+      <a class="section-link" href="readers.html">Все читатели →</a>
+    </div>
+    <div class="evening-updates" id="evening-updates"></div>
+    <div class="evening-empty" id="evening-updates-empty" hidden>
+      <p>Пока никого рядом. Найди читателя — и здесь появятся его следы.</p>
+      <a class="btn btn--small btn--ghost" href="readers.html">Найти читателя</a>
+    </div>
+  </section>
+
+  <section class="evening-section container" id="evening-quote-section" aria-labelledby="evening-quote-title">
+    <div class="evening-quote-wrap">
+      <article class="evening-quote">
+        <p class="evening-quote__mark" aria-hidden="true">“</p>
+        <blockquote id="evening-quote-text">Не ищи меня среди имён. Я уже там, где начинается тишина.</blockquote>
+        <p class="evening-quote__source">
+          <a id="evening-quote-reader" href="readers.html?reader=mina">Мина С.</a>
+          <span>·</span>
+          <a id="evening-quote-source" href="reader.html?slug=pepel-i-luna&amp;chapter=12">Пепел и луна · глава 12</a>
+        </p>
+        <a class="evening-quote__link" href="quotes.html">В общую тетрадь →</a>
+      </article>
+      <aside class="evening-note">
+        <p class="eyebrow">На полях</p>
+        <h2 id="evening-quote-title">Одна строка — достаточно.</h2>
+        <p>Слова, которые остаются после главы. Их можно сохранить в заметки или унести с собой открыткой.</p>
+        <a class="evening-note__link" href="quotes.html">Открыть цитаты →</a>
+      </aside>
+    </div>
+  </section>
+</main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="profile.html">Профиль</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="notes.html">Заметки</a>
+            <a href="quotes.html">Цитаты</a>
+            <a href="bingo.html">Девять вечеров</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="rules.html#dmca">DMCA</a>
+            <a href="rules.html#privacy">Конфиденциальность</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="uploads.js" defer></script>
+  <script src="readers-data.js?v=readers1" defer></script>
+  <script src="quotes-data.js?v=quotes1" defer></script>
+  <script src="clubs-data.js?v=meeting1" defer></script>
+  <script src="letters.js?v=letters1" defer></script>
+  <script src="notifications.js?v=notif1" defer></script>
+  <script src="evening.js?v=taste2" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>
+

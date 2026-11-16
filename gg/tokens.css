@@ -1,0 +1,3 @@
+:root{--primary:#17171B;--secondary:#6F6D72;--muted:#A5A3AA;--accent:#E63946;--bg:#F5F3F0;--surface:#1F1F24;--font:'Exo 2',system-ui,sans-serif}
+body{background:var(--primary);color:var(--bg);font-family:var(--font)}
+.btn{background:var(--accent);color:#fff;padding:14px 28px;border-radius:8px;font-weight:600}

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuroha — знаки v3</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #070b14;
+    --ink-2: #0a0f1c;
+    --paper: #e9e1d2;
+    --paper-2: #f3ede2;
+    --brass: #c9a25e;
+    --muted: #9a958b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--paper); font-family: "Exo 2", sans-serif; }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 48px 28px 72px; }
+  .eyebrow { margin: 0 0 12px; color: var(--brass); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { margin: 0 0 10px; font-size: clamp(38px, 6vw, 68px); line-height: .95; letter-spacing: -.05em; font-weight: 600; }
+  .lead { margin: 0 0 36px; max-width: 680px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+  h2 { margin: 38px 0 14px; font-size: 13px; letter-spacing: .18em; text-transform: uppercase; color: var(--brass); font-weight: 500; }
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .panel { border: 1px solid rgba(201,162,94,.22); border-radius: 14px; padding: 28px; background: var(--ink-2); }
+  .panel.paper { background: var(--paper-2); color: #1b1712; border-color: rgba(138,106,47,.22); }
+  .panel.paper h2 { color: #8a6a2f; }
+  .markrow { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+  .markrow figure { margin: 0; text-align: center; color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+  .markrow img { display: block; width: auto; height: auto; margin: 0 auto 8px; }
+  .markrow .s120 img { width: 120px; height: 120px; }
+  .markrow .s64 img { width: 64px; height: 64px; }
+  .markrow .s32 img { width: 32px; height: 32px; }
+  .markrow .s16 img { width: 16px; height: 16px; }
+  .identity { display: flex; align-items: center; gap: 22px; margin-top: 10px; }
+  .identity img { width: 80px; height: 80px; }
+  .identity .word { font-size: 48px; letter-spacing: -.06em; font-weight: 600; line-height: 1; }
+  .identity .desc { margin-top: 7px; color: var(--brass); font-size: 9px; letter-spacing: .24em; text-transform: uppercase; }
+  .secondary { display: flex; align-items: center; gap: 18px; }
+  .secondary img { width: 72px; height: 72px; }
+  .secondary .word { font-size: 30px; letter-spacing: .06em; font-weight: 600; }
+  .secondary .desc { color: var(--brass); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; margin-top: 4px; }
+  .pair { display: flex; align-items: flex-end; gap: 34px; flex-wrap: wrap; }
+  .pair .big img { width: 120px; height: 120px; }
+  .pair .small img { width: 72px; height: 72px; }
+  .note { margin: 18px 0 0; color: var(--muted); font-size: 11px; line-height: 1.6; }
+  .paper .note { color: #6e6a63; }
+  @media (max-width: 760px) { .grid { grid-template-columns: 1fr; } .panel { padding: 20px; } .identity .word { font-size: 38px; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">Kuroha · marks</p>
+  <h1>Луна над книгой.<br>Куро рядом.</h1>
+  <p class="lead">Основной знак — раскрытая книга и месяц над ней. Второй — Куро, хранительница библиотеки. Оба работают в одном цвете, на тёмном и на бумаге.</p>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Основной знак · ночь</h2>
+      <div class="markrow">
+        <figure class="s120"><img src="logo-symbol.svg" alt=""><figcaption>120</figcaption></figure>
+        <figure class="s64"><img src="logo-symbol.svg" alt=""><figcaption>64</figcaption></figure>
+        <figure class="s32"><img src="logo-symbol.svg" alt=""><figcaption>32</figcaption></figure>
+        <figure class="s16"><img src="logo-symbol.svg" alt=""><figcaption>16</figcaption></figure>
+      </div>
+      <div class="identity">
+        <img src="logo-symbol.svg" alt="">
+        <div><div class="word">kuroha</div><div class="desc">ночная библиотека</div></div>
+      </div>
+    </section>
+
+    <section class="panel paper">
+      <h2>Основной знак · бумага</h2>
+      <div class="markrow">
+        <figure class="s120"><img src="logo-symbol-ink.svg" alt=""><figcaption>120</figcaption></figure>
+        <figure class="s64"><img src="logo-symbol-ink.svg" alt=""><figcaption>64</figcaption></figure>
+        <figure class="s32"><img src="logo-symbol-ink.svg" alt=""><figcaption>32</figcaption></figure>
+        <figure class="s16"><img src="logo-symbol-ink.svg" alt=""><figcaption>16</figcaption></figure>
+      </div>
+      <div class="identity">
+        <img src="logo-symbol-ink.svg" alt="">
+        <div><div class="word">kuroha</div><div class="desc">ночная библиотека</div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Второй знак · Куро</h2>
+      <div class="markrow">
+        <figure class="s120"><img src="kuro-mark.svg" alt=""><figcaption>120</figcaption></figure>
+        <figure class="s64"><img src="kuro-mark.svg" alt=""><figcaption>64</figcaption></figure>
+        <figure class="s32"><img src="kuro-mark.svg" alt=""><figcaption>32</figcaption></figure>
+        <figure class="s16"><img src="kuro-mark.svg" alt=""><figcaption>16</figcaption></figure>
+      </div>
+      <div class="secondary">
+        <img src="kuro-mark.svg" alt="">
+        <div><div class="word">Куро</div><div class="desc">хранительница</div></div>
+      </div>
+    </section>
+
+    <section class="panel paper">
+      <h2>Второй знак · бумага</h2>
+      <div class="markrow">
+        <figure class="s120"><img src="kuro-mark-ink.svg" alt=""><figcaption>120</figcaption></figure>
+        <figure class="s64"><img src="kuro-mark-ink.svg" alt=""><figcaption>64</figcaption></figure>
+        <figure class="s32"><img src="kuro-mark-ink.svg" alt=""><figcaption>32</figcaption></figure>
+        <figure class="s16"><img src="kuro-mark-ink.svg" alt=""><figcaption>16</figcaption></figure>
+      </div>
+      <div class="secondary">
+        <img src="kuro-mark-ink.svg" alt="">
+        <div><div class="word">Куро</div><div class="desc">хранительница</div></div>
+      </div>
+    </section>
+  </div>
+
+  <h2>Пара</h2>
+  <div class="pair">
+    <div class="big"><img src="logo-symbol.svg" alt=""></div>
+    <div class="small"><img src="kuro-mark.svg" alt=""></div>
+  </div>
+  <p class="note">Слева — основной знак для шапки, иконки и обложек. Справа — Куро для пустых состояний, 404, профиля и маленьких подписей.</p>
+</div>
+</body>
+</html>

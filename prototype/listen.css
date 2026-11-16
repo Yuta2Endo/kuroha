@@ -1,0 +1,185 @@
+/* Kuroha 3.0 — audio chapter */
+
+.reader-listen-btn { position: relative; }
+.reader-listen-btn.is-playing::after {
+  content: "";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--kh-accent);
+  box-shadow: 0 0 0 3px var(--kh-bg);
+}
+.listen-panel {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 82;
+  width: min(340px, calc(100vw - 32px));
+  padding: 18px;
+  border: 1px solid var(--kh-border-strong);
+  border-radius: 14px;
+  background: var(--kh-surface-raised);
+  box-shadow: var(--kh-shadow-card);
+  color: var(--kh-text);
+}
+.listen-panel[hidden] { display: none; }
+.listen-panel__head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.listen-panel__head .eyebrow { margin-bottom: 7px; }
+.listen-panel__head b {
+  display: block;
+  max-width: 260px;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.listen-close {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--kh-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--kh-text-muted);
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}
+.listen-close:hover { color: var(--kh-text); border-color: var(--kh-accent); }
+.listen-status {
+  min-height: 16px;
+  margin: 0 0 10px;
+  color: var(--kh-text-muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.listen-progress {
+  height: 3px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--kh-border);
+}
+.listen-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--kh-accent);
+  transition: width 180ms var(--kh-ease-out);
+}
+.listen-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.listen-control {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--kh-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--kh-text-muted);
+  font-size: 13px;
+  cursor: pointer;
+}
+.listen-control:hover:not(:disabled) { color: var(--kh-text); border-color: var(--kh-accent); }
+.listen-control:disabled { opacity: 0.35; cursor: default; }
+.listen-play {
+  width: 42px;
+  height: 42px;
+  border-color: var(--kh-accent);
+  background: var(--kh-accent);
+  color: #fff;
+  font-size: 14px;
+}
+.listen-play:hover:not(:disabled) { background: var(--kh-accent-soft); border-color: var(--kh-accent-soft); }
+.listen-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 9px;
+  color: var(--kh-text-muted);
+  font-size: 10px;
+}
+.listen-field select,
+.listen-field input[type="range"] {
+  max-width: 210px;
+}
+.listen-field select {
+  height: 28px;
+  padding: 0 8px;
+  border: 1px solid var(--kh-border);
+  border-radius: 6px;
+  background: var(--kh-bg);
+  color: var(--kh-text);
+  font: inherit;
+  font-size: 10px;
+}
+.listen-field select:focus { outline: 2px solid var(--kh-link); outline-offset: 2px; }
+.listen-field input[type="range"] { width: 150px; accent-color: var(--kh-accent); }
+.listen-field output { min-width: 30px; color: var(--kh-text); text-align: right; }
+.listen-continue {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  color: var(--kh-text-faint);
+  font-size: 10px;
+}
+.listen-continue input { accent-color: var(--kh-accent); }
+.reader-text p.is-speaking,
+.reader-text blockquote.is-speaking {
+  background: rgba(230, 57, 70, 0.09);
+  box-shadow: inset 3px 0 0 var(--kh-accent);
+}
+.reader-text p,
+.reader-text blockquote { transition: background 180ms var(--kh-ease-out), box-shadow 180ms var(--kh-ease-out); }
+
+[data-theme="paper"] .listen-panel {
+  border-color: rgba(23, 23, 27, 0.18);
+  background: #fffdfa;
+}
+[data-theme="paper"] .listen-close,
+[data-theme="paper"] .listen-field select,
+[data-theme="paper"] .listen-control { border-color: rgba(23, 23, 27, 0.2); }
+[data-theme="paper"] .listen-field select { background: #f5f3f0; }
+[data-theme="paper"] .reader-text p.is-speaking,
+[data-theme="paper"] .reader-text blockquote.is-speaking { background: rgba(181, 45, 56, 0.08); }
+[data-theme="paper"] .listen-play { color: #fff; }
+
+@media (max-width: 760px) {
+  .listen-panel {
+    right: 16px;
+    bottom: 16px;
+    width: calc(100vw - 32px);
+    max-height: calc(100dvh - 32px);
+    overflow-y: auto;
+  }
+}
+@media (max-width: 480px) {
+  .reader-bar__actions #font-minus,
+  .reader-bar__actions #font-plus { display: none; }
+  .listen-panel { right: 12px; bottom: 12px; width: calc(100vw - 24px); padding: 16px; }
+  .listen-controls { gap: 10px; }
+  .listen-field { align-items: flex-start; flex-direction: column; gap: 5px; }
+  .listen-field select,
+  .listen-field input[type="range"] { width: 100%; max-width: none; }
+  .listen-field output { align-self: flex-end; }
+}

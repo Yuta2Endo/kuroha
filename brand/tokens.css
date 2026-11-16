@@ -1,0 +1,218 @@
+/* ==========================================================================
+   KUROHA — design tokens
+   Brand: Kuroha · torii, ensō and sakura
+   Version: 3.0 · November 2026
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* ------------------------------------------------------------------------
+     Raw palette
+     ------------------------------------------------------------------------ */
+  --kh-ink-950: #0b0b0e;
+  --kh-ink-900: #17171b;
+  --kh-ink-800: #1f1f24;
+  --kh-ink-700: #2a2a31;
+
+  --kh-paper: #f5f3f0;
+  --kh-paper-2: #fbfaf8;
+
+  --kh-red: #e63946;
+  --kh-red-light: #ff6b73;
+  --kh-red-dark: #b52d38;
+
+  --kh-gray-500: #6f6d72;
+  --kh-gray-300: #a5a3aa;
+  --kh-gray-200: #d8d5d2;
+
+  --kh-moss: #6f8f7a;
+
+  /* Legacy aliases kept for the prototype's older CSS.
+     Brass and moon now resolve to the red accent family. */
+  --kh-brass: var(--kh-red);
+  --kh-brass-light: var(--kh-red-light);
+  --kh-brass-dark: var(--kh-red-dark);
+  --kh-moon: var(--kh-red-light);
+  --kh-moon-dark: var(--kh-red-dark);
+  --kh-oxblood: var(--kh-red-dark);
+  --kh-oxblood-soft: var(--kh-red);
+  --kh-graphite: var(--kh-gray-500);
+  --kh-muted: var(--kh-gray-300);
+
+  /* ------------------------------------------------------------------------
+     Semantic tokens — night theme (default)
+     ------------------------------------------------------------------------ */
+  --kh-bg: var(--kh-ink-900);
+  --kh-bg-deep: var(--kh-ink-950);
+  --kh-surface: var(--kh-ink-800);
+  --kh-surface-raised: var(--kh-ink-700);
+
+  --kh-text: var(--kh-paper);
+  --kh-text-muted: var(--kh-gray-300);
+  --kh-text-faint: var(--kh-gray-500);
+
+  --kh-accent: var(--kh-red);
+  --kh-accent-soft: var(--kh-red-light);
+  --kh-link: var(--kh-red-light);
+  --kh-danger: var(--kh-red-light);
+  --kh-success: var(--kh-moss);
+
+  --kh-border: rgba(245, 243, 240, 0.1);
+  --kh-border-strong: rgba(245, 243, 240, 0.18);
+  --kh-border-accent: rgba(230, 57, 70, 0.34);
+
+  /* ------------------------------------------------------------------------
+     Gradients
+     ------------------------------------------------------------------------ */
+  --kh-gradient-night: linear-gradient(160deg, #0b0b0e 0%, #17171b 55%, #1f1f24 100%);
+  --kh-gradient-paper: linear-gradient(180deg, #fbfaf8 0%, #f5f3f0 100%);
+  --kh-gradient-red: linear-gradient(135deg, #ff6b73 0%, #e63946 55%, #b52d38 100%);
+
+  /* ------------------------------------------------------------------------
+     Typography
+     One family, three jobs. Exo 2 carries the whole system.
+     ------------------------------------------------------------------------ */
+  --kh-font-display: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kh-font-ui: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --kh-font-reading: "Exo 2", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --kh-weight-display: 600;
+  --kh-weight-ui: 500;
+  --kh-weight-reading: 400;
+
+  --kh-tracking-display: -0.055em;
+  --kh-tracking-ui: -0.01em;
+  --kh-tracking-label: 0.18em;
+
+  --kh-text-xs: 0.75rem;      /* 12 */
+  --kh-text-sm: 0.875rem;     /* 14 */
+  --kh-text-base: 1rem;       /* 16 */
+  --kh-text-md: 1.125rem;     /* 18 */
+  --kh-text-lg: 1.375rem;     /* 22 */
+  --kh-text-xl: 1.75rem;      /* 28 */
+  --kh-text-2xl: 2rem;        /* 32 */
+  --kh-text-3xl: 3rem;        /* 48 */
+  --kh-text-4xl: 4rem;        /* 64 */
+  --kh-text-5xl: 5rem;        /* 80 */
+
+  --kh-leading-tight: 1;
+  --kh-leading-snug: 1.15;
+  --kh-leading-normal: 1.5;
+  --kh-leading-relaxed: 1.65;
+  --kh-leading-reading: 1.75;
+
+  --kh-tracking-tight: -0.03em;
+  --kh-tracking-normal: 0;
+  --kh-tracking-wide: 0.08em;
+
+  /* ------------------------------------------------------------------------
+     Spacing — 4 px base
+     ------------------------------------------------------------------------ */
+  --kh-space-1: 4px;
+  --kh-space-2: 8px;
+  --kh-space-3: 12px;
+  --kh-space-4: 16px;
+  --kh-space-5: 24px;
+  --kh-space-6: 32px;
+  --kh-space-7: 48px;
+  --kh-space-8: 64px;
+  --kh-space-9: 96px;
+
+  /* ------------------------------------------------------------------------
+     Layout
+     ------------------------------------------------------------------------ */
+  --kh-container: 1280px;
+  --kh-spine: 72px;
+  --kh-page-padding: 40px;
+  --kh-page-padding-mobile: 20px;
+
+  /* ------------------------------------------------------------------------
+     Radius
+     ------------------------------------------------------------------------ */
+  --kh-radius-paper: 2px;
+  --kh-radius-cover: 6px;
+  --kh-radius-button: 8px;
+  --kh-radius-input: 8px;
+  --kh-radius-card: 12px;
+  --kh-radius-large: 20px;
+  --kh-radius-pill: 999px;
+
+  /* ------------------------------------------------------------------------
+     Shadows
+     ------------------------------------------------------------------------ */
+  --kh-shadow-paper: 0 18px 48px rgba(0, 0, 0, 0.36);
+  --kh-shadow-card: 0 12px 32px rgba(0, 0, 0, 0.28);
+  --kh-shadow-glow: 0 0 48px rgba(230, 57, 70, 0.14);
+
+  /* ------------------------------------------------------------------------
+     Motion
+     ------------------------------------------------------------------------ */
+  --kh-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --kh-ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --kh-duration-fast: 140ms;
+  --kh-duration: 200ms;
+  --kh-duration-slow: 320ms;
+  --kh-duration-draw: 600ms;
+}
+
+/* ==========================================================================
+   Reader themes
+   ========================================================================== */
+
+[data-reader="paper"] {
+  color-scheme: light;
+  --kh-bg: var(--kh-paper-2);
+  --kh-bg-deep: var(--kh-paper);
+  --kh-surface: #f5f3f0;
+  --kh-surface-raised: #fffdfa;
+
+  --kh-text: #17171b;
+  --kh-text-muted: #5f5d62;
+  --kh-text-faint: #6f6d72;
+
+  --kh-accent: var(--kh-red-dark);
+  --kh-accent-soft: var(--kh-red);
+  --kh-link: var(--kh-red-dark);
+  --kh-danger: var(--kh-red-dark);
+  --kh-success: #4f7a5e;
+
+  --kh-border: rgba(23, 23, 27, 0.12);
+  --kh-border-strong: rgba(23, 23, 27, 0.2);
+  --kh-border-accent: rgba(181, 45, 56, 0.32);
+}
+
+[data-reader="gray"] {
+  color-scheme: dark;
+  --kh-bg: #1f1f24;
+  --kh-bg-deep: #17171b;
+  --kh-surface: #2a2a31;
+  --kh-surface-raised: #303037;
+
+  --kh-text: #f5f3f0;
+  --kh-text-muted: #a5a3aa;
+  --kh-text-faint: #6f6d72;
+
+  --kh-accent: var(--kh-red);
+  --kh-accent-soft: var(--kh-red-light);
+  --kh-link: var(--kh-red-light);
+  --kh-danger: var(--kh-red-light);
+  --kh-success: var(--kh-moss);
+
+  --kh-border: rgba(245, 243, 240, 0.1);
+  --kh-border-strong: rgba(245, 243, 240, 0.18);
+  --kh-border-accent: rgba(230, 57, 70, 0.3);
+}
+
+/* ==========================================================================
+   Motion preferences
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kh-duration-fast: 0ms;
+    --kh-duration: 0ms;
+    --kh-duration-slow: 0ms;
+    --kh-duration-draw: 0ms;
+  }
+}

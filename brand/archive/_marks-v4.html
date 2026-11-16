@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuroha — варианты главного знака</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #070b14;
+    --ink-2: #0a0f1c;
+    --paper: #e9e1d2;
+    --paper-2: #f3ede2;
+    --brass: #c9a25e;
+    --muted: #9a958b;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--paper); font-family: "Exo 2", sans-serif; }
+  .wrap { max-width: 1220px; margin: 0 auto; padding: 48px 28px 72px; }
+  .eyebrow { margin: 0 0 12px; color: var(--brass); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { margin: 0 0 10px; font-size: clamp(38px, 6vw, 70px); line-height: .95; letter-spacing: -.05em; font-weight: 600; }
+  .lead { margin: 0 0 34px; max-width: 700px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+  .board { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; }
+  .card { border: 1px solid rgba(201,162,94,.22); border-radius: 14px; background: var(--ink-2); padding: 22px; }
+  .card__top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; margin-bottom: 20px; }
+  h2 { margin: 0; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: var(--brass); font-weight: 500; }
+  .tag { color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+  .stage { display: flex; align-items: flex-end; gap: 22px; min-height: 166px; padding: 10px 0 18px; }
+  .mark { display: block; color: var(--brass); }
+  .s140 { width: 140px; height: 140px; }
+  .s64 { width: 64px; height: 64px; }
+  .s32 { width: 32px; height: 32px; }
+  .s16 { width: 16px; height: 16px; }
+  .smallrow { display: flex; align-items: flex-end; gap: 16px; padding-top: 8px; }
+  .caption { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.6; min-height: 54px; }
+  .paper { background: var(--paper-2); color: #1b1712; border-color: rgba(138,106,47,.22); }
+  .paper h2 { color: #8a6a2f; }
+  .paper .mark { color: #1b1712; }
+  .paper .tag, .paper .caption { color: #6e6a63; }
+  .paper .stage { border-top: 1px solid rgba(138,106,47,.16); }
+  .wide { grid-column: 1 / -1; display: grid; grid-template-columns: .9fr 1.1fr; gap: 18px; align-items: center; }
+  .wide .stage { min-height: 190px; border: 0; }
+  .wide h2 { color: var(--brass); }
+  .note { margin: 26px 0 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+  @media (max-width: 900px) { .board { grid-template-columns: 1fr; } .wide { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="mark-page" viewBox="0 0 120 120">
+      <path d="M64 14C46 14 32 27 32 44c0 11 5 21 13 27-5-9-4-20 1-30 6-12 15-20 26-24-2.5-2-5.2-3-8-3Z" fill="currentColor"/>
+      <path d="M21 79c14-6 28-3 39 7v18c-11-7-25-9-39-5V79Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M99 79c-14-6-28-3-39 7v18c11-7 25-9 39-5V79Z" fill="none" stroke="currentColor" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M60 88v17" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="mark-spine" viewBox="0 0 120 120">
+      <mask id="spine-cut">
+        <rect width="120" height="120" fill="#fff"/>
+        <circle cx="58" cy="38" r="14" fill="#000"/>
+        <circle cx="64" cy="34" r="10.5" fill="#fff"/>
+      </mask>
+      <path d="M42 12c0-4 3-7 7-7h22c4 0 7 3 7 7v92H42V12Z" fill="currentColor" mask="url(#spine-cut)"/>
+      <path d="M78 18h10v82H78Z" fill="currentColor" opacity=".38"/>
+      <path d="M82 26v66M85 26v66M88 26v66" stroke="currentColor" stroke-opacity=".5" stroke-width="1.2"/>
+      <path d="M42 70h36" stroke="currentColor" stroke-width="3" opacity=".55"/>
+    </symbol>
+    <symbol id="mark-quill" viewBox="0 0 120 120">
+      <path d="M64 10C44 12 30 26 30 44c0 12 6 22 16 28-5-10-4-22 2-33 6-11 15-19 26-23-3-4-6-6-10-6Z" fill="currentColor"/>
+      <path d="M46 72c4 12 9 24 14 34" fill="none" stroke="currentColor" stroke-width="4.2" stroke-linecap="round"/>
+      <path d="M49 77c7-2 13 0 18 4M53 87c6-2 11 0 15 3M56 97c5-1 8 0 11 2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity=".72"/>
+      <path d="M20 82c14-6 28-2 40 9v11c-11-7-26-9-40-5V82Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M100 82c-14-6-28-2-40 9v11c11-7 26-9 40-5V82Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">Kuroha · main mark · 3 directions</p>
+  <h1>Три способа<br>взять луну с собой.</h1>
+  <p class="lead">Без маскота. Только знак, бумага и ночь. Ниже — три направления: от тихого книжного корешка до пера, которое стало месяцем.</p>
+
+  <div class="board">
+    <article class="card">
+      <div class="card__top"><h2>01 · Луна в книге</h2><span class="tag">литературный</span></div>
+      <div class="stage">
+        <svg class="mark s140" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+        <div class="smallrow">
+          <svg class="mark s64" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+          <svg class="mark s32" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+          <svg class="mark s16" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+        </div>
+      </div>
+      <p class="caption">Раскрытая книга линией, месяц — плотным пятном. Самый мягкий и «читательский» вариант.</p>
+    </article>
+
+    <article class="card">
+      <div class="card__top"><h2>02 · Луна в корешке</h2><span class="tag">архитектурный</span></div>
+      <div class="stage">
+        <svg class="mark s140" viewBox="0 0 120 120"><use href="#mark-spine"></use></svg>
+        <div class="smallrow">
+          <svg class="mark s64" viewBox="0 0 120 120"><use href="#mark-spine"></use></svg>
+          <svg class="mark s32" viewBox="0 0 120 120"><use href="#mark-spine"></use></svg>
+          <svg class="mark s16" viewBox="0 0 120 120"><use href="#mark-spine"></use></svg>
+        </div>
+      </div>
+      <p class="caption">Вертикальный корешок с вырезанным месяцем. Отсылает к 72-пиксельному корешку сайта и работает как иконка.</p>
+    </article>
+
+    <article class="card">
+      <div class="card__top"><h2>03 · Луна-перо</h2><span class="tag">созвучный имени</span></div>
+      <div class="stage">
+        <svg class="mark s140" viewBox="0 0 120 120"><use href="#mark-quill"></use></svg>
+        <div class="smallrow">
+          <svg class="mark s64" viewBox="0 0 120 120"><use href="#mark-quill"></use></svg>
+          <svg class="mark s32" viewBox="0 0 120 120"><use href="#mark-quill"></use></svg>
+          <svg class="mark s16" viewBox="0 0 120 120"><use href="#mark-quill"></use></svg>
+        </div>
+      </div>
+      <p class="caption">Месяц, который продолжается пером, а перо — страницей. Прямее всего говорит с именем Kuroha.</p>
+    </article>
+
+    <article class="card paper wide">
+      <div>
+        <div class="card__top"><h2>На бумаге · Луна в книге</h2><span class="tag">ink version</span></div>
+        <p class="caption">Тот же знак в тёмной версии. Месяц остаётся плотным, книга — линией. На бумаге работает без потери воздуха.</p>
+      </div>
+      <div class="stage">
+        <svg class="mark s140" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+        <div class="smallrow">
+          <svg class="mark s64" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+          <svg class="mark s32" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+          <svg class="mark s16" viewBox="0 0 120 120"><use href="#mark-page"></use></svg>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <p class="note">Мой выбор — <strong>02 · Луна в корешке</strong>: он тише, взрослее и точнее связан с сайтом. Если хочется больше тепла — 01, если важнее имя Kuroha — 03.</p>
+</div>
+</body>
+</html>

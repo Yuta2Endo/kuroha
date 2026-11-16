@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuroha — главный знак</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  :root { --ink:#070b14; --ink-2:#0a0f1c; --paper:#e9e1d2; --paper-2:#f3ede2; --brass:#c9a25e; --muted:#9a958b; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ink); color: var(--paper); font-family: "Exo 2", sans-serif; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 48px 28px 72px; }
+  .eyebrow { margin: 0 0 12px; color: var(--brass); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; }
+  h1 { margin: 0 0 10px; font-size: clamp(38px, 6vw, 70px); line-height: .95; letter-spacing: -.05em; font-weight: 600; }
+  .lead { margin: 0 0 36px; max-width: 720px; color: var(--muted); font-size: 14px; line-height: 1.65; }
+  .board { display: grid; grid-template-columns: 1.1fr .9fr; gap: 16px; }
+  .card { border: 1px solid rgba(201,162,94,.22); border-radius: 14px; background: var(--ink-2); padding: 24px; }
+  .card__top { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin-bottom:18px; }
+  h2 { margin:0; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--brass); font-weight:500; }
+  .tag { color:var(--muted); font-size:9px; letter-spacing:.12em; text-transform:uppercase; }
+  .stage { display:flex; align-items:flex-end; gap:26px; min-height:190px; padding:8px 0 18px; }
+  .mark { display:block; }
+  .mark--night { --moon:#f3ede2; --moon-line:#8a6a2f; --book:#c9a25e; --book-line:#070b14; --feather:#c9a25e; --feather-line:#070b14; }
+  .mark--paper { --moon:#c9a25e; --moon-line:#6d5224; --book:#1b1712; --book-line:#f3ede2; --feather:#1b1712; --feather-line:#f3ede2; }
+  .s190 { width:190px; height:190px; }
+  .s96 { width:96px; height:96px; }
+  .s64 { width:64px; height:64px; }
+  .s32 { width:32px; height:32px; }
+  .s16 { width:16px; height:16px; }
+  .smallrow { display:flex; align-items:flex-end; gap:18px; }
+  .caption { margin:0; color:var(--muted); font-size:11px; line-height:1.6; }
+  .paper { background:var(--paper-2); color:#1b1712; border-color:rgba(138,106,47,.22); }
+  .paper h2 { color:#8a6a2f; }
+  .paper .tag, .paper .caption { color:#6e6a63; }
+  .paper .stage { border-top:1px solid rgba(138,106,47,.16); }
+  .wide { grid-column:1/-1; display:grid; grid-template-columns:1fr 1.2fr; gap:18px; align-items:center; }
+  .wide .stage { border:0; min-height:150px; }
+  .note { margin:26px 0 0; color:var(--muted); font-size:11px; line-height:1.7; }
+  .note strong { color:var(--paper); font-weight:500; }
+  @media (max-width: 860px) { .board { grid-template-columns:1fr; } .wide { grid-template-columns:1fr; } }
+  @media (max-width: 620px) {
+    .wrap { padding: 32px 18px 52px; }
+    .card { padding: 18px; }
+    .stage { flex-wrap: wrap; gap: 18px; min-height: 0; }
+    .s190 { width: 138px; height: 138px; }
+    .s96 { width: 72px; height: 72px; }
+    .s64 { width: 54px; height: 54px; }
+    .smallrow { gap: 12px; flex-wrap: wrap; }
+    .wide .stage { min-height: 0; }
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="m-page" viewBox="0 0 120 120">
+      <path d="M70 12C52 14 39 27 39 43c0 12 6 22 15 28-7-9-8-21-4-32 4-11 12-19 22-23-1-1.5-1.5-3-2-4Z" fill="var(--moon)" stroke="var(--moon-line)" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M22 76c14-6 27-3 36 7v21c-10-7-22-9-36-5V76Z" fill="var(--book)"/>
+      <path d="M98 76c-14-6-27-3-36 7v21c10-7 22-9 36-5V76Z" fill="var(--book)"/>
+      <path d="M32 88c8-3 16-1 21 3" fill="none" stroke="var(--book-line)" stroke-opacity=".42" stroke-width="2" stroke-linecap="round"/>
+      <path d="M88 88c-8-3-16-1-21 3" fill="none" stroke="var(--book-line)" stroke-opacity=".42" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="m-feather" viewBox="0 0 120 120">
+      <path d="M78 8C94 20 104 40 102 60 100 82 86 100 58 114 60 94 62 76 58 58 54 40 60 22 78 8Z" fill="var(--feather)"/>
+      <path d="M82 24C72 25 65 32 65 41c0 6 3 11 8 14-3-5-3-12 1-18 4-6 9-10 15-12-2-1-5-1-7-1Z" fill="var(--moon)" stroke="var(--moon-line)" stroke-width="1.4" stroke-linejoin="round"/>
+      <path d="M72 62c7-4 13-6 19-6M68 76c6-4 12-6 17-6M64 90c5-4 10-6 14-6" fill="none" stroke="var(--feather-line)" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="wrap">
+  <p class="eyebrow">Kuroha · main & secondary mark</p>
+  <h1>Луна над книгой.<br>И перо рядом.</h1>
+  <p class="lead">Без маскота. Главный знак — раскрытая книга и бумажный месяц. Второй — эволюция прежнего пера: в нём живёт луна. Оба знака работают в одном цвете, на ночи и на бумаге.</p>
+
+  <div class="board">
+    <article class="card">
+      <div class="card__top"><h2>Главный · Луна над книгой</h2><span class="tag">night</span></div>
+      <div class="stage">
+        <svg class="mark mark--night s190" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+        <div class="smallrow">
+          <svg class="mark mark--night s96" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+          <svg class="mark mark--night s64" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+          <svg class="mark mark--night s32" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+          <svg class="mark mark--night s16" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+        </div>
+      </div>
+      <p class="caption">Месяц — бумажный, с тонким бронзовым контуром. Книга — латунная. На тёмном это тихий свет, на бумаге — тот же силуэт.</p>
+    </article>
+
+    <article class="card">
+      <div class="card__top"><h2>Второй · Луна-перо</h2><span class="tag">signature</span></div>
+      <div class="stage">
+        <svg class="mark mark--night s190" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+        <div class="smallrow">
+          <svg class="mark mark--night s96" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+          <svg class="mark mark--night s64" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+          <svg class="mark mark--night s32" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+          <svg class="mark mark--night s16" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+        </div>
+      </div>
+      <p class="caption">Прежнее перо, но с бумажным месяцем в пере. Прямая связь с именем Kuroha и с ночной библиотекой.</p>
+    </article>
+
+    <article class="card paper wide">
+      <div>
+        <div class="card__top"><h2>На бумаге · главный</h2><span class="tag">ink version</span></div>
+        <p class="caption">Инверсия: книга становится чернильной, месяц — латунным. Контур месяца остаётся тонким, поэтому знак не тяжелеет.</p>
+      </div>
+      <div class="stage">
+        <svg class="mark mark--paper s190" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+        <div class="smallrow">
+          <svg class="mark mark--paper s96" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+          <svg class="mark mark--paper s64" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+          <svg class="mark mark--paper s32" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+          <svg class="mark mark--paper s16" viewBox="0 0 120 120"><use href="#m-page"></use></svg>
+        </div>
+      </div>
+    </article>
+
+    <article class="card paper wide">
+      <div>
+        <div class="card__top"><h2>На бумаге · второй</h2><span class="tag">ink version</span></div>
+        <p class="caption">Перо-месяц в инверсии. Хорошо работает как маленький знак в пустых состояниях, профиле и подписях.</p>
+      </div>
+      <div class="stage">
+        <svg class="mark mark--paper s190" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+        <div class="smallrow">
+          <svg class="mark mark--paper s96" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+          <svg class="mark mark--paper s64" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+          <svg class="mark mark--paper s32" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+          <svg class="mark mark--paper s16" viewBox="0 0 120 120"><use href="#m-feather"></use></svg>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <p class="note">Мой выбор — <strong>главный «Луна над книгой»</strong>: он прямо отвечает на запрос, спокойно живёт в шапке и в иконке приложения. <strong>Луна-перо</strong> — второй знак вместо маскота: он сохраняет имя Kuroha и старую историю, но не спорит с книгой.</p>
+</div>
+</body>
+</html>

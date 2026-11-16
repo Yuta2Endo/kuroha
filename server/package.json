@@ -1,0 +1,9 @@
+{
+  "name": "kuroha-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local zero-dependency API for the Kuroha prototype",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

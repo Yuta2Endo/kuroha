@@ -1,0 +1,13 @@
+# Runtime data of the local backend (contains password hashes, sessions, uploads)
+server/db.json
+server/uploads/
+
+# OS / editors
+Thumbs.db
+desktop.ini
+.DS_Store
+*.log
+
+# Temporary files
+*.tmp
+*.bak

@@ -1,0 +1,59 @@
+{
+  "id": "./",
+  "name": "Kuroha — манга и сообщество",
+  "short_name": "Kuroha",
+  "description": "Манга, манхва, маньхуа и новеллы. Читалка, полки и сообщество. Читай между строк.",
+  "lang": "ru",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#17171B",
+  "theme_color": "#17171B",
+  "categories": ["books", "entertainment"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Каталог",
+      "short_name": "Каталог",
+      "description": "Все истории библиотеки",
+      "url": "./catalog.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Моя полка",
+      "short_name": "Полка",
+      "description": "Истории, которые ты читаешь",
+      "url": "./profile.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Расписание",
+      "short_name": "Расписание",
+      "description": "Ближайшие главы недели",
+      "url": "./schedule.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    },
+    {
+      "name": "Мой вечер",
+      "short_name": "Вечер",
+      "description": "Продолжить чтение и проверить события",
+      "url": "./evening.html",
+      "icons": [{ "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+    }
+  ]
+}

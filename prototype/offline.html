@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Нет связи — Kuroha</title>
+  <meta name="description" content="Kuroha временно без связи. Сохранённый прогресс останется на месте.">
+  <meta name="theme-color" content="#17171b">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=search1">
+  <style>
+    .offline-page {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 76% 18%, rgba(201, 162, 94, 0.08), transparent 34%),
+        var(--kh-bg-deep);
+      color: var(--kh-text);
+    }
+
+    .offline-shell {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .offline-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-block: 22px;
+      border-bottom: 1px solid var(--kh-border);
+    }
+
+    .offline-top .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--kh-paper);
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .offline-top .brand img {
+      width: 28px;
+      height: 28px;
+    }
+
+    .offline-top__note {
+      margin: 0;
+      color: var(--kh-text-faint);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .offline-main {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: clamp(32px, 8vw, 100px);
+      align-items: center;
+      flex: 1;
+      padding-block: clamp(56px, 9vw, 120px);
+    }
+
+    .offline-copy {
+      min-width: 0;
+    }
+
+    .offline-copy .eyebrow {
+      color: var(--kh-brass);
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .offline-copy h1 {
+      max-width: 12ch;
+      margin: 18px 0 0;
+      font-family: var(--kh-font-display);
+      font-size: clamp(48px, 7vw, 92px);
+      font-weight: 500;
+      line-height: 0.92;
+      letter-spacing: -0.05em;
+    }
+
+    .offline-copy p {
+      max-width: 52ch;
+      margin: 24px 0 0;
+      color: var(--kh-text-muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .offline-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 30px;
+    }
+
+    .offline-card {
+      position: relative;
+      padding: 30px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      box-shadow: var(--kh-shadow-paper);
+      transform: rotate(0.7deg);
+    }
+
+    .offline-card__mark {
+      width: 52px;
+      height: 52px;
+      margin-bottom: 22px;
+    }
+
+    .offline-card h2 {
+      margin: 0;
+      font-family: var(--kh-font-display);
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 600;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+    }
+
+    .offline-card p {
+      margin: 14px 0 0;
+      color: #5f5a52;
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .offline-card__rule {
+      height: 1px;
+      margin: 22px 0;
+      background: rgba(27, 23, 18, 0.14);
+    }
+
+    .offline-card__foot {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      color: #8a6a2f;
+      font-size: 9px;
+    }
+
+    .offline-bottom {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-block: 18px;
+      border-top: 1px solid var(--kh-border);
+      color: var(--kh-text-faint);
+      font-size: 9px;
+    }
+
+    .offline-bottom a {
+      color: var(--kh-text-muted);
+      text-decoration: none;
+    }
+
+    .offline-bottom a:hover {
+      color: var(--kh-brass);
+    }
+
+    @media (max-width: 760px) {
+      .offline-main {
+        grid-template-columns: 1fr;
+        align-content: start;
+        gap: 34px;
+        padding-block: 46px 54px;
+      }
+
+      .offline-copy h1 {
+        font-size: clamp(44px, 13vw, 64px);
+      }
+
+      .offline-card {
+        max-width: 420px;
+        padding: 24px;
+      }
+
+      .offline-actions .btn {
+        flex: 1 1 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .offline-card {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+<body class="offline-page">
+  <a class="skip-link" href="#main" style="position:fixed;top:8px;left:8px;z-index:200;padding:10px 14px;border-radius:2px;background:var(--kh-paper);color:#1b1712;font-size:12px;transform:translateY(-200%)" onfocus="this.style.transform='none'" onblur="this.style.transform='translateY(-200%)'">Перейти к содержанию</a>
+  <div class="offline-shell container">
+    <header class="offline-top">
+      <a class="brand" href="index.html" aria-label="Kuroha — главная">
+        <img src="assets/logo-symbol.svg" alt="" width="28" height="28">
+        <span>KUROHA</span>
+      </a>
+      <p class="offline-top__note">манга · сообщество</p>
+    </header>
+
+    <main class="offline-main" id="main">
+      <div class="offline-copy">
+        <p class="eyebrow">Нет связи</p>
+        <h1>Связь потерялась.<br>Истории остались.</h1>
+        <p>Страница не загрузилась, но полка, прогресс и заметки уже сохранены на этом устройстве. Когда сеть вернётся, продолжим с той же строки.</p>
+        <div class="offline-actions">
+          <button class="btn btn--primary" type="button" onclick="location.reload()">Попробовать снова</button>
+          <a class="btn btn--ghost" href="index.html">На главную</a>
+        </div>
+      </div>
+
+      <aside class="offline-card" aria-label="Kuroha офлайн">
+        <img class="offline-card__mark" src="assets/logo-symbol-ink.svg" alt="" width="52" height="52">
+        <h2>Ночь длиннее,<br>но это ненадолго.</h2>
+        <p>Открой Kuroha снова, когда появится сеть. Твоё место в истории уже отмечено.</p>
+        <div class="offline-card__rule"></div>
+        <div class="offline-card__foot">
+          <span>офлайн-режим</span>
+          <span>Kuroha</span>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="offline-bottom">
+      <span>© 2026 Kuroha</span>
+      <span>Читай между строк.</span>
+      <a href="catalog.html">Каталог</a>
+    </footer>
+  </div>
+</body>
+</html>

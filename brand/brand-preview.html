@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuroha — бренд-система 3.0</title>
+<meta name="description" content="Kuroha 3.0 — тории, энсо и красная сакура. Знак, цвет, типографика и голос манга-сообщества.">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+  :root {
+    --page: #0b0b0e;
+    --page-2: #17171b;
+    --surface: #1f1f24;
+    --surface-2: #24242a;
+    --paper: #f5f3f0;
+    --paper-2: #fbfaf8;
+    --red: #e63946;
+    --red-soft: #ff6b73;
+    --red-dark: #b52d38;
+    --gray: #a5a3aa;
+    --faint: #6f6d72;
+    --line: rgba(245, 243, 240, .1);
+    --line-strong: rgba(245, 243, 240, .18);
+    --red-line: rgba(230, 57, 70, .34);
+    --rail: 76px;
+    --pad: clamp(22px, 4vw, 64px);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background:
+      radial-gradient(ellipse 50% 38% at 88% 4%, rgba(230,57,70,.11), transparent 66%),
+      radial-gradient(ellipse 40% 32% at 8% 40%, rgba(245,243,240,.035), transparent 70%),
+      var(--page);
+    color: var(--paper);
+    font-family: var(--kh-font-ui);
+    font-size: 15px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: rgba(230,57,70,.32); color: #fff; }
+  a { color: var(--red-soft); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:hover { color: var(--paper); }
+  :focus-visible { outline: 2px solid var(--red-soft); outline-offset: 4px; }
+  img, svg { display: block; max-width: 100%; }
+  h1, h2, h3, p, figure, blockquote, dl, dd { margin: 0; }
+  .skip {
+    position: fixed; left: 16px; top: -80px; z-index: 40;
+    padding: 10px 16px; border-radius: 8px; background: var(--paper); color: var(--page);
+    text-decoration: none; transition: top .18s ease;
+  }
+  .skip:focus-visible { top: 16px; }
+
+  .rail {
+    position: fixed; inset: 0 auto 0 0; width: var(--rail); z-index: 10;
+    display: flex; flex-direction: column; align-items: center; justify-content: space-between;
+    border-right: 1px solid var(--line);
+    background: rgba(11,11,14,.72);
+    backdrop-filter: blur(12px);
+  }
+  .rail__mark { margin-top: 24px; width: 32px; height: 32px; }
+  .rail__word {
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    font-size: 9px; font-weight: 500; letter-spacing: .3em; text-transform: uppercase;
+    color: var(--faint); white-space: nowrap;
+  }
+  .rail__word b { color: var(--red-soft); font-weight: 500; }
+  .rail__foot {
+    margin-bottom: 26px; writing-mode: vertical-rl; transform: rotate(180deg);
+    font-size: 8px; letter-spacing: .22em; color: var(--faint); text-transform: uppercase;
+  }
+
+  .page { margin-left: var(--rail); }
+  .container { width: min(100%, 1360px); margin: 0 auto; padding: 0 var(--pad); }
+
+  .topbar { border-bottom: 1px solid var(--line); }
+  .topbar__inner {
+    display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    min-height: 78px;
+  }
+  .brandline { display: inline-flex; align-items: center; gap: 12px; color: var(--paper); text-decoration: none; }
+  .brandline img { width: 30px; height: 30px; }
+  .brandline b {
+    font-size: 15px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
+  }
+  .brandline span {
+    padding-left: 12px; border-left: 1px solid var(--line-strong);
+    color: var(--gray); font-size: 9px; letter-spacing: .16em; text-transform: uppercase;
+  }
+  .topnav { display: flex; gap: clamp(14px, 2vw, 28px); }
+  .topnav a {
+    color: var(--gray); font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+    text-decoration: none; transition: color .16s ease;
+  }
+  .topnav a:hover { color: var(--paper); }
+  .version {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 11px; border: 1px solid var(--red-line); border-radius: 999px;
+    color: var(--red-soft); font-size: 9px; letter-spacing: .14em; text-transform: uppercase;
+  }
+  .version::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+
+  .hero { padding: clamp(70px, 12vh, 150px) 0 clamp(64px, 9vw, 110px); }
+  .hero__grid { display: grid; grid-template-columns: 1.03fr .97fr; gap: clamp(34px, 6vw, 90px); align-items: center; }
+  .eyebrow {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--red-soft); font-size: 10px; font-weight: 500; letter-spacing: .2em; text-transform: uppercase;
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--red); }
+  .hero h1 {
+    max-width: 760px; margin-top: 24px;
+    font-size: clamp(58px, 8.4vw, 130px); line-height: .82; letter-spacing: -.075em; font-weight: 600;
+  }
+  .hero__lead {
+    max-width: 50ch; margin-top: 30px;
+    color: var(--gray); font-size: clamp(16px, 1.5vw, 19px); line-height: 1.6;
+  }
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+    min-height: 44px; padding: 0 18px; border: 1px solid transparent; border-radius: 8px;
+    font: inherit; font-size: 11px; font-weight: 500; letter-spacing: .04em; text-decoration: none;
+    transition: background .16s ease, border-color .16s ease, color .16s ease;
+  }
+  .btn--red { background: var(--red); color: #fff; }
+  .btn--red:hover { background: var(--red-dark); color: #fff; }
+  .btn--ghost { border-color: var(--line-strong); color: var(--paper); }
+  .btn--ghost:hover { border-color: var(--red); color: var(--red-soft); }
+  .hero__meta {
+    display: flex; flex-wrap: wrap; gap: 22px 34px; margin-top: 48px; padding-top: 22px;
+    border-top: 1px solid var(--line);
+  }
+  .hero__meta div { display: flex; flex-direction: column; gap: 3px; }
+  .hero__meta b { font-size: 19px; font-weight: 500; letter-spacing: -.03em; }
+  .hero__meta span { color: var(--faint); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+
+  .mark-stage {
+    position: relative; min-height: 540px; display: grid; place-items: center;
+    padding: 34px; border: 1px solid var(--line); border-radius: 14px;
+    background:
+      linear-gradient(rgba(245,243,240,.034) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(245,243,240,.034) 1px, transparent 1px),
+      var(--page-2);
+    background-size: 52px 52px, 52px 52px, auto;
+    overflow: hidden;
+  }
+  .mark-stage::before {
+    content: ""; position: absolute; inset: 24px; border: 1px solid rgba(245,243,240,.08);
+    border-radius: 10px; pointer-events: none;
+  }
+  .mark-stage::after {
+    content: ""; position: absolute; width: 420px; height: 420px; border: 1px solid var(--red-line);
+    border-radius: 50%; pointer-events: none; opacity: .6;
+  }
+  .mark-stage__label {
+    position: absolute; left: 32px; top: 30px; z-index: 1;
+    color: var(--faint); font-size: 9px; letter-spacing: .18em; text-transform: uppercase;
+  }
+  .mark-stage__label b { color: var(--red-soft); font-weight: 500; }
+  .mark-stage img { position: relative; z-index: 2; width: min(70%, 330px); height: auto; }
+  .mark-stage__foot {
+    position: absolute; left: 32px; right: 32px; bottom: 26px; z-index: 1;
+    display: flex; justify-content: space-between; gap: 16px;
+    color: var(--faint); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .mark-stage__foot b { color: var(--paper); font-weight: 400; }
+
+  .section { padding: clamp(64px, 8vw, 104px) 0; border-top: 1px solid var(--line); scroll-margin-top: 24px; }
+  .section-head { display: grid; grid-template-columns: 1fr 1fr; gap: 24px 60px; align-items: end; margin-bottom: 34px; }
+  .section-head h2 {
+    max-width: 14ch; margin-top: 12px;
+    font-size: clamp(36px, 4.8vw, 66px); line-height: .96; letter-spacing: -.055em; font-weight: 600;
+  }
+  .section-head p { max-width: 48ch; color: var(--gray); font-size: 14px; line-height: 1.7; }
+  .section-head p b { color: var(--paper); font-weight: 500; }
+  .section-label { color: var(--faint); font-size: 9px; letter-spacing: .18em; text-transform: uppercase; }
+
+  .changes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border-top: 1px solid var(--line); }
+  .change { padding: 24px 24px 26px 0; border-right: 1px solid var(--line); }
+  .change + .change { padding-left: 24px; }
+  .change:last-child { border-right: 0; }
+  .change__label { color: var(--red-soft); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+  .change h3 { margin-top: 48px; font-size: 21px; font-weight: 500; letter-spacing: -.03em; }
+  .change p { max-width: 34ch; margin-top: 9px; color: var(--gray); font-size: 12px; line-height: 1.65; }
+
+  .marks { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .mark-panel { min-height: 360px; padding: 28px; border-radius: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+  .mark-panel--night { background: var(--page-2); border: 1px solid var(--line); }
+  .mark-panel--paper { background: var(--paper); color: var(--page); }
+  .mark-panel--paper .mark-panel__label { color: var(--red-dark); }
+  .mark-panel--paper .mark-panel__caption { color: #6f6d72; }
+  .mark-panel__label { color: var(--faint); font-size: 9px; letter-spacing: .16em; text-transform: uppercase; }
+  .mark-panel__mark { width: 150px; height: 150px; margin: 24px auto; }
+  .mark-panel__caption { display: flex; justify-content: space-between; gap: 16px; color: var(--faint); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+  .sizes { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 18px; }
+  .size { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 16px 8px; border: 1px solid var(--line); border-radius: 8px; }
+  .size b { color: var(--faint); font-size: 8px; font-weight: 400; letter-spacing: .1em; }
+  .size img { width: 32px; height: 32px; }
+  .size:nth-child(2) img { width: 24px; height: 24px; }
+  .size:nth-child(3) img { width: 16px; height: 16px; }
+  .size:nth-child(4) img { width: 12px; height: 12px; }
+  .size:nth-child(2) { background: rgba(230,57,70,.05); border-color: var(--red-line); }
+
+  .lockups { display: grid; gap: 14px; }
+  .lockup-row { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 22px 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--page-2); }
+  .lockup-row--paper { background: var(--paper); border-color: #ddd8d2; }
+  .lockup-row img { width: min(100%, 410px); height: auto; }
+  .lockup-row span { flex: none; color: var(--faint); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+  .lockup-note { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; color: var(--faint); font-size: 11px; }
+  .lockup-note b { color: var(--paper); font-weight: 500; }
+
+  .palette { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  .swatch { min-height: 170px; padding: 15px; border-radius: 8px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid transparent; }
+  .swatch b { font-size: 12px; font-weight: 500; letter-spacing: .02em; }
+  .swatch span { font-size: 9px; letter-spacing: .1em; text-transform: uppercase; opacity: .66; }
+  .swatch--ink { background: #17171b; color: var(--paper); border-color: var(--line); }
+  .swatch--deep { background: #0b0b0e; color: var(--paper); border-color: var(--line); }
+  .swatch--surface { background: #1f1f24; color: var(--paper); border-color: var(--line); }
+  .swatch--paper { background: #f5f3f0; color: #17171b; }
+  .swatch--red { background: #e63946; color: #fff; }
+  .swatch--gray { background: #a5a3aa; color: #17171b; }
+  .ratio { display: flex; height: 10px; margin-top: 18px; border-radius: 99px; overflow: hidden; background: var(--surface); }
+  .ratio span:nth-child(1) { width: 60%; background: #17171b; }
+  .ratio span:nth-child(2) { width: 25%; background: #f5f3f0; }
+  .ratio span:nth-child(3) { width: 10%; background: #e63946; }
+  .ratio span:nth-child(4) { width: 5%; background: #a5a3aa; }
+  .ratio-note { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 9px; color: var(--faint); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+
+  .type-grid { display: grid; grid-template-columns: 1.25fr .75fr; gap: 30px; align-items: start; }
+  .type-display { border-top: 1px solid var(--line); padding-top: 18px; }
+  .type-display strong { display: block; font-size: clamp(46px, 6.2vw, 98px); line-height: .86; letter-spacing: -.07em; font-weight: 600; }
+  .type-display em { display: block; margin-top: 14px; color: var(--red-soft); font-size: clamp(26px, 3.3vw, 48px); font-style: normal; letter-spacing: -.04em; }
+  .type-row { display: flex; align-items: baseline; justify-content: space-between; gap: 22px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .type-row span { color: var(--faint); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+  .type-row b { font-weight: 400; text-align: right; }
+  .type-row b.w300 { font-weight: 300; }
+  .type-row b.w500 { font-weight: 500; }
+  .type-row b.w600 { font-weight: 600; }
+  .type-row b.w700 { font-weight: 700; }
+  .reading-card {
+    margin-top: 26px; padding: 22px; background: var(--paper); color: #17171b; border-radius: 2px;
+    box-shadow: var(--kh-shadow-paper);
+  }
+  .reading-card p { font-size: 17px; line-height: 1.75; }
+  .reading-card cite { display: block; margin-top: 16px; color: #6f6d72; font-size: 9px; font-style: normal; letter-spacing: .12em; text-transform: uppercase; }
+
+  .ui-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .ui-panel { padding: 24px; border: 1px solid var(--line); border-radius: 10px; background: var(--page-2); }
+  .ui-panel--paper { background: var(--paper); color: var(--page); border-color: #ddd8d2; }
+  .ui-panel__caption { margin-bottom: 30px; color: var(--faint); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; }
+  .ui-panel--paper .ui-panel__caption { color: #6f6d72; }
+  .ui-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .ui-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 24px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 28px; padding: 0 11px;
+    border: 1px solid var(--line-strong); border-radius: 999px; color: var(--gray);
+    font-size: 9px; letter-spacing: .04em;
+  }
+  .chip--red { color: var(--red-soft); border-color: var(--red-line); }
+  .chip--paper { color: #5f5d62; border-color: rgba(23,23,27,.16); }
+  .ui-field { margin-top: 24px; padding: 11px 12px; border: 1px solid var(--line-strong); border-radius: 8px; color: var(--faint); font-size: 11px; }
+  .ui-panel--paper .ui-field { border-color: rgba(23,23,27,.16); color: #6f6d72; }
+  .reader-row { display: grid; grid-template-columns: 40px 1fr auto; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid rgba(23,23,27,.12); }
+  .reader-row:last-child { border-bottom: 0; }
+  .reader-row__cover { width: 40px; height: 56px; border-radius: 3px; background: linear-gradient(150deg, #2a2a31, #0b0b0e); }
+  .reader-row b { display: block; font-size: 12px; font-weight: 600; }
+  .reader-row span { display: block; margin-top: 3px; color: #6f6d72; font-size: 9px; }
+  .reader-row em { color: var(--red-dark); font-size: 10px; font-style: normal; font-weight: 600; }
+
+  .carriers { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+  .carrier { padding: 14px; border: 1px solid var(--line); border-radius: 10px; background: var(--page-2); }
+  .carrier img { width: 100%; height: auto; border-radius: 6px; }
+  .carrier--avatar img { width: min(100%, 280px); margin: 10px auto 20px; }
+  .carrier figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 12px; color: var(--faint); font-size: 9px; letter-spacing: .1em; text-transform: uppercase; }
+  .carrier figcaption b { color: var(--paper); font-weight: 400; }
+  .carrier-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .icon-line { display: flex; align-items: center; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .icon-line:last-child { border-bottom: 0; }
+  .icon-line img { width: 56px; height: 56px; border-radius: 12px; }
+  .icon-line b { display: block; font-size: 12px; font-weight: 500; }
+  .icon-line span { display: block; margin-top: 3px; color: var(--faint); font-size: 9px; }
+  .icon-line--favicon img { width: 38px; height: 38px; border-radius: 8px; }
+
+  .voice { display: grid; grid-template-columns: 1.15fr .85fr; gap: 34px; align-items: start; }
+  .voice blockquote { font-size: clamp(26px, 3.4vw, 48px); line-height: 1.08; letter-spacing: -.045em; }
+  .voice blockquote span { color: var(--red-soft); }
+  .voice__note { color: var(--gray); font-size: 13px; line-height: 1.7; }
+  .micro { display: grid; gap: 0; margin-top: 24px; border-top: 1px solid var(--line); }
+  .micro div { display: grid; grid-template-columns: 90px 1fr; gap: 14px; padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .micro dt { color: var(--faint); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
+  .micro dd { color: var(--paper); font-size: 12px; }
+
+  .rules { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .rule { padding: 20px; border-top: 1px solid var(--red-line); }
+  .rule b { display: block; color: var(--red-soft); font-size: 10px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
+  .rule p { margin-top: 18px; color: var(--gray); font-size: 12px; line-height: 1.65; }
+  .rule p strong { color: var(--paper); font-weight: 500; }
+
+  .footer { padding: 30px 0 40px; border-top: 1px solid var(--line); }
+  .footer__grid { display: flex; justify-content: space-between; gap: 32px; align-items: end; }
+  .footer__brand { display: flex; align-items: center; gap: 12px; }
+  .footer__brand img { width: 28px; height: 28px; }
+  .footer__brand b { font-size: 12px; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; }
+  .footer p { color: var(--faint); font-size: 10px; }
+  .footer__files { color: var(--faint); font-size: 10px; line-height: 1.8; text-align: right; }
+  .footer__files b { color: var(--gray); font-weight: 400; }
+
+  @media (max-width: 1100px) {
+    .hero__grid { grid-template-columns: 1fr .9fr; gap: 32px; }
+    .mark-stage { min-height: 470px; }
+    .palette { grid-template-columns: repeat(3, 1fr); }
+    .type-grid, .voice, .carriers { grid-template-columns: 1fr; }
+    .carrier--avatar img { width: min(100%, 240px); }
+  }
+  @media (max-width: 980px) {
+    .rail { display: none; }
+    .page { margin-left: 0; }
+    .topnav { display: none; }
+    .hero { padding-top: 64px; }
+    .hero__grid { grid-template-columns: 1fr; }
+    .mark-stage { min-height: 430px; max-width: 560px; width: 100%; margin: 0 auto; }
+    .section-head { grid-template-columns: 1fr; gap: 16px; }
+    .section-head p { max-width: 60ch; }
+    .changes { grid-template-columns: 1fr; }
+    .change, .change + .change { padding: 20px 0; border-right: 0; border-bottom: 1px solid var(--line); }
+    .change:last-child { border-bottom: 0; }
+    .change h3 { margin-top: 16px; }
+    .marks { grid-template-columns: 1fr; }
+    .ui-grid { grid-template-columns: 1fr; }
+    .rules { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .topbar__inner { min-height: 66px; }
+    .brandline span { display: none; }
+    .brandline b { font-size: 13px; }
+    .hero { padding: 50px 0 64px; }
+    .hero h1 { font-size: clamp(48px, 14vw, 78px); }
+    .hero__lead { margin-top: 22px; font-size: 15px; }
+    .hero__actions { margin-top: 24px; }
+    .hero__meta { margin-top: 32px; gap: 18px 26px; }
+    .mark-stage { min-height: 360px; padding: 22px; }
+    .mark-stage::before { inset: 14px; }
+    .mark-stage::after { width: 300px; height: 300px; }
+    .mark-stage__label { left: 20px; top: 20px; }
+    .mark-stage__foot { left: 20px; right: 20px; bottom: 18px; font-size: 8px; }
+    .section { padding: 56px 0; }
+    .section-head h2 { font-size: clamp(34px, 10vw, 50px); }
+    .section-head p { font-size: 13px; }
+    .mark-panel { min-height: 300px; padding: 22px; }
+    .mark-panel__mark { width: 120px; height: 120px; margin: 16px auto; }
+    .sizes { gap: 8px; }
+    .size { padding: 12px 4px; }
+    .lockup-row { padding: 16px; flex-direction: column; align-items: flex-start; }
+    .lockup-row img { width: 100%; }
+    .palette { grid-template-columns: repeat(2, 1fr); }
+    .swatch { min-height: 130px; }
+    .type-display strong { font-size: clamp(42px, 13vw, 68px); }
+    .type-display em { font-size: clamp(23px, 7vw, 34px); }
+    .voice blockquote { font-size: clamp(25px, 8vw, 38px); }
+    .micro div { grid-template-columns: 76px 1fr; gap: 10px; }
+    .carrier-pair { grid-template-columns: 1fr; }
+    .footer__grid { flex-direction: column; align-items: flex-start; }
+    .footer__files { text-align: left; }
+  }
+  @media (max-width: 480px) {
+    .container { padding-inline: 20px; }
+    .topbar__inner { gap: 12px; }
+    .version { padding: 6px 8px; font-size: 8px; }
+    .hero h1 { font-size: clamp(45px, 14.5vw, 62px); }
+    .hero__meta b { font-size: 16px; }
+    .mark-stage { min-height: 310px; }
+    .mark-stage::after { width: 250px; height: 250px; }
+    .mark-stage__foot { display: none; }
+    .mark-panel__caption { font-size: 8px; }
+    .sizes { grid-template-columns: repeat(2, 1fr); }
+    .palette { grid-template-columns: 1fr 1fr; }
+    .swatch { min-height: 118px; }
+    .reading-card { padding: 18px; }
+    .reading-card p { font-size: 16px; }
+    .ui-panel { padding: 18px; }
+    .carrier { padding: 10px; }
+    .micro div { grid-template-columns: 1fr; gap: 2px; }
+    .footer__brand b { font-size: 11px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">К содержанию</a>
+
+<aside class="rail" aria-label="Разделы бренд-бука">
+  <a class="rail__mark" href="#top" aria-label="Kuroha">
+    <img src="logo-symbol.svg" alt="" width="32" height="32">
+  </a>
+  <div class="rail__word">Kuroha <b>·</b> brand system <b>·</b> 3.0</div>
+  <div class="rail__foot">2026 / 03</div>
+</aside>
+
+<div class="page" id="top">
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brandline" href="#top">
+        <img src="logo-symbol.svg" alt="" width="30" height="30">
+        <b>Kuroha</b>
+        <span>Манга · сообщество</span>
+      </a>
+      <nav class="topnav" aria-label="Разделы">
+        <a href="#new">Что нового</a>
+        <a href="#mark">Знак</a>
+        <a href="#lockup">Логотип</a>
+        <a href="#color">Цвет</a>
+        <a href="#type">Шрифт</a>
+        <a href="#ui">Интерфейс</a>
+        <a href="#voice">Голос</a>
+      </nav>
+      <span class="version">brand system 3.0</span>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero container" aria-labelledby="hero-title">
+      <div class="hero__grid">
+        <div>
+          <p class="eyebrow">Kuroha · редизайн 3.0</p>
+          <h1 id="hero-title">Вход<br>в историю.</h1>
+          <p class="hero__lead">Тории в двойном энсо. Красная сакура как единственный громкий акцент. Новый знак Kuroha открывает дверь в мангу, манхву, маньхуа и сообщество — без шума и лишних деталей.</p>
+          <div class="hero__actions">
+            <a class="btn btn--red" href="#mark">Смотреть знак</a>
+            <a class="btn btn--ghost" href="#carriers">Носители</a>
+          </div>
+          <div class="hero__meta" aria-label="Коротко о системе">
+            <div><b>1</b><span>знак</span></div>
+            <div><b>2</b><span>версии: ночь / бумага</span></div>
+            <div><b>1</b><span>красный акцент</span></div>
+          </div>
+        </div>
+        <figure class="mark-stage">
+          <div class="mark-stage__label"><b>01</b> / главный знак</div>
+          <img src="logo-symbol.svg" alt="Знак Kuroha: тории в двойном энсо с красной сакурой" width="120" height="120">
+          <figcaption class="mark-stage__foot">
+            <span><b>Тории</b> · вход</span>
+            <span><b>Энсо</b> · круг</span>
+            <span><b>Сакура</b> · жизнь</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section container" id="new" aria-labelledby="new-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Что нового</p>
+          <h2 id="new-title">Три тихих<br>изменения.</h2>
+        </div>
+        <p>Прежний знак был пером — личным, бумажным, очень тихим. Новый <b>тории</b> делает бренд заметнее и сразу говорит о Японии, манге и сообществе. Остальное стало строже, чтобы знак звучал.</p>
+      </div>
+      <div class="changes">
+        <article class="change">
+          <p class="change__label">Знак</p>
+          <h3>Тории вместо пера</h3>
+          <p>Вход в историю. Двойное энсо удерживает движение, а три цветка сакуры дают знаку жизнь и цвет.</p>
+        </article>
+        <article class="change">
+          <p class="change__label">Цвет</p>
+          <h3>Один красный акцент</h3>
+          <p>Глубокий графит, тёплая бумага и красный <b>#E63946</b>. Красный — только для действия, фокуса и сакуры.</p>
+        </article>
+        <article class="change">
+          <p class="change__label">Шрифт</p>
+          <h3>Exo 2 во всём</h3>
+          <p>Заголовки, интерфейс и текст читалки. Одна семья, три задачи, чёткий ритм и никакой декоративной пестроты.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section container" id="mark" aria-labelledby="mark-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Знак</p>
+          <h2 id="mark-title">Тории<br>и энсо.</h2>
+        </div>
+        <p>Два круга — <b>энсо</b> — рисуются одним движением и остаются незамкнутыми. Это не «идеальный круг», а след руки. Внутри — тории, вход в историю. Красная ветка сакуры — единственный цветной элемент.</p>
+      </div>
+      <div class="marks">
+        <div class="mark-panel mark-panel--night">
+          <span class="mark-panel__label">01 / night · основной</span>
+          <img class="mark-panel__mark" src="logo-symbol.svg" alt="Знак Kuroha на тёмном фоне" width="120" height="120">
+          <div class="mark-panel__caption"><span>#F5F3F0</span><span>#E63946</span><span>120 × 120</span></div>
+        </div>
+        <div class="mark-panel mark-panel--paper">
+          <span class="mark-panel__label">02 / paper · инверсия</span>
+          <img class="mark-panel__mark" src="logo-symbol-ink.svg" alt="Знак Kuroha на бумажном фоне" width="120" height="120">
+          <div class="mark-panel__caption"><span>#17171B</span><span>#E63946</span><span>120 × 120</span></div>
+        </div>
+      </div>
+      <div class="sizes" aria-label="Размеры знака">
+        <div class="size"><img src="logo-symbol.svg" alt="" width="32" height="32"><b>32 px</b></div>
+        <div class="size"><img src="logo-symbol.svg" alt="" width="24" height="24"><b>24 px</b></div>
+        <div class="size"><img src="logo-symbol.svg" alt="" width="16" height="16"><b>16 px</b></div>
+        <div class="size"><img src="logo-symbol.svg" alt="" width="12" height="12"><b>favicon</b></div>
+      </div>
+    </section>
+
+    <section class="section container" id="lockup" aria-labelledby="lockup-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Логотип</p>
+          <h2 id="lockup-title">Знак, имя,<br>дескриптор.</h2>
+        </div>
+        <p>В горизонтальном lockup — только знак и имя. <b>Exo 2 500</b>, широкий трекинг, тонкая линия между знаком и текстом. Дескриптор живёт отдельно: в OG и подписях.</p>
+      </div>
+      <div class="lockups">
+        <div class="lockup-row">
+          <img src="logo-lockup-outlined.svg" alt="Логотип Kuroha на тёмном фоне" width="640" height="140">
+          <span>night / outlined</span>
+        </div>
+        <div class="lockup-row lockup-row--paper">
+          <img src="logo-lockup-ink-outlined.svg" alt="Логотип Kuroha на бумажном фоне" width="640" height="140">
+          <span>paper / outlined</span>
+        </div>
+      </div>
+      <p class="lockup-note"><b>Для печати и внешних сервисов</b> используйте outlined-версии: текст переведён в кривые и не зависит от шрифта. Для сайта — HTML-lockup с живым Exo 2. Плашки <b>logo-on-dark / logo-on-light</b> лежат отдельно.</p>
+    </section>
+
+    <section class="section container" id="color" aria-labelledby="color-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Цвет</p>
+          <h2 id="color-title">Чернила,<br>бумага, красный.</h2>
+        </div>
+        <p>Графит — основа, бумага — воздух, красный — нерв. Пропорции простые: <b>60 / 25 / 10 / 5</b>. Красного должно быть мало, иначе он перестаёт быть событием.</p>
+      </div>
+      <div class="palette">
+        <div class="swatch swatch--ink"><b>Ink 900</b><span>#17171B · основа</span></div>
+        <div class="swatch swatch--deep"><b>Ink 950</b><span>#0B0B0E · глубина</span></div>
+        <div class="swatch swatch--surface"><b>Ink 800</b><span>#1F1F24 · поверхность</span></div>
+        <div class="swatch swatch--paper"><b>Paper</b><span>#F5F3F0 · воздух</span></div>
+        <div class="swatch swatch--red"><b>Red</b><span>#E63946 · действие</span></div>
+        <div class="swatch swatch--gray"><b>Gray</b><span>#A5A3AA · тишина</span></div>
+      </div>
+      <div class="ratio" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+      <div class="ratio-note"><span>60 ink</span><span>25 paper</span><span>10 red</span><span>5 gray</span></div>
+    </section>
+
+    <section class="section container" id="type" aria-labelledby="type-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Типографика</p>
+          <h2 id="type-title">Одна семья.<br>Три голоса.</h2>
+        </div>
+        <p><b>Exo 2</b> держит и заголовки, и интерфейс, и текст. Заголовки — крупные, плотные, с отрицательным трекингом. Метки — капсом, но редко. Читалка — 17–19 px, строка не длиннее 65 знаков.</p>
+      </div>
+      <div class="type-grid">
+        <div>
+          <div class="type-display">
+            <strong>KUROHA</strong>
+            <em>Читай между строк.</em>
+          </div>
+          <div class="type-row"><span>display / 600</span><b class="w600">Вход в историю</b></div>
+          <div class="type-row"><span>ui / 500</span><b class="w500">Моя полка · 12 историй</b></div>
+          <div class="type-row"><span>body / 400</span><b class="w400">Тихая история, которая остаётся после последней страницы.</b></div>
+          <div class="type-row"><span>label / 500</span><b class="w500" style="letter-spacing:.16em;text-transform:uppercase;font-size:10px">Манга · сообщество</b></div>
+        </div>
+        <div class="reading-card">
+          <p>«Не ищи меня среди имён. Я — в тишине между строк, в дожде на стекле и в свете, который ты оставил на столе.»</p>
+          <cite>Пепел и луна · глава 12</cite>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container" id="ui" aria-labelledby="ui-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Интерфейс</p>
+          <h2 id="ui-title">Красный —<br>только событие.</h2>
+        </div>
+        <p>Кнопка действия, активная глава, новая история, фокус. Всё остальное — графит, бумага и тонкие линии. Никаких градиентных кнопок и одинаковых SaaS-карточек.</p>
+      </div>
+      <div class="ui-grid">
+        <div class="ui-panel">
+          <div class="ui-panel__caption">dark / controls</div>
+          <div class="ui-actions">
+            <a class="btn btn--red" href="#color">Читать</a>
+            <a class="btn btn--ghost" href="#type">В список</a>
+          </div>
+          <div class="ui-chips">
+            <span class="chip chip--red">новая глава</span>
+            <span class="chip">манхва</span>
+            <span class="chip">завершён</span>
+          </div>
+          <div class="ui-field">Название, автор, жанр
+</div>
+        </div>
+        <div class="ui-panel ui-panel--paper">
+          <div class="ui-panel__caption">paper / reader</div>
+          <div class="reader-row">
+            <span class="reader-row__cover"></span>
+            <div><b>Пепел и луна</b><span>глава 12 · дом на краю ночи</span></div>
+            <em>12 / 48</em>
+          </div>
+          <div class="reader-row">
+            <span class="reader-row__cover" style="background:linear-gradient(150deg,#6f8f7a,#17171b)"></span>
+            <div><b>Тихий океан</b><span>глава 12 · последняя страница</span></div>
+            <em>100%</em>
+          </div>
+          <div class="reader-row">
+            <span class="reader-row__cover" style="background:linear-gradient(150deg,#b52d38,#17171b)"></span>
+            <div><b>Красная нить</b><span>глава 27 · новая</span></div>
+            <em>+1</em>
+          </div>
+          <div class="ui-chips">
+            <span class="chip chip--red">читаю</span>
+            <span class="chip chip--paper">в планах</span>
+            <span class="chip chip--paper">прочитано</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container" id="carriers" aria-labelledby="carriers-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Носители</p>
+          <h2 id="carriers-title">От favicon<br>до открытки.</h2>
+        </div>
+        <p>Знак должен работать и в 16 px, и на большом экране. Для приложения — тёмная плашка, для соцсетей — аватар со знаком в размерах 1024, 512 и 400 px, для ссылок — OG-карточка с цитатой.</p>
+      </div>
+      <div class="carriers">
+        <figure class="carrier carrier--avatar">
+          <img src="social-avatar.png?v=avatar3" alt="Социальный аватар Kuroha" width="1024" height="1024">
+          <figcaption><span>social avatar</span><b>1024 · 512 · 400</b></figcaption>
+        </figure>
+        <div>
+          <div class="carrier-pair">
+            <figure class="carrier">
+              <img src="icon-512.png" alt="Иконка приложения Kuroha" width="512" height="512">
+              <figcaption><span>app icon</span><b>512</b></figcaption>
+            </figure>
+            <figure class="carrier">
+              <img src="og-image.png" alt="OG-карточка Kuroha" width="1200" height="630">
+              <figcaption><span>og image</span><b>1200 × 630</b></figcaption>
+            </figure>
+          </div>
+          <div class="icon-line">
+            <img src="favicon.svg" alt="Favicon Kuroha" width="120" height="120">
+            <div><b>Favicon</b><span>тёмная плашка, знак без подписи</span></div>
+          </div>
+          <div class="icon-line icon-line--favicon">
+            <img src="icon-192.png" alt="Иконка 192 px" width="192" height="192">
+            <div><b>PWA / 192</b><span>установка на домашний экран</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container" id="voice" aria-labelledby="voice-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Голос</p>
+          <h2 id="voice-title">Тихо. Точно.<br>По делу.</h2>
+        </div>
+        <p>Kuroha не кричит и не заигрывает. Говорит на «ты», но без панибратства. Ошибка — это направление, а не извинение. Пустота — приглашение, а не приговор.</p>
+      </div>
+      <div class="voice">
+        <blockquote>«Читай<br><span>между строк.</span>»</blockquote>
+        <div>
+          <p class="voice__note">Короткие фразы. Никаких восклицательных знаков и эмодзи в интерфейсе. Красный появляется там, где есть действие или событие.</p>
+          <dl class="micro">
+            <div><dt>404</dt><dd>Эта страница ушла за горизонт.</dd></div>
+            <div><dt>Пустая полка</dt><dd>Пока тихо. Первая история уже близко.</dd></div>
+            <div><dt>Загрузка</dt><dd>Тории открываются…</dd></div>
+            <div><dt>Установка</dt><dd>Kuroha рядом.</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section class="section container" id="rules" aria-labelledby="rules-title">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Правила</p>
+          <h2 id="rules-title">Чтобы знак<br>не сломался.</h2>
+        </div>
+        <p>Знак сильный, но хрупкий: ему нужны воздух, тёмная или бумажная подложка и один красный акцент. Не добавляйте свечения, рамки и вторую сакуру.</p>
+      </div>
+      <div class="rules">
+        <article class="rule"><b>01 / воздух</b><p>Охранное поле — <strong>0.5 высоты знака</strong> со всех сторон. Ничего не должно касаться энсо.</p></article>
+        <article class="rule"><b>02 / минимум</b><p>Не меньше <strong>24 px</strong> для знака и <strong>120 px</strong> для lockup. В 16 px используйте favicon-версию.</p></article>
+        <article class="rule"><b>03 / красный</b><p><strong>#E63946</strong> — единственный акцент. Не меняйте цвет сакуры, не добавляйте градиент на тории.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__grid">
+      <div>
+        <div class="footer__brand">
+          <img src="logo-symbol.svg" alt="" width="28" height="28">
+          <b>Kuroha 3.0</b>
+        </div>
+        <p style="margin-top:10px">Манга · сообщество · и ещё. Читай между строк.</p>
+      </div>
+      <div class="footer__files">
+        <b>logo-symbol.svg · logo-lockup-outlined.svg<br>social-avatar.png · og-image.png · icon-512.png</b><br>
+        brand/tokens.css · tailwind-tokens.js · README.md
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

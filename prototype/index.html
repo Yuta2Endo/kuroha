@@ -1,0 +1,436 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kuroha — читать мангу, манхву, маньхуа и новеллы онлайн</title>
+  <meta name="description" content="Манга, манхва, маньхуа и новеллы. Читалка, полки и сообщество. Удобная читалка, сохранение прогресса, без лишней рекламы.">
+  <meta name="theme-color" content="#17171b">
+  <meta property="og:title" content="Kuroha — манга, сообщество и ещё">
+  <meta property="og:description" content="Читай между строк. Манга, манхва, маньхуа и новеллы в одной библиотеке.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=search1">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body>
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html">Профиль</a>
+        </nav>
+
+                <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html">Профиль</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero -->
+      <section class="hero container" aria-labelledby="hero-title">
+        <div class="hero__copy">
+          <p class="eyebrow">Манга · сообщество · и ещё</p>
+          <h1 id="hero-title">Читай<br><span>между строк</span></h1>
+          <p class="hero__lead">Манга, манхва, маньхуа и новеллы в одной библиотеке. Без шума и лишних кликов — только истории.</p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="catalog.html">Открыть каталог</a>
+            <a class="btn btn--secondary" id="hero-continue" href="reader.html?slug=pepel-i-luna&amp;chapter=12">Продолжить чтение</a>
+            <a class="btn btn--ghost" href="evening.html">Мой вечер</a>
+          </div>
+          <div class="hero__stats" aria-label="Библиотека в цифрах">
+            <div><b>12 480</b><span>тайтлов</span></div>
+            <div><b>86 200</b><span>глав</span></div>
+            <div><b>каждый день</b><span>новые главы</span></div>
+          </div>
+        </div>
+
+        <div class="hero__feature">
+          <article class="feature-card" aria-labelledby="feature-title">
+            <div class="feature-card__top">
+              <span>Выбор редакции</span>
+              <span>18+</span>
+            </div>
+            <div class="feature-card__body">
+              <div class="cover cover--lg cover--low" data-art="moon" style="--c1:#2c1b3d;--c2:#080b14;--c-accent:#c9a25e" aria-hidden="true">
+                <span class="cover__type">манхва</span>
+                <span class="cover__title">Пепел<br>и луна</span>
+                <span class="cover__author">Мина С.</span>
+              </div>
+              <div class="feature-card__info">
+                <p class="feature-card__type">Манхва · тёмное фэнтези</p>
+                <h2 id="feature-title">Пепел и луна</h2>
+                <p>История о городе, который забыл, как выглядит небо.</p>
+                <p class="feature-card__meta">48 глав · онгоинг · ★ 8,9</p>
+                <a class="btn btn--primary btn--small" href="title.html?slug=pepel-i-luna">Читать</a>
+              </div>
+            </div>
+            <div class="feature-card__bottom">
+              <span>Kuroha / выбор редакции</span>
+              <span>001</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Continue reading -->
+      <section class="section section--continue" aria-labelledby="continue-title">
+        <div class="container">
+          <div class="continue-card" id="continue-card">
+            <div class="cover cover--mini cover--low" id="continue-cover" data-art="moon" style="--c1:#2c1b3d;--c2:#080b14;--c-accent:#c9a25e" aria-hidden="true">
+              <span class="cover__title">Пепел<br>и луна</span>
+            </div>
+            <div>
+              <p class="paper-label" id="continue-label">Продолжить чтение</p>
+              <h2 id="continue-title">Пепел и луна</h2>
+              <p class="continue-card__chapter" id="continue-chapter">Ты остановился на 12 главе</p>
+              <div class="progress" id="continue-progress" role="progressbar" aria-label="Прогресс чтения" aria-valuemin="0" aria-valuemax="100" aria-valuenow="25"><span style="width:25%"></span></div>
+              <div class="continue-card__meta"><span id="continue-count">12 / 48 глав</span><span id="continue-percent">25%</span></div>
+            </div>
+            <a class="btn btn--ink" id="continue-link" href="reader.html?slug=pepel-i-luna&amp;chapter=12">Продолжить</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- New in library -->
+      <section class="section" id="new" aria-labelledby="new-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Новое в библиотеке</p>
+              <h2 id="new-title">Свежие главы</h2>
+              <p>Свежие главы из твоих жанров. Обновления за последние три дня.</p>
+            </div>
+            <a class="section-link" href="catalog.html">Все новинки</a>
+          </div>
+          <div class="book-grid" id="new-grid"></div>
+          <noscript><p class="no-js">Включи JavaScript, чтобы увидеть свежие главы.</p></noscript>
+        </div>
+      </section>
+
+      <!-- Collections -->
+      <section class="section" aria-labelledby="collections-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Собрания</p>
+              <h2 id="collections-title">Не знаешь, что выбрать?</h2>
+              <p>Начни с подборки. В каждой — истории, которые подходят друг другу по настроению.</p>
+            </div>
+            <a class="section-link" href="collections.html">Все собрания</a>
+          </div>
+
+          <div class="collections">
+            <article class="collection">
+              <div class="collection__covers" aria-hidden="true">
+                <div class="cover cover--mini cover--low" data-art="moon" style="--c1:#2c1b3d;--c2:#080b14;--c-accent:#c9a25e">
+                  <span class="cover__title">Пепел<br>и луна</span>
+                </div>
+                <div class="cover cover--mini cover--center" data-art="tunnel" style="--c1:#2a2a2a;--c2:#070b14;--c-accent:#c9a25e">
+                  <span class="cover__title">Под<br>землёй</span>
+                </div>
+                <div class="cover cover--mini cover--top" data-art="tunnel" style="--c1:#241c2a;--c2:#070b14;--c-accent:#d27a86">
+                  <span class="cover__title">Тени<br>на стене</span>
+                </div>
+              </div>
+              <div>
+                <h3><a href="collection.html?slug=dark-side">Тёмная сторона</a></h3>
+                <p>Мистика, ужасы и триллеры для позднего вечера. Читать лучше с лампой.</p>
+                <a class="collection__meta" href="collection.html?slug=dark-side">8 историй · смотреть</a>
+              </div>
+            </article>
+
+            <article class="collection">
+              <div class="collection__covers" aria-hidden="true">
+                <div class="cover cover--mini cover--center" data-art="wave" style="--c1:#17333d;--c2:#070b14;--c-accent:#9db4ff">
+                  <span class="cover__title">Тихий<br>океан</span>
+                </div>
+                <div class="cover cover--mini cover--center" data-art="window" style="--c1:#1f3a44;--c2:#0a0f1c;--c-accent:#e9e1d2">
+                  <span class="cover__title">Дом<br>у моря</span>
+                </div>
+                <div class="cover cover--mini cover--low" data-art="window" style="--c1:#3a2f22;--c2:#0a0f1c;--c-accent:#e3c98f">
+                  <span class="cover__title">Чайная<br>на углу</span>
+                </div>
+              </div>
+              <div>
+                <h3><a href="collection.html?slug=light-stories">Светлые истории</a></h3>
+                <p>Повседневность, романтика и немного тепла. Для вечера, когда хочется выдохнуть.</p>
+                <a class="collection__meta" href="collection.html?slug=light-stories">9 историй · смотреть</a>
+              </div>
+            </article>
+
+            <article class="collection">
+              <div class="collection__covers" aria-hidden="true">
+                <div class="cover cover--mini cover--top" data-art="line" style="--c1:#4a3b2a;--c2:#0a0f1c;--c-accent:#e9e1d2">
+                  <span class="cover__title">Бумажные<br>птицы</span>
+                </div>
+                <div class="cover cover--mini cover--top" data-art="arch" style="--c1:#2c3b4a;--c2:#0a0f1c;--c-accent:#e3c98f">
+                  <span class="cover__title">Зимний<br>свет</span>
+                </div>
+                <div class="cover cover--mini cover--center" data-art="window" style="--c1:#3a2f22;--c2:#0a0f1c;--c-accent:#e9e1d2">
+                  <span class="cover__title">Маленькая<br>библиотека</span>
+                </div>
+              </div>
+              <div>
+                <h3><a href="collection.html?slug=until-dawn">До рассвета</a></h3>
+                <p>Истории, которые можно прочитать за одну ночь. Без ожидания глав.</p>
+                <a class="collection__meta" href="collection.html?slug=until-dawn">11 историй · смотреть</a>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Genres -->
+      <section class="section" id="genres" aria-labelledby="genres-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Жанры</p>
+              <h2 id="genres-title">Найди своё настроение</h2>
+              <p>Или открой каталог и выбери фильтры. В библиотеке есть ещё история, ужасы и комедия.</p>
+            </div>
+            <a class="section-link" href="catalog.html">Весь каталог</a>
+          </div>
+          <div class="genre-cloud">
+            <a class="chip" href="genre.html?genre=fantasy">Фэнтези</a>
+            <a class="chip" href="genre.html?genre=romance">Романтика</a>
+            <a class="chip" href="genre.html?genre=drama">Драма</a>
+            <a class="chip" href="genre.html?genre=mystery">Мистика</a>
+            <a class="chip" href="genre.html?genre=slice">Повседневность</a>
+            <a class="chip" href="genre.html?genre=adventure">Приключения</a>
+            <a class="chip" href="genre.html?genre=thriller">Триллер</a>
+            <a class="chip" href="genre.html?genre=scifi">Фантастика</a>
+            <a class="chip" href="genre.html?genre=horror">Ужасы</a>
+            <a class="chip" href="genre.html?genre=comedy">Комедия</a>
+          </div>
+          <p class="genre-note">Не нашёл подходящее? В каталоге можно смешать несколько жанров и типов.</p>
+        </div>
+      </section>
+
+      <!-- Why -->
+      <section class="section" aria-labelledby="why-title">
+        <div class="container">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow">Почему Kuroha</p>
+              <h2 id="why-title">Тише, но лучше</h2>
+            </div>
+          </div>
+          <div class="why-grid">
+            <article class="why-item">
+              <h3>Прогресс не теряется</h3>
+              <p>Закрой вкладку и вернись на ту же строку. Kuroha помнит, где ты остановился.</p>
+            </article>
+            <article class="why-item">
+              <h3>Читалка, а не сайт</h3>
+              <p>Ничего не отвлекает от истории: ни автоплей, ни всплывающие окна, ни бесконечные баннеры.</p>
+            </article>
+            <article class="why-item">
+              <h3>Никакой лишней рекламы</h3>
+              <p>Только библиотека и ты. Реклама не перекрывает страницы и не ломает ритм чтения.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="notes.html">Заметки</a>
+
+            <a href="quotes.html">Цитаты</a>
+            <a href="bingo.html">Девять вечеров</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+            <a href="catalog.html?status=completed">Завершённые</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="rules.html#dmca">DMCA</a>
+            <a href="rules.html#privacy">Конфиденциальность</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="home.js?v=home2" defer></script>
+  <script src="notifications.js?v=notif1" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>

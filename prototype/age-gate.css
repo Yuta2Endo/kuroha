@@ -1,0 +1,74 @@
+/* Kuroha 3.0 — 18+ gate */
+.age-gate {
+  width: min(446px, calc(100vw - 32px));
+  max-height: calc(100dvh - 32px);
+  padding: 0;
+  overflow: auto;
+  border: 1px solid rgba(23, 23, 27, 0.12);
+  border-radius: 14px;
+  background: var(--kh-paper);
+  color: var(--kh-ink-900);
+  box-shadow: 0 28px 80px rgba(0, 0, 0, 0.38);
+}
+.age-gate::backdrop {
+  background: rgba(11, 11, 14, 0.74);
+  backdrop-filter: blur(7px);
+}
+.age-gate__panel { padding: 28px; }
+.age-gate__badge {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 18px;
+  border: 1px solid #b52d38;
+  border-radius: 50%;
+  color: #b52d38;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+.age-gate .eyebrow { color: #8a6a2f; }
+.age-gate .eyebrow::before { background: #b52d38; }
+.age-gate h2 {
+  margin: 12px 0 12px;
+  font-family: var(--kh-font-display);
+  font-size: clamp(32px, 4vw, 42px);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.05em;
+}
+.age-gate p {
+  margin: 0 0 16px;
+  color: #5f5d62;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.age-gate p strong { color: #17171b; font-weight: 500; }
+.age-gate__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+.age-gate__actions .btn { flex: 1 1 auto; }
+.age-gate__actions .btn--primary { background: #b52d38; color: #fff; }
+.age-gate__actions .btn--primary:hover { background: #9b2530; }
+.age-gate__actions .btn--ghost { color: #17171b; border-color: rgba(23, 23, 27, 0.24); }
+.age-gate__note {
+  margin: 18px 0 0 !important;
+  padding-top: 14px;
+  border-top: 1px solid rgba(23, 23, 27, 0.13);
+  color: #6f6d72 !important;
+  font-size: 9px !important;
+}
+.age-gate__note a {
+  color: #8a6a2f;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+@media (max-width: 480px) {
+  .age-gate__panel { padding: 22px; }
+  .age-gate__actions { flex-direction: column; }
+  .age-gate__actions .btn { width: 100%; }
+}
