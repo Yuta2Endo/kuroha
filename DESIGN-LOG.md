@@ -38,3 +38,50 @@
 Ожидаемые правки Haiku: контраст `feature-card` в бумажной теме,
 приведение кнопок к акцентной палитре темы, состояния навигации,
 поведение hero на 360–480 px.
+
+---
+
+## index.html — цикл 1 · 17.11.2026
+
+Статус: принято, проверено. Бриф и скриншоты — `briefs/index-baseline/`.
+
+Принято:
+
+1. `.btn--secondary` — цвет `--kh-link`, граница `--kh-accent`. В paper
+   `#b52d38`, в graphite `#ff6b73`: 5,58 и 5,88 вместо 3,77 и 4,29.
+2. `.chip:hover` — граница `--kh-accent`, цвет `--kh-link` по той же причине.
+3. `.hero__stats span` — 12 px, `--kh-text-muted`; 5,87–7,17.
+4. `.continue-card__meta` — 12 px, `--kh-gray-500`; 3,35 → 4,62.
+5. `.feature-card__top`, `__bottom` — 12 px.
+6. `.feature-card__type` — 12 px, `--kh-red-dark`; каскад ограничен
+   `:not(.feature-card__type):not(.feature-card__meta)`, метка снова красная.
+7. `.feature-card__meta` — 12 px, `--kh-gray-500`; после починки каскада
+   не проваливается в 10 px.
+8. `.notification-badge` — 18 px, 12 px, `--kh-ink-950` на `--kh-brass`;
+   контраст 4,17 → 4,72. Фон намеренно `--kh-brass`, а не `--kh-accent`:
+   в paper `--kh-accent` тёмный и с тёмным текстом не проходит.
+9. `.icon-btn:hover`, `.btn--ghost:hover` в paper — фон `--kh-border`
+   (13 % ink), hover виден без нового токена.
+10. `.brand img`, `.spine__mark img` — `--kh-ink-900` вместо `#17171b`.
+11. `.section-link` — 12 px.
+12. На ≤760 `.hero__actions .btn--ghost` — отдельная строка, текст слева,
+    без бокового padding: «Мой вечер» читается как третичное действие,
+    а не растянутая кнопка.
+
+Отклонено:
+
+- Новые токены `--kh-paper-border` и `--kh-hover-fill`: есть `--kh-border`.
+- `aria-current` на главной: активного пункта навигации нет.
+- Новый токен `--kh-text-display` для h1: вне лимита, размер работает.
+- Тексты empty/error и скелетон `#new-grid`: нужны авторские тексты
+  и JS, это отдельная задача.
+- `:active` у кнопок: следующий цикл.
+- Скрытый «Войти» на 360 и состав навигации: только по прямой команде.
+
+Попутно: `sw.js` прекешировал `styles.css` из HTTP-кеша и отдавал его
+через `ignoreSearch`, поэтому `?v=` не доходил до браузера. Теперь
+`PRECACHE` — это `Request` с `cache: "reload"`, `CACHE_NAME` — `kuroha-v81`.
+
+Проверено: 1280 / 768 / 360, night / paper / graphite, `scrollWidth`
+равен ширине экрана, переполнений нет, консоль чистая, пустой
+`localStorage` показывает «Начни с первой главы».

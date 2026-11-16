@@ -1,7 +1,7 @@
-const CACHE_NAME = "kuroha-v78";
+const CACHE_NAME = "kuroha-v81";
 const OFFLINE_URL = "./offline.html";
 
-const PRECACHE = [
+const PRECACHE_URLS = [
   "./index.html",
   "./catalog.html",
   "./title.html",
@@ -132,6 +132,7 @@ const PRECACHE = [
   "./assets/icon-512.png",
   "./assets/og-image.png"
 ];
+const PRECACHE = PRECACHE_URLS.map((url) => new Request(url, { cache: "reload" }));
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
