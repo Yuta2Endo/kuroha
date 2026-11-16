@@ -106,7 +106,7 @@
     if (location.protocol !== "http:" && location.protocol !== "https:") return;
 
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("sw.js?v=cloud2").catch(() => {});
+      navigator.serviceWorker.register("sw.js?v=cloud3").catch(() => {});
     });
   }
 

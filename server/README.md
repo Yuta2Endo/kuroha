@@ -27,6 +27,7 @@ python -m http.server 4177 --bind 127.0.0.1
 - Bearer-токены, сессия 30 дней;
 - полный снимок локального состояния: `GET /api/state`, `PUT /api/state`;
 - жалобы: `POST /api/reports`, `GET /api/reports`, `PATCH /api/reports/:id`;
+- загрузки глав: `POST /api/uploads` (JSON с base64), `GET /api/uploads`, `DELETE /api/uploads/:id`, раздача `/uploads/...`;
 - health-check;
 - CORS для сайта на `127.0.0.1:4177` и `localhost:4177`.
 
@@ -42,8 +43,11 @@ python -m http.server 4177 --bind 127.0.0.1
 | GET | `/api/state` | получить снимок |
 | PUT | `/api/state` | сохранить `{ state: {...} }` |
 | POST | `/api/reports` | публичная жалоба |
-| GET | `/api/reports` | список жалоб (нужен токен) |
-| PATCH | `/api/reports/:id` | `{ status: "open" \| "resolved" \| "dismissed" }` |
+| GET | `/api/reports` | список жалоб (только admin) |
+| PATCH | `/api/reports/:id` | `{ status: "open" \| "resolved" \| "dismissed" }` (admin) |
+| POST | `/api/uploads` | `{ slug, chapter, chapterName, files: [{name,type,data}] }` (admin) |
+| GET | `/api/uploads?slug=` | список серверных загрузок |
+| DELETE | `/api/uploads/:id` | удалить загрузку и файлы (admin/автор) |
 
 Защищённые запросы:
 
