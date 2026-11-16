@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Правила публикации Kuroha</title>
+  <meta name="description" content="Кто может загружать главы, какие права подтверждает команда и как проходит модерация.">
+  <meta name="theme-color" content="#17171b">
+  <meta property="og:title" content="Правила публикации Kuroha">
+  <meta property="og:description" content="Кто может загружать главы, какие права подтверждает команда и как проходит модерация.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=design2">
+  <link rel="stylesheet" href="service.css?v=service3">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body class="legal-page" data-page="publishing">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html">Профиль</a>
+        </nav>
+
+                <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html">Профиль</a>
+        <a href="evening.html">Мой вечер</a>
+        <a href="notes.html">Заметки</a>
+
+        <a href="quotes.html">Цитаты</a>
+        <a href="bingo.html">Девять вечеров</a>
+        <a href="year.html">Итоги года</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+        <main id="main">
+      <section class="service-hero container" aria-labelledby="doc-title">
+        <div class="service-hero__copy">
+          <p class="eyebrow">Документы</p>
+          <h1 id="doc-title">Правила<br>публикации.</h1>
+          <p class="service-lead">Кто может загружать главы, какие права подтверждает команда и как проходит модерация.</p>
+          <div class="service-actions">
+            <a class="btn btn--ghost" href="rules.html">Все документы</a>
+            <a class="btn btn--ghost" href="#doc-content">К содержанию</a>
+          </div>
+        </div>
+        <aside class="service-card">
+          <p class="service-card__label">Редакция</p>
+          <p class="service-card__date">17 ноября 2026</p>
+          <p class="service-card__note">Черновик. Не является юридической консультацией. Перед публикацией проверьте текст с юристом и заполните реквизиты Оператора.</p>
+        </aside>
+      </section>
+
+      <section class="service-section container">
+        <div class="service-layout">
+          <aside class="service-toc" aria-label="Содержание документа">
+            <p class="eyebrow">На этой странице</p>
+            <a href="#section-1">1. Кто может публиковать</a>
+            <a href="#section-2">2. Права на оригинал и перевод</a>
+            <a href="#section-3">3. Что можно публиковать</a>
+            <a href="#section-4">4. Формат и качество</a>
+            <a href="#section-5">5. Метаданные</a>
+            <a href="#section-6">6. Возрастные метки</a>
+            <a href="#section-7">7. Проверка</a>
+            <a href="#section-8">8. Запрещено</a>
+            <a href="#section-9">9. Санкции и апелляция</a>
+            <a href="#section-10">10. Контакты</a>
+          </aside>
+
+          <div class="service-prose" id="doc-content">
+            <div class="service-note"><b>Черновик.</b> Документ подготовлен для Kuroha и не заменяет юридическую консультацию. Поля в квадратных скобках нужно заполнить перед публикацией.</div>
+<p>Статус: черновик от 17.11.2026. Подготовлен для проверки юристом и не является юридической консультацией.</p>
+<p>Правила описывают, как переводчики и команды загружают главы, какие материалы принимаются и как проходит проверка. Они дополняют Пользовательское соглашение и документ об авторском праве.</p>
+<section id="section-1">
+<h2>1. Кто может публиковать</h2>
+<p>1.1. Загружать главы может пользователь с ролью переводчика, владельца команды или администратора.</p>
+<p>1.2. Команда должна иметь подтверждённый профиль: название, контакт, состав и хотя бы один ответственный за публикации.</p>
+<p>1.3. Пользователь, загрузивший главу, отвечает за её содержание и за наличие прав. Роль на сайте не заменяет разрешение правообладателя.</p>
+</section>
+
+<section id="section-2">
+<h2>2. Права на оригинал и перевод</h2>
+<p>2.1. Перед публикацией переводчик подтверждает, что у него есть разрешение на перевод и публикацию оригинала либо оригинал находится в общественном достоянии или распространяется по лицензии, допускающей перевод и публикацию.</p>
+<p>2.2. Для лицензий Creative Commons нужно соблюдать условия: атрибуцию, share-alike, запрет дополнительных ограничений. Если лицензия запрещает коммерческое использование или производные произведения, материал не принимается.</p>
+<p>2.3. Переводчик сохраняет права на свой перевод и даёт Оператору неисключительную лицензию на хранение, показ и техническую обработку на время размещения.</p>
+<p>2.4. При жалобе правообладателя глава может быть скрыта до выяснения обстоятельств. Это не означает признания нарушения.</p>
+</section>
+
+<section id="section-3">
+<h2>3. Что можно публиковать</h2>
+<p>3.1. Перевод главы, сделанный командой, с указанием автора оригинала, переводчика, редактора и источника.</p>
+<p>3.2. Оригинальную работу автора, который разрешил публикацию и подтвердил условия.</p>
+<p>3.3. Материал в общественном достоянии, если проверены срок охраны и права на конкретный скан или перевод.</p>
+<p>3.4. Превью и обложку, если права позволяют их использовать. Обложка не должна вводить читателя в заблуждение.</p>
+</section>
+
+<section id="section-4">
+<h2>4. Формат и качество</h2>
+<p>4.1. Страницы загружаются изображениями в поддерживаемом формате. Порядок страниц должен совпадать с оригиналом.</p>
+<p>4.2. Изображения должны быть читаемыми: без обрезанных панелей, сильного шума, водяных знаков посторонних сайтов и повреждённых файлов.</p>
+<p>4.3. Перевод должен быть вставлен аккуратно: без перекрытия важных деталей, без обрезанного текста и без случайных надписей поверх кадра.</p>
+<p>4.4. Не принимаются главы, собранные из чужих сканов без разрешения, даже если перевод сделан командой.</p>
+<p>4.5. Если глава содержит несколько версий, публикуется одна основная. Старые версии сохраняются в истории для модерации.</p>
+</section>
+
+<section id="section-5">
+<h2>5. Метаданные</h2>
+<p>5.1. У главы должны быть номер, название (если есть), язык, команда и возрастная маркировка.</p>
+<p>5.2. Для тайтла указываются автор, художник, оригинальное название, жанры, формат и статус прав.</p>
+<p>5.3. Если используется лицензия, указываются её название, ссылка и требования к атрибуции.</p>
+<p>5.4. Нельзя указывать чужие имена, команды или ссылки как свои.</p>
+</section>
+
+<section id="section-6">
+<h2>6. Возрастные метки</h2>
+<p>6.1. Тайтл и глава получают возрастную маркировку: 0+, 6+, 12+, 16+ или 18+.</p>
+<p>6.2. Материалы 18+ закрываются возрастным гейтом и не показываются в общих подборках без предупреждения.</p>
+<p>6.3. Если модератор сомневается в маркировке, он может запросить уточнение или скрыть материал до проверки.</p>
+</section>
+
+<section id="section-7">
+<h2>7. Проверка</h2>
+<p>7.1. Новая глава попадает в очередь модерации. До публикации она видна только команде и модераторам.</p>
+<p>7.2. Модератор проверяет права, метаданные, качество и возрастную маркировку.</p>
+<p>7.3. Возможные решения: опубликовать, вернуть на доработку с комментарием, отклонить с указанием причины.</p>
+<p>7.4. Команда может исправить замечания и отправить версию повторно. Каждая отправка сохраняется в истории.</p>
+<p>7.5. Срок проверки зависит от объёма очереди. Ориентир — до 7 календарных дней, но срок не гарантируется.</p>
+</section>
+
+<section id="section-8">
+<h2>8. Запрещено</h2>
+<p>8.1. Загружать чужие главы, сканы, переводы и обложки без разрешения.</p>
+<p>8.2. Обходить возрастные ограничения, модерацию или блокировки.</p>
+<p>8.3. Публиковать вредоносные файлы, фишинг, спам и рекламу.</p>
+<p>8.4. Оскорблять читателей, авторов, переводчиков и модераторов.</p>
+<p>8.5. Раскрывать личные данные других людей.</p>
+<p>8.6. Выдавать чужую работу за свою или искажать сведения о правах.</p>
+<p>8.7. Использовать автоматический scraping сайта для перезалива контента.</p>
+</section>
+
+<section id="section-9">
+<h2>9. Санкции и апелляция</h2>
+<p>9.1. При нарушении Оператор может предупредить, вернуть главу на доработку, ограничить загрузку, приостановить команду или удалить материал.</p>
+<p>9.2. Повторные нарушения могут привести к блокировке аккаунта и команды.</p>
+<p>9.3. Решение можно обжаловать через контакт поддержки в течение 30 календарных дней. Апелляция рассматривается в разумный срок.</p>
+<p>9.4. Жалобы правообладателей рассматриваются по процедуре, описанной в документе «Правообладателям и DMCA».</p>
+</section>
+
+<section id="section-10">
+<h2>10. Контакты</h2>
+<p>10.1. Вопросы по публикации: [email].</p>
+<p>10.2. Жалобы правообладателей: [email] с темой «DMCA» или «Права».</p>
+<p>10.3. Оператор: [Оператор].</p>
+</section>
+            <div class="service-contact" aria-label="Другие документы">
+            <a href="terms.html">Соглашение</a>
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="copyright.html">Авторское право</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="offer.html">Оферта</a>
+              <a href="rules.html">Все документы</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="profile.html">Профиль</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="notes.html">Заметки</a>
+            <a href="quotes.html">Цитаты</a>
+            <a href="bingo.html">Девять вечеров</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="terms.html">Соглашение</a>
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="offer.html">Оферта</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="notifications.js?v=notif1" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>
+

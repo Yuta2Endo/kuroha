@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Пользовательское соглашение Kuroha</title>
+  <meta name="description" content="Условия использования Kuroha: аккаунт, роли, пользовательский контент, модерация и ответственность.">
+  <meta name="theme-color" content="#17171b">
+  <meta property="og:title" content="Пользовательское соглашение Kuroha">
+  <meta property="og:description" content="Условия использования Kuroha: аккаунт, роли, пользовательский контент, модерация и ответственность.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=design2">
+  <link rel="stylesheet" href="service.css?v=service3">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body class="legal-page" data-page="terms">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html">Профиль</a>
+        </nav>
+
+                <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html">Профиль</a>
+        <a href="evening.html">Мой вечер</a>
+        <a href="notes.html">Заметки</a>
+
+        <a href="quotes.html">Цитаты</a>
+        <a href="bingo.html">Девять вечеров</a>
+        <a href="year.html">Итоги года</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+        <main id="main">
+      <section class="service-hero container" aria-labelledby="doc-title">
+        <div class="service-hero__copy">
+          <p class="eyebrow">Документы</p>
+          <h1 id="doc-title">Пользовательское<br>соглашение.</h1>
+          <p class="service-lead">Условия использования Kuroha: аккаунт, роли, пользовательский контент, модерация и ответственность.</p>
+          <div class="service-actions">
+            <a class="btn btn--ghost" href="rules.html">Все документы</a>
+            <a class="btn btn--ghost" href="#doc-content">К содержанию</a>
+          </div>
+        </div>
+        <aside class="service-card">
+          <p class="service-card__label">Редакция</p>
+          <p class="service-card__date">17 ноября 2026</p>
+          <p class="service-card__note">Черновик. Не является юридической консультацией. Перед публикацией проверьте текст с юристом и заполните реквизиты Оператора.</p>
+        </aside>
+      </section>
+
+      <section class="service-section container">
+        <div class="service-layout">
+          <aside class="service-toc" aria-label="Содержание документа">
+            <p class="eyebrow">На этой странице</p>
+            <a href="#section-1">1. Термины</a>
+            <a href="#section-2">2. Принятие условий</a>
+            <a href="#section-3">3. Аккаунт</a>
+            <a href="#section-4">4. Роли</a>
+            <a href="#section-5">5. Пользовательский контент</a>
+            <a href="#section-6">6. Запрещённые действия</a>
+            <a href="#section-7">7. Модерация и жалобы</a>
+            <a href="#section-8">8. Интеллектуальная собственность</a>
+            <a href="#section-9">9. Ссылки на другие сайты</a>
+            <a href="#section-10">10. Отказ от гарантий</a>
+            <a href="#section-11">11. Ответственность</a>
+            <a href="#section-12">12. Прекращение доступа</a>
+            <a href="#section-13">13. Изменения Соглашения</a>
+            <a href="#section-14">14. Споры</a>
+            <a href="#section-15">15. Контакты</a>
+            <a href="#section-16">16. Заключительные положения</a>
+          </aside>
+
+          <div class="service-prose" id="doc-content">
+            <div class="service-note"><b>Черновик.</b> Документ подготовлен для Kuroha и не заменяет юридическую консультацию. Поля в квадратных скобках нужно заполнить перед публикацией.</div>
+<p>Редакция: черновик от 17.11.2026. Вступает в силу с [дата публикации].</p>
+<p>Настоящее Соглашение регулирует использование сайта Kuroha, его страниц, приложения, API и иных сервисов (далее — Сайт). Сайт принадлежит и управляется Оператором проекта Kuroha (далее — Оператор). Реквизиты Оператора: [заполнить].</p>
+<p>Перед использованием Сайта прочитай Соглашение. Если не согласен с ним, не используй Сайт.</p>
+<section id="section-1">
+<h2>1. Термины</h2>
+<p>1.1. <strong>Сайт</strong> — совокупность страниц, интерфейсов, API и файлов, доступных по адресу [домен], включая установленное приложение.</p>
+<p>1.2. <strong>Пользователь</strong> — лицо, использующее Сайт.</p>
+<p>1.3. <strong>Контент</strong> — тайтлы, главы, изображения, тексты, обложки, описания, переводы, оформление и иные материалы, размещённые на Сайте.</p>
+<p>1.4. <strong>Пользовательский контент</strong> — материалы, которые Пользователь загружает, публикует или передаёт через Сайт: главы, переводы, обложки, описания, профиль, комментарии, оценки и иные материалы.</p>
+<p>1.5. <strong>Переводчик</strong> — Пользователь, который загружает переводы или иные материалы для глав.</p>
+<p>1.6. <strong>Команда</strong> — объединение переводчиков, которое ведёт один или несколько тайтлов и действует через общий аккаунт или приглашения.</p>
+<p>1.7. <strong>Модерация</strong> — проверка, редактирование, ограничение доступа, удаление или отклонение материалов, а также ограничение аккаунтов.</p>
+</section>
+
+<section id="section-2">
+<h2>2. Принятие условий</h2>
+<p>2.1. Использование Сайта, регистрация, загрузка материалов или нажатие кнопки согласия означают принятие Соглашения в полном объёме.</p>
+<p>2.2. Соглашение действует бессрочно до его изменения или прекращения доступа Пользователя.</p>
+<p>2.3. Сайт не предназначен для детей младше 12 лет. Доступ к материалам с возрастным рейтингом 18+ разрешён только после подтверждения возраста. Пользователь подтверждает, что достиг возраста, указанного в рейтинге материала, и обладает достаточной дееспособностью. Если по закону требуется согласие законного представителя, Пользователь подтверждает, что оно получено.</p>
+<p>2.4. Обработка персональных данных регулируется отдельной Политикой обработки персональных данных. Используя Сайт, Пользователь подтверждает, что ознакомился с ней.</p>
+</section>
+
+<section id="section-3">
+<h2>3. Аккаунт</h2>
+<p>3.1. Чтение доступно без аккаунта. Для синхронизации прогресса, загрузки переводов и участия в командной работе может потребоваться аккаунт.</p>
+<p>3.2. Пользователь указывает достоверные данные и поддерживает их актуальность. Для входа может использоваться email, одноразовая ссылка или внешний провайдер.</p>
+<p>3.3. Пользователь отвечает за сохранность пароля, устройств и сессии. О подозрении на несанкционированный доступ нужно сообщить Оператору.</p>
+<p>3.4. Нельзя передавать аккаунт третьим лицам, создавать несколько аккаунтов для обхода ограничений или выдавать себя за другого человека.</p>
+<p>3.5. Пользователь может удалить аккаунт через настройки или обратившись по адресу [email]. Удаление аккаунта не отменяет обязанности, возникшие до него, и не удаляет материалы, которые уже опубликованы с согласия Пользователя, если закон или условия лицензии требуют их сохранить.</p>
+<p>3.6. Оператор вправе приостановить или ограничить аккаунт при нарушении Соглашения, правил модерации или закона.</p>
+</section>
+
+<section id="section-4">
+<h2>4. Роли</h2>
+<p>4.1. <strong>Читатель</strong> смотрит тайтлы, сохраняет прогресс, закладки и оценки.</p>
+<p>4.2. <strong>Переводчик</strong> загружает главы, переводы и связанные материалы, а также отвечает за наличие прав на них.</p>
+<p>4.3. <strong>Владелец команды</strong> приглашает участников, распределяет роли и отвечает за действия команды в пределах своих полномочий.</p>
+<p>4.4. <strong>Модератор и администратор</strong> проверяют материалы, рассматривают жалобы и применяют ограничения. Эти роли не создают трудовых отношений с Оператором.</p>
+<p>4.5. Пользователь не вправе выдавать себя за Оператора, модератора или правообладателя.</p>
+</section>
+
+<section id="section-5">
+<h2>5. Пользовательский контент</h2>
+<p>5.1. Загружая материал, Пользователь подтверждает, что:</p>
+<ul>
+<li>создал его сам или получил необходимые права и разрешения;</li>
+<li>имеет право на перевод, распространение и публикацию;</li>
+<li>материал не нарушает права третьих лиц, закон и правила Сайта;</li>
+<li>все сведения об авторстве, источнике и лицензии указаны достоверно.</li>
+</ul>
+<p>5.2. Пользователь сохраняет права на свой контент и предоставляет Оператору неисключительную лицензию на хранение, воспроизведение, публичный показ, техническую обработку, форматирование и отображение материала на Сайте. Условия лицензии подробно описаны в документе «Авторское право».</p>
+<p>5.3. Оператор не приобретает исключительные права на Пользовательский контент и не продаёт его отдельно от Сайта.</p>
+<p>5.4. Оператор вправе проверять, редактировать оформление, отклонять, скрывать или удалять материалы, если они нарушают Соглашение, правила модерации, закон или права третьих лиц.</p>
+<p>5.5. Оператор не обязан публиковать каждый загруженный материал и не гарантирует сроки проверки.</p>
+<p>5.6. Пользователь может удалить свой материал, если он не опубликован или если закон и лицензия позволяют это сделать. После удаления копии могут некоторое время сохраняться в резервных копиях и кеше.</p>
+</section>
+
+<section id="section-6">
+<h2>6. Запрещённые действия</h2>
+<p>Запрещено:</p>
+<ul>
+<li>загружать чужие главы, обложки, переводы и тексты без разрешения</li>
+</ul>
+<p>правообладателя;</p>
+<ul>
+<li>обходить возрастные ограничения, блокировки и технические защиты;</li>
+<li>собирать данные Сайта автоматически, если это создаёт нагрузку или</li>
+</ul>
+<p>нарушает запреты в robots.txt и настоящем Соглашении;</p>
+<ul>
+<li>распространять вредоносный код, спам и фишинговые ссылки;</li>
+<li>публиковать незаконный контент, призывы к насилию, травлю, угрозы,</li>
+</ul>
+<p>материалы с сексуализацией несовершеннолетних и иные нарушения закона;</p>
+<ul>
+<li>раскрывать персональные данные других людей без согласия;</li>
+<li>выдавать себя за другого человека, автора, переводчика или модератора;</li>
+<li>использовать Сайт для коммерческого распространения контента без</li>
+</ul>
+<p>отдельного разрешения;</p>
+<ul>
+<li>вмешиваться в работу Сайта, серверов и аккаунтов других Пользователей.</li>
+</ul>
+</section>
+
+<section id="section-7">
+<h2>7. Модерация и жалобы</h2>
+<p>7.1. Модерация может быть предварительной или последующей. Оператор вправе проверять материал до публикации или после жалобы.</p>
+<p>7.2. При нарушении Оператор может вынести предупреждение, ограничить публикацию, скрыть материал, приостановить аккаунт или заблокировать его.</p>
+<p>7.3. Пользователь может оспорить решение, написав на [email] в течение 30 дней. В обращении нужно указать ссылку на материал, причину несогласия и подтверждающие сведения.</p>
+<p>7.4. Оператор ведёт политику повторных нарушений. Аккаунты, которые систематически нарушают авторские права, могут быть заблокированы.</p>
+<p>7.5. При получении обоснованной жалобы правообладателя Оператор вправе ограничить доступ к материалу до выяснения обстоятельств.</p>
+</section>
+
+<section id="section-8">
+<h2>8. Интеллектуальная собственность</h2>
+<p>8.1. Оформление, программный код, логотип, название Kuroha и структура Сайта принадлежат Оператору или используются на законных основаниях.</p>
+<p>8.2. Права на тайтлы, главы, изображения и переводы принадлежат их авторам, переводчикам и иным правообладателям.</p>
+<p>8.3. Нельзя копировать, перепечатывать, продавать или распространять материалы Сайта без разрешения правообладателя, кроме случаев, прямо разрешённых законом или лицензией.</p>
+<p>8.4. Порядок обращения правообладателей описан в документе «Правообладателям и DMCA».</p>
+</section>
+
+<section id="section-9">
+<h2>9. Ссылки на другие сайты</h2>
+<p>9.1. Сайт может содержать ссылки на внешние ресурсы. Оператор не отвечает за их содержание, доступность и правила обработки данных.</p>
+<p>9.2. Переход по внешней ссылке совершается на риск Пользователя.</p>
+</section>
+
+<section id="section-10">
+<h2>10. Отказ от гарантий</h2>
+<p>10.1. Сайт предоставляется «как есть» и «как доступно». Оператор не гарантирует бесперебойную работу, отсутствие ошибок и сохранность любого материала.</p>
+<p>10.2. Оператор вправе проводить технические работы, менять интерфейс и ограничивать отдельные функции.</p>
+<p>10.3. Оператор не гарантирует, что каждый материал проверен юридически. Пользователь самостоятельно оценивает законность использования материала.</p>
+</section>
+
+<section id="section-11">
+<h2>11. Ответственность</h2>
+<p>11.1. Пользователь отвечает за свои действия, загруженный контент и соблюдение прав третьих лиц.</p>
+<p>11.2. Оператор не отвечает за косвенные убытки, упущенную выгоду и утрату данных, если иное не предусмотрено законом.</p>
+<p>11.3. Ограничения ответственности не применяются в случаях, когда закон запрещает их устанавливать, и не ограничивают права потребителей.</p>
+<p>11.4. Пользователь возмещает Оператору убытки, возникшие из-за нарушения прав третьих лиц его материалом, в пределах, допускаемых законом.</p>
+</section>
+
+<section id="section-12">
+<h2>12. Прекращение доступа</h2>
+<p>12.1. Пользователь может прекратить использование Сайта в любое время.</p>
+<p>12.2. Оператор может ограничить или прекратить доступ при нарушении Соглашения, требований закона или при угрозе безопасности Сайта.</p>
+<p>12.3. Положения об авторских правах, ответственности и разрешении споров сохраняют силу после прекращения доступа.</p>
+</section>
+
+<section id="section-13">
+<h2>13. Изменения Соглашения</h2>
+<p>13.1. Оператор вправе изменять Соглашение. Новая редакция публикуется на Сайте с датой вступления в силу.</p>
+<p>13.2. О существенных изменениях Оператор старается уведомить заранее через Сайт или email.</p>
+<p>13.3. Продолжение использования после вступления изменений в силу означает согласие с новой редакцией. Если Пользователь не согласен, он прекращает использование Сайта.</p>
+</section>
+
+<section id="section-14">
+<h2>14. Споры</h2>
+<p>14.1. К Соглашению применяется право Российской Федерации.</p>
+<p>14.2. До обращения в суд сторона направляет письменную претензию на [email]. Срок ответа — 30 дней, если закон не устанавливает иной срок.</p>
+<p>14.3. Спор рассматривается в суде по правилам подсудности, установленным законом. Права потребителей и иные обязательные правила применяются в полном объёме.</p>
+</section>
+
+<section id="section-15">
+<h2>15. Контакты</h2>
+<p>Оператор проекта Kuroha: [наименование или ИП, ИНН, ОГРН/ОГРНИП, адрес]. Email: [email]. Домен: [домен].</p>
+</section>
+
+<section id="section-16">
+<h2>16. Заключительные положения</h2>
+<p>16.1. Если отдельное положение Соглашения признано недействительным, остальные положения продолжают действовать.</p>
+<p>16.2. Соглашение вместе с документами «Авторское право», «Правообладателям и DMCA», «Публичная оферта» и Политикой обработки персональных данных составляет единый набор правил Сайта.</p>
+<p>16.3. Язык Соглашения — русский. Переводы на другие языки носят информационный характер, приоритет имеет русская редакция.</p>
+</section>
+            <div class="service-contact" aria-label="Другие документы">
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="copyright.html">Авторское право</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="offer.html">Оферта</a>
+            <a href="publishing.html">Правила публикации</a>
+              <a href="rules.html">Все документы</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="profile.html">Профиль</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="notes.html">Заметки</a>
+            <a href="quotes.html">Цитаты</a>
+            <a href="bingo.html">Девять вечеров</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="terms.html">Соглашение</a>
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="offer.html">Оферта</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="notifications.js?v=notif1" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>
+

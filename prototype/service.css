@@ -389,3 +389,14 @@
   .service-prose h2 { font-size: 28px; }
   .service-contact { flex-direction: column; gap: 12px; }
 }
+
+/* Legal documents: long Russian headings on narrow screens. */
+@media (max-width: 760px) {
+  .legal-page .service-hero h1 {
+    font-size: clamp(40px, 10vw, 60px);
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 480px) {
+  .legal-page .service-hero h1 { font-size: clamp(32px, 9vw, 44px); }
+}

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Правообладателям и DMCA — Kuroha</title>
+  <meta name="description" content="Как подать уведомление по российскому закону или DMCA, что приложить и как проходит проверка.">
+  <meta name="theme-color" content="#17171b">
+  <meta property="og:title" content="Правообладателям и DMCA — Kuroha">
+  <meta property="og:description" content="Как подать уведомление по российскому закону или DMCA, что приложить и как проходит проверка.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=design2">
+  <link rel="stylesheet" href="service.css?v=service3">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body class="legal-page" data-page="dmca">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html">Профиль</a>
+        </nav>
+
+                <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html">Профиль</a>
+        <a href="evening.html">Мой вечер</a>
+        <a href="notes.html">Заметки</a>
+
+        <a href="quotes.html">Цитаты</a>
+        <a href="bingo.html">Девять вечеров</a>
+        <a href="year.html">Итоги года</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+        <main id="main">
+      <section class="service-hero container" aria-labelledby="doc-title">
+        <div class="service-hero__copy">
+          <p class="eyebrow">Документы</p>
+          <h1 id="doc-title">Правообладателям<br>и DMCA.</h1>
+          <p class="service-lead">Как подать уведомление по российскому закону или DMCA, что приложить и как проходит проверка.</p>
+          <div class="service-actions">
+            <a class="btn btn--ghost" href="rules.html">Все документы</a>
+            <a class="btn btn--ghost" href="#doc-content">К содержанию</a>
+          </div>
+        </div>
+        <aside class="service-card">
+          <p class="service-card__label">Редакция</p>
+          <p class="service-card__date">17 ноября 2026</p>
+          <p class="service-card__note">Черновик. Не является юридической консультацией. Перед публикацией проверьте текст с юристом и заполните реквизиты Оператора.</p>
+        </aside>
+      </section>
+
+      <section class="service-section container">
+        <div class="service-layout">
+          <aside class="service-toc" aria-label="Содержание документа">
+            <p class="eyebrow">На этой странице</p>
+            <a href="#section-1">1. Кому адресован документ</a>
+            <a href="#section-2">2. Российский порядок: уведомление информационного посредника</a>
+            <a href="#section-3">3. DMCA: уведомление для США</a>
+            <a href="#section-4">4. Общие правила рассмотрения</a>
+            <a href="#section-5">5. Контакты</a>
+            <a href="#section-6">6. Заключительные положения</a>
+          </aside>
+
+          <div class="service-prose" id="doc-content">
+            <div class="service-note"><b>Черновик.</b> Документ подготовлен для Kuroha и не заменяет юридическую консультацию. Поля в квадратных скобках нужно заполнить перед публикацией.</div>
+<p>Редакция: черновик от 17.11.2026. Вступает в силу с [дата публикации].</p>
+<p>Этот документ описывает, как сообщить о нарушении авторских прав на Сайте Kuroha и как Оператор рассматривает такие обращения.</p>
+<p>DMCA — американский закон об авторском праве. Для России основной механизм — уведомление информационного посредника по ст. 1253.1 ГК РФ. Ниже есть оба блока. Они не заменяют юридическую консультацию: окончательную квалификацию нарушения даёт суд.</p>
+<section id="section-1">
+<h2>1. Кому адресован документ</h2>
+<p>1.1. Автору или иному правообладателю произведения.</p>
+<p>1.2. Представителю правообладателя по доверенности или договору.</p>
+<p>1.3. Пользователю, чей материал был ограничен или удалён по жалобе.</p>
+<p>1.4. Оператору проекта Kuroha, который рассматривает обращения.</p>
+</section>
+
+<section id="section-2">
+<h2>2. Российский порядок: уведомление информационного посредника</h2>
+<p>2.1. Если материал на Сайте нарушает твои права, направь уведомление на [email] или по адресу [адрес]. Тема письма: «Жалоба на нарушение авторских прав».</p>
+<p>2.2. В уведомлении желательно указать:</p>
+<ul>
+<li>свои фамилию, имя и отчество или наименование организации;</li>
+<li>контактный email и телефон для ответа;</li>
+<li>произведение, права на которое нарушены: название, автор, при наличии —</li>
+</ul>
+<p>номер регистрации или договор;</p>
+<ul>
+<li>точные ссылки на спорные страницы и, если возможно, номера страниц;</li>
+<li>описание того, какие права нарушены и чем это подтверждается;</li>
+<li>сведения о том, что заявитель является правообладателем или действует</li>
+</ul>
+<p>по его поручению;</p>
+<ul>
+<li>заявление о добросовестном убеждении в нарушении;</li>
+<li>подпись или электронную подпись.</li>
+</ul>
+<p>2.3. Если уведомление неполное, Оператор может запросить уточнения. До получения достаточных сведений материал может оставаться доступным.</p>
+<p>2.4. Оператор регистрирует обращение, проверяет ссылки и сведения, при необходимости запрашивает у загрузившего подтверждение прав.</p>
+<p>2.5. Если нарушение выглядит обоснованным, Оператор вправе ограничить доступ к материалу, скрыть его или удалить. Оператор уведомляет загрузившего о причине ограничения, если закон не запрещает раскрывать данные заявителя.</p>
+<p>2.6. Загрузивший может направить возражения: указать, почему материал размещён законно, приложить лицензию, разрешение автора или иные доказательства.</p>
+<p>2.7. Оператор рассматривает возражения и может восстановить материал, если права подтверждены. Восстановление не означает, что Оператор признаёт отсутствие нарушения: спор между сторонами решается по закону.</p>
+<p>2.8. Оператор действует как информационный посредник и принимает меры, предусмотренные ст. 1253.1 ГК РФ. Освобождение от ответственности возможно при соблюдении условий закона; окончательно этот вопрос решает суд.</p>
+</section>
+
+<section id="section-3">
+<h2>3. DMCA: уведомление для США</h2>
+<p>3.1. Если произведение охраняется в США и ты являешься правообладателем или его представителем, можно направить DMCA-уведомление на [email] с темой «DMCA Notice».</p>
+<p>3.2. DMCA-уведомление должно содержать:</p>
+<ul>
+<li>физическую или электронную подпись правообладателя или представителя;</li>
+<li>идентификацию произведения, права на которое нарушены;</li>
+<li>идентификацию спорного материала и достаточно точные ссылки, чтобы его</li>
+</ul>
+<p>можно было найти;</p>
+<ul>
+<li>контактные данные заявителя: имя, адрес, телефон, email;</li>
+<li>заявление о добросовестном убеждении, что использование материала не</li>
+</ul>
+<p>разрешено правообладателем, его представителем или законом;</p>
+<ul>
+<li>заявление под ответственностью за ложные сведения о том, что информация</li>
+</ul>
+<p>в уведомлении точна и заявитель уполномочен действовать от имени правообладателя;</p>
+<ul>
+<li>согласие на подсудность спора суду по месту нахождения заявителя или</li>
+</ul>
+<p>Оператора, если применимо.</p>
+<p>3.3. DMCA-агент Оператора: [имя, адрес, email]. Если Оператор регистрирует агента в Бюро авторского права США, данные обновляются на Сайте.</p>
+<p>3.4. После получения полного уведомления Оператор может удалить или ограничить доступ к материалу, уведомить загрузившего и предложить направить контр-уведомление.</p>
+<p>3.5. Контр-уведомление должно содержать:</p>
+<ul>
+<li>подпись загрузившего;</li>
+<li>идентификацию удалённого материала и ссылку, по которой он был доступен;</li>
+<li>контактные данные;</li>
+<li>заявление под ответственностью за ложные сведения о добросовестном</li>
+</ul>
+<p>убеждении, что материал был удалён по ошибке или неверной идентификации;</p>
+<ul>
+<li>согласие на подсудность суду, если загрузивший находится в США, и согласие</li>
+</ul>
+<p>принять уведомление от заявителя.</p>
+<p>3.6. Если контр-уведомление соответствует требованиям, Оператор может восстановить материал через 10–14 рабочих дней, если не получит уведомление о судебном иске.</p>
+<p>3.7. Оператор ведёт политику повторных нарушителей: аккаунты, которые систематически получают обоснованные жалобы, могут быть ограничены или заблокированы.</p>
+</section>
+
+<section id="section-4">
+<h2>4. Общие правила рассмотрения</h2>
+<p>4.1. Оператор рассматривает обращения в разумный срок. Ориентир: подтвердить получение в течение 3 рабочих дней, а полное уведомление — в течение 30 календарных дней. Срок может быть больше, если нужны уточнения или юридическая проверка.</p>
+<p>4.2. Заявитель должен действовать добросовестно. Заведомо ложная жалоба, подделка документов или сокрытие того, что использование разрешено, могут привести к отказу в рассмотрении и ограничению аккаунта.</p>
+<p>4.3. Оператор вправе запросить документы: договор, лицензию, доверенность, переписку с автором. Персональные данные заявителя обрабатываются только для рассмотрения жалобы и защиты прав Оператора.</p>
+<p>4.4. Оператор может раскрыть загрузившему сведения о жалобе в объёме, необходимом для возражения. Полная анонимность не гарантируется, если закон или суд требуют раскрытия.</p>
+<p>4.5. Материал может быть скрыт на время проверки. Скрытие не является признанием нарушения и не лишает стороны права обратиться в суд.</p>
+<p>4.6. Оператор не выступает арбитром между правообладателем и загрузившим. Он принимает технические и организационные меры в пределах закона.</p>
+<p>4.7. Если спор выходит за пределы Сайта, стороны решают его самостоятельно или в суде. Оператор может предоставить сведения по законному запросу.</p>
+</section>
+
+<section id="section-5">
+<h2>5. Контакты</h2>
+<p>Жалобы и уведомления: [email]. Почтовый адрес: [адрес]. DMCA-агент: [имя, адрес, email]. Телефон: [телефон].</p>
+</section>
+
+<section id="section-6">
+<h2>6. Заключительные положения</h2>
+<p>6.1. Документ входит в набор правил Сайта вместе с Пользовательским соглашением, документом «Авторское право» и Публичной офертой.</p>
+<p>6.2. При противоречии между документом и законом применяется закон.</p>
+<p>6.3. Язык документа — русский. Переводы носят информационный характер.</p>
+</section>
+            <div class="service-contact" aria-label="Другие документы">
+            <a href="terms.html">Соглашение</a>
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="copyright.html">Авторское право</a>
+            <a href="offer.html">Оферта</a>
+            <a href="publishing.html">Правила публикации</a>
+              <a href="rules.html">Все документы</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="profile.html">Профиль</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="notes.html">Заметки</a>
+            <a href="quotes.html">Цитаты</a>
+            <a href="bingo.html">Девять вечеров</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="terms.html">Соглашение</a>
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="offer.html">Оферта</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="auth.js?v=auth1" defer></script>
+  <script src="notifications.js?v=notif1" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>
+
