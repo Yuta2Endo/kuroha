@@ -22,8 +22,18 @@ services:
       - "80:80"
       - "443:443"
       - "443:443/udp"
+    command:
+      - sh
+      - -c
+      - |
+        cat > /etc/caddy/Caddyfile <<'EOF'
+        api.kuroha.org {
+          encode zstd gzip
+          reverse_proxy api:4180
+        }
+        EOF
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
