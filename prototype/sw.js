@@ -1,4 +1,4 @@
-const CACHE_NAME = "kuroha-v93";
+const CACHE_NAME = "kuroha-v99";
 const OFFLINE_URL = "./offline.html";
 
 const PRECACHE_URLS = [
@@ -42,6 +42,7 @@ const PRECACHE_URLS = [
   "./collections.html",
   "./collection.html",
   "./admin.html",
+  "./studio.html",
   "./offline.html",
   "./tokens.css",
   "./styles.css",
@@ -80,6 +81,7 @@ const PRECACHE_URLS = [
   "./schedule.css",
   "./discover.css",
   "./admin.css",
+  "./studio.css",
   "./data.js",
   "./search-data.js",
   "./discover-data.js",
@@ -127,6 +129,7 @@ const PRECACHE_URLS = [
   "./schedule.js",
   "./uploads.js",
   "./admin.js",
+  "./studio.js",
   "./pwa.js",
   "./manifest.webmanifest",
   "./assets/favicon.svg",

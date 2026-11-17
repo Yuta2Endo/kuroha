@@ -1,0 +1,592 @@
+<!doctype html>
+<html lang="ru" data-theme="night">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Студия — Kuroha</title>
+  <meta name="description" content="Студия Kuroha: команды переводчиков, тайтлы, главы, загрузка страниц и очередь модерации.">
+  <meta name="theme-color" content="#17171b">
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="tokens.css?v=brand3">
+  <link rel="stylesheet" href="styles.css?v=design2">
+  <link rel="stylesheet" href="studio.css?v=studio6">
+  <script>
+    try {
+      var urlTheme = new URLSearchParams(window.location.search).get("theme");
+      var savedTheme = localStorage.getItem("kuroha-theme");
+      var initialTheme = urlTheme === "night" || urlTheme === "paper" || urlTheme === "graphite"
+        ? urlTheme
+        : savedTheme;
+      if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
+        document.documentElement.dataset.theme = initialTheme;
+      }
+    } catch (error) {}
+  </script>
+  <style>
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 200;
+      padding: 10px 14px;
+      border-radius: 2px;
+      background: var(--kh-paper);
+      color: #1b1712;
+      font-size: 12px;
+      transform: translateY(-200%);
+    }
+    .skip-link:focus { transform: none; }
+  </style>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Kuroha">
+  <meta name="application-name" content="Kuroha">
+</head>
+<body data-page="studio">
+  <a class="skip-link" href="#main">Перейти к содержанию</a>
+
+  <aside class="spine" aria-label="Kuroha">
+    <a class="spine__mark" href="index.html" aria-label="Kuroha — главная">
+      <img src="assets/logo-symbol.svg" alt="" width="30" height="30">
+    </a>
+    <div class="spine__word">манга · сообщество</div>
+    <button class="spine__theme" type="button" data-theme-toggle aria-label="Сменить тему">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+      </svg>
+      <span class="spine__theme-label" data-theme-label>ночь</span>
+    </button>
+  </aside>
+
+  <div class="site">
+    <header class="site-header">
+      <div class="container header__inner">
+        <a class="brand" href="index.html" aria-label="Kuroha — главная">
+          <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+          <span>KUROHA</span>
+        </a>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="catalog.html">Каталог</a>
+          <a href="genres.html">Жанры</a>
+          <a href="collections.html">Подборки</a>
+          <a href="novels.html">Новеллы</a>
+          <a href="feed.html">Лента</a>
+          <a href="top.html">Топы</a>
+          <a href="catalog.html" data-random-title>Случайная</a>
+          <a href="profile.html">Профиль</a>
+        </nav>
+
+        <div class="header__actions">
+          <a class="icon-btn notification-btn" href="notifications.html" data-notifications-link aria-label="Уведомления" title="Уведомления">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"></path>
+              <path d="M10 21h4"></path>
+            </svg>
+            <span class="notification-badge" data-notifications-count hidden>0</span>
+          </a>
+          <button class="icon-btn" type="button" data-search-open aria-label="Поиск по библиотеке" title="Поиск">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="7"></circle>
+              <path d="m16.5 16.5 4 4"></path>
+            </svg>
+          </button>
+          <a class="btn btn--small btn--ghost login" href="auth.html">Войти</a>
+          <button class="menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" aria-label="Открыть меню">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="mobile-menu" id="mobile-menu" hidden>
+        <a href="catalog.html">Каталог</a>
+        <a href="genres.html">Жанры</a>
+        <a href="collections.html">Подборки</a>
+        <a href="novels.html">Новеллы</a>
+        <a href="feed.html">Лента</a>
+        <a href="top.html">Топы</a>
+        <a href="catalog.html" data-random-title>Случайная</a>
+        <a href="profile.html">Профиль</a>
+        <div class="mobile-menu__foot">
+          <button class="mobile-menu__theme" type="button" data-theme-toggle>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 0 1 9.5 4 8.5 8.5 0 1 0 20 14.5Z"/>
+            </svg>
+            <span>Тема: <span data-theme-label>ночь</span></span>
+          </button>
+          <a class="btn btn--small btn--ghost" href="auth.html">Войти</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="studio-hero container" aria-labelledby="studio-title">
+        <div class="studio-hero__copy">
+          <p class="eyebrow">Студия · вертикальный срез</p>
+          <h1 id="studio-title">Студия</h1>
+          <p class="studio-hero__lead">Команды, тайтлы и главы до публикации. Загружай страницы, отправляй на проверку и следи за статусами — без переписки и таблиц.</p>
+        </div>
+
+        <aside class="studio-session" aria-label="Сессия">
+          <div class="studio-session__head">
+            <span class="studio-session__label">Сессия</span>
+            <span class="studio-session__dot" id="studio-api-dot" data-state="checking" aria-hidden="true"></span>
+          </div>
+          <div class="studio-session__body" id="studio-session-body">
+            <span class="studio-session__avatar" aria-hidden="true">K</span>
+            <div class="studio-session__identity">
+              <b id="studio-session-name">Гость</b>
+              <span id="studio-session-email">Вход нужен для работы</span>
+            </div>
+            <span class="studio-role" id="studio-session-role" hidden>читатель</span>
+          </div>
+          <p class="studio-session__note" id="studio-session-note">Войди, чтобы открыть команды и очередь проверки.</p>
+          <div class="studio-session__actions" id="studio-session-actions" hidden>
+            <button class="studio-link" type="button" id="studio-refresh-session">Обновить роль</button>
+            <button class="studio-link studio-link--danger" type="button" id="studio-logout">Выйти</button>
+          </div>
+          <p class="studio-session__api"><span id="studio-api-text">Проверяем API…</span> · <code id="studio-api-base">—</code></p>
+        </aside>
+      </section>
+
+      <section class="studio-shell container" aria-label="Рабочая область">
+        <div class="studio-auth" id="studio-auth" hidden>
+          <div class="studio-auth__intro">
+            <p class="eyebrow">Вход</p>
+            <h2>Сначала аккаунт</h2>
+            <p>Одна сессия для студии и очереди. Регистрация создаёт читателя; роль переводчика или модератора выдаёт администратор.</p>
+            <ul class="studio-auth__notes">
+              <li><b>Переводчик</b> — команды, тайтлы, главы и страницы.</li>
+              <li><b>Модератор</b> — очередь и решение по главам.</li>
+              <li><b>Читатель</b> — каталог и читалка без студии.</li>
+            </ul>
+          </div>
+
+          <form class="studio-card studio-auth__form" id="studio-auth-form" novalidate>
+            <div class="studio-auth__switch" role="group" aria-label="Вход или регистрация">
+              <button class="studio-auth__mode is-active" type="button" data-auth-mode="login" aria-pressed="true">Вход</button>
+              <button class="studio-auth__mode" type="button" data-auth-mode="register" aria-pressed="false">Регистрация</button>
+            </div>
+
+            <label class="studio-field" id="studio-name-field" hidden>
+              <span>Имя</span>
+              <input id="studio-auth-name" name="name" type="text" maxlength="40" autocomplete="name" placeholder="Как тебя называть">
+            </label>
+            <label class="studio-field">
+              <span>Email</span>
+              <input id="studio-auth-email" name="email" type="email" maxlength="120" autocomplete="email" placeholder="you@example.com" required>
+            </label>
+            <label class="studio-field">
+              <span>Пароль</span>
+              <input id="studio-auth-password" name="password" type="password" minlength="6" maxlength="120" autocomplete="current-password" placeholder="минимум 6 символов" required>
+            </label>
+
+            <div class="studio-actions">
+              <button class="btn btn--primary" type="submit" id="studio-auth-submit">Войти</button>
+              <span class="studio-status" id="studio-auth-status" role="status" aria-live="polite"></span>
+            </div>
+            <p class="studio-note">Токен хранится только в этом браузере, в <code>kuroha-api-token</code>. Пароль никуда не сохраняется.</p>
+          </form>
+        </div>
+
+        <div class="studio-denied studio-card" id="studio-denied" hidden>
+          <p class="eyebrow">Доступ</p>
+          <h2>Студия закрыта</h2>
+          <p id="studio-denied-text">Твой аккаунт — читатель. Студия открывается переводчикам и модераторам; роль выдаёт администратор. Каталог и читалка работают как обычно.</p>
+          <div class="studio-actions">
+            <a class="btn btn--primary" href="catalog.html">Открыть каталог</a>
+            <button class="btn btn--ghost" type="button" id="studio-denied-logout">Выйти</button>
+          </div>
+        </div>
+
+        <div class="studio-workspace" id="studio-workspace" hidden>
+          <div class="studio-tabs" id="studio-tabs" role="tablist" aria-label="Режим студии" hidden>
+            <button class="studio-tab is-active" id="studio-tab-studio" type="button" data-studio-tab="studio" role="tab" aria-selected="true" aria-controls="studio-panel-studio">Студия</button>
+            <button class="studio-tab" id="studio-tab-moderation" type="button" data-studio-tab="moderation" role="tab" aria-selected="false" aria-controls="studio-panel-moderation">
+              Модерация
+              <span class="studio-tab__count" id="studio-queue-count" hidden>0</span>
+            </button>
+          </div>
+
+          <div class="studio-panel" id="studio-panel-studio" role="tabpanel" aria-labelledby="studio-tab-studio">
+            <div class="studio-layout">
+              <div class="studio-column">
+                <section class="studio-card studio-workbench" id="studio-workbench" aria-labelledby="studio-workbench-title" hidden>
+                  <div class="studio-card__head studio-workbench__head">
+                    <div class="studio-workbench__copy">
+                      <p class="eyebrow">Глава</p>
+                      <h2 id="studio-workbench-title">—</h2>
+                      <div class="studio-meta" id="studio-workbench-meta"></div>
+                    </div>
+                    <button class="studio-close" type="button" id="studio-workbench-close" aria-label="Закрыть главу">×</button>
+                  </div>
+
+                  <div class="studio-callout" id="studio-workbench-note" hidden></div>
+
+                  <div class="studio-subhead">
+                    <h3>Страницы</h3>
+                    <span class="studio-subhead__meta" id="studio-pages-count">0</span>
+                  </div>
+                  <div class="studio-thumbs" id="studio-pages"></div>
+                  <p class="studio-empty studio-empty--inline" id="studio-pages-empty">Страниц пока нет. Загрузи первую — она станет превью главы.</p>
+
+                  <p class="studio-note studio-note--tight" id="studio-pages-note">Новая загрузка заменяет весь набор страниц версии. Отдельную страницу убрать нельзя — только пересобрать набор.</p>
+
+                  <label class="studio-dropzone" id="studio-dropzone" for="studio-files">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M12 16V4"></path>
+                      <path d="m7 9 5-5 5 5"></path>
+                      <path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"></path>
+                    </svg>
+                    <b>Перетащи или выбери страницы</b>
+                    <small>PNG, JPG или WebP · до 10 МБ на страницу · до 100</small>
+                    <input id="studio-files" type="file" multiple accept="image/jpeg,image/png,image/webp">
+                  </label>
+
+                  <div class="studio-picks" id="studio-picks" hidden>
+                    <div class="studio-subhead">
+                      <h3>К загрузке</h3>
+                      <button class="studio-link studio-link--danger" type="button" id="studio-clear-picks">Очистить</button>
+                    </div>
+                    <div class="studio-thumbs" id="studio-picks-grid"></div>
+                  </div>
+
+                  <div class="studio-actions">
+                    <button class="btn btn--secondary" type="button" id="studio-upload">Загрузить страницы</button>
+                    <button class="btn btn--primary" type="button" id="studio-submit">Отправить на проверку</button>
+                    <span class="studio-status" id="studio-workbench-status" role="status" aria-live="polite"></span>
+                  </div>
+                  <div class="studio-progress" id="studio-progress" role="progressbar" aria-label="Загрузка страниц" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" hidden><span></span></div>
+                </section>
+
+                <section class="studio-card studio-library" aria-labelledby="studio-library-title">
+                  <div class="studio-card__head">
+                    <div>
+                      <p class="eyebrow">Архив</p>
+                      <h2 id="studio-library-title">Мои тайтлы</h2>
+                      <p>Черновики, главы и статусы проверки.</p>
+                    </div>
+                    <button class="studio-icon-btn" type="button" id="studio-refresh-library" aria-label="Обновить список" title="Обновить список">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M20 11a8 8 0 1 0-2.3 5.7"></path>
+                        <path d="M20 4v7h-7"></path>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <div class="studio-stats">
+                    <div class="studio-stat"><b id="studio-stat-titles">0</b><span>тайтлов</span></div>
+                    <div class="studio-stat"><b id="studio-stat-chapters">0</b><span>глав</span></div>
+                    <div class="studio-stat"><b id="studio-stat-review">0</b><span>на проверке</span></div>
+                  </div>
+
+                  <p class="studio-status" id="studio-library-state" role="status" aria-live="polite">Загружаем тайтлы…</p>
+                  <div class="studio-library__list" id="studio-library-list"></div>
+
+                  <div class="studio-empty" id="studio-library-empty" hidden>
+                    <img src="assets/logo-symbol.svg" alt="" width="34" height="34">
+                    <b>Пока пусто</b>
+                    Создай команду и первый тайтл — главы появятся здесь.
+                  </div>
+                </section>
+              </div>
+
+              <aside class="studio-column studio-column--side" aria-label="Создание">
+                <section class="studio-card studio-create" aria-labelledby="studio-team-title">
+                  <div class="studio-card__head">
+                    <div>
+                      <p class="eyebrow">Команда</p>
+                      <h2 id="studio-team-title">Новая команда</h2>
+                      <p>Команда владеет главами и держит состав.</p>
+                    </div>
+                  </div>
+                  <form class="studio-form" id="studio-team-form" novalidate>
+                    <label class="studio-field">
+                      <span>Название</span>
+                      <input name="name" type="text" maxlength="120" placeholder="Например: Тихие страницы" required>
+                      <small class="studio-field__error" data-error="name"></small>
+                    </label>
+                    <label class="studio-field">
+                      <span>Slug</span>
+                      <input name="slug" type="text" maxlength="64" pattern="[a-z0-9-]{3,64}" placeholder="tihie-stranicy" required>
+                      <small class="studio-field__error" data-error="slug"></small>
+                    </label>
+                    <div class="studio-actions">
+                      <button class="btn btn--secondary" type="submit">Создать команду</button>
+                      <span class="studio-status" id="studio-team-status" role="status" aria-live="polite"></span>
+                    </div>
+                  </form>
+                </section>
+
+                <section class="studio-card studio-create" aria-labelledby="studio-title-form-title">
+                  <div class="studio-card__head">
+                    <div>
+                      <p class="eyebrow">Тайтл</p>
+                      <h2 id="studio-title-form-title">Новая карточка</h2>
+                      <p>Права важны: без подтверждения глава не опубликуется.</p>
+                    </div>
+                  </div>
+                  <form class="studio-form" id="studio-title-form" novalidate>
+                    <div class="studio-form__row">
+                      <label class="studio-field">
+                        <span>Slug</span>
+                        <input name="slug" type="text" maxlength="120" pattern="[a-z0-9-]{3,120}" placeholder="nochnaya-smena" required>
+                        <small class="studio-field__error" data-error="slug"></small>
+                      </label>
+                      <label class="studio-field">
+                        <span>Тип</span>
+                        <select name="type">
+                          <option value="manga">Манга</option>
+                          <option value="manhwa">Манхва</option>
+                          <option value="manhua">Маньхуа</option>
+                          <option value="novel">Новелла</option>
+                        </select>
+                      </label>
+                    </div>
+                    <label class="studio-field">
+                      <span>Название</span>
+                      <input name="title" type="text" maxlength="200" placeholder="Ночная смена" required>
+                      <small class="studio-field__error" data-error="title"></small>
+                    </label>
+                    <label class="studio-field">
+                      <span>Оригинальное название</span>
+                      <input name="originalTitle" type="text" maxlength="200" placeholder="Night Shift">
+                    </label>
+                    <label class="studio-field">
+                      <span>Описание</span>
+                      <textarea name="description" rows="3" maxlength="4000" placeholder="О чём история, без спойлеров"></textarea>
+                    </label>
+
+                    <div class="studio-form__row">
+                      <label class="studio-field">
+                        <span>Права</span>
+                        <select name="rightsStatus">
+                          <option value="unverified">Не подтверждены</option>
+                          <option value="licensed">Лицензия</option>
+                          <option value="permission">Разрешение автора</option>
+                          <option value="public_domain">Общественное достояние</option>
+                          <option value="cc">Creative Commons</option>
+                        </select>
+                      </label>
+                      <label class="studio-field">
+                        <span>Возраст</span>
+                        <select name="ageRating">
+                          <option value="0">0+</option>
+                          <option value="6">6+</option>
+                          <option value="12">12+</option>
+                          <option value="16">16+</option>
+                          <option value="18">18+</option>
+                        </select>
+                      </label>
+                    </div>
+                    <label class="studio-field">
+                      <span>Правообладатель</span>
+                      <input name="rightsHolder" type="text" maxlength="200" placeholder="Автор или издательство">
+                    </label>
+                    <div class="studio-form__row">
+                      <label class="studio-field">
+                        <span>Лицензия</span>
+                        <input name="license" type="text" maxlength="120" placeholder="author-permission">
+                      </label>
+                      <label class="studio-field">
+                        <span>Ссылка на лицензию</span>
+                        <input name="licenseUrl" type="url" maxlength="500" placeholder="https://…">
+                        <small class="studio-field__error" data-error="licenseUrl"></small>
+                      </label>
+                    </div>
+                    <label class="studio-field">
+                      <span>Источник</span>
+                      <input name="sourceUrl" type="url" maxlength="500" placeholder="https://example.com/work">
+                      <small class="studio-field__error" data-error="sourceUrl"></small>
+                    </label>
+
+                    <div class="studio-actions">
+                      <button class="btn btn--primary" type="submit">Создать тайтл</button>
+                      <span class="studio-status" id="studio-title-status" role="status" aria-live="polite"></span>
+                    </div>
+                  </form>
+                </section>
+
+                <section class="studio-card studio-create" aria-labelledby="studio-chapter-form-title">
+                  <div class="studio-card__head">
+                    <div>
+                      <p class="eyebrow">Глава</p>
+                      <h2 id="studio-chapter-form-title">Новая глава</h2>
+                      <p>Номер уникален внутри тайтла и языка.</p>
+                    </div>
+                  </div>
+                  <form class="studio-form" id="studio-chapter-form" novalidate>
+                    <label class="studio-field">
+                      <span>Тайтл</span>
+                      <select name="titleSlug" required></select>
+                      <small class="studio-field__error" data-error="titleSlug"></small>
+                    </label>
+                    <div class="studio-form__row">
+                      <label class="studio-field">
+                        <span>Номер</span>
+                        <input name="number" type="number" min="0.01" max="99999" step="0.01" value="1" required>
+                        <small class="studio-field__error" data-error="number"></small>
+                      </label>
+                      <label class="studio-field">
+                        <span>Команда</span>
+                        <select name="teamId" required></select>
+                        <small class="studio-field__error" data-error="teamId"></small>
+                      </label>
+                    </div>
+                    <label class="studio-field">
+                      <span>Название главы</span>
+                      <input name="title" type="text" maxlength="200" placeholder="Например: Первый снег">
+                    </label>
+                    <div class="studio-actions">
+                      <button class="btn btn--secondary" type="submit">Создать главу</button>
+                      <span class="studio-status" id="studio-chapter-status" role="status" aria-live="polite"></span>
+                    </div>
+                    <p class="studio-note studio-note--tight" id="studio-chapter-hint">Сначала нужна команда и тайтл.</p>
+                  </form>
+                </section>
+              </aside>
+            </div>
+          </div>
+
+          <div class="studio-panel" id="studio-panel-moderation" role="tabpanel" aria-labelledby="studio-tab-moderation" hidden>
+            <section class="studio-card studio-queue" aria-labelledby="studio-queue-title">
+              <div class="studio-card__head">
+                <div>
+                  <p class="eyebrow">Проверка</p>
+                  <h2 id="studio-queue-title">Очередь модерации</h2>
+                  <p>Сначала старые. Решение принимается по последней версии главы.</p>
+                </div>
+                <div class="studio-queue__head-actions">
+                  <span class="studio-badge" id="studio-queue-total">0 в очереди</span>
+                  <button class="studio-icon-btn" type="button" id="studio-refresh-queue" aria-label="Обновить очередь" title="Обновить очередь">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M20 11a8 8 0 1 0-2.3 5.7"></path>
+                      <path d="M20 4v7h-7"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <p class="studio-status" id="studio-queue-state" role="status" aria-live="polite">Загружаем очередь…</p>
+              <div class="studio-queue__list" id="studio-queue-list"></div>
+
+              <div class="studio-empty" id="studio-queue-empty" hidden>
+                <img src="assets/logo-symbol.svg" alt="" width="34" height="34">
+                <b>Очередь пуста</b>
+                Всё проверено. Новые главы придут сюда сами.
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <div class="footer__grid">
+          <div class="footer__brand">
+            <a class="brand" href="index.html" aria-label="Kuroha — главная">
+              <img src="assets/logo-symbol.svg" alt="" width="32" height="32">
+              <span>KUROHA</span>
+            </a>
+            <p>Kuroha — манга, сообщество и ещё. Читай между строк.</p>
+          </div>
+          <div class="footer__col">
+            <h4>Библиотека</h4>
+            <a href="catalog.html">Каталог</a>
+            <a href="genres.html">Жанры</a>
+            <a href="collections.html">Подборки</a>
+            <a href="lists.html">Списки</a>
+            <a href="novels.html">Новеллы</a>
+            <a href="feed.html">Лента</a>
+            <a href="schedule.html">Расписание</a>
+            <a href="top.html">Топы</a>
+            <a href="notes.html">Заметки</a>
+
+            <a href="quotes.html">Цитаты</a>
+            <a href="bingo.html">Девять вечеров</a>
+            <a href="evening.html">Мой вечер</a>
+            <a href="year.html">Итоги года</a>
+            <a href="recommendations.html">Рекомендации</a>
+            <a href="teams.html">Команды</a>
+            <a href="clubs.html">Клубы</a>
+            <a href="readers.html">Читатели</a>
+            <a href="letters.html">Письма</a>
+            <a href="catalog.html?status=completed">Завершённые</a>
+          </div>
+          <div class="footer__col">
+            <h4>Помощь</h4>
+            <a href="about.html">О проекте</a>
+            <a href="rules.html">Правила</a>
+            <a href="terms.html">Соглашение</a>
+            <a href="privacy.html">Конфиденциальность</a>
+            <a href="dmca.html">DMCA</a>
+            <a href="offer.html">Оферта</a>
+            <a href="about.html#contacts">Контакты</a>
+          </div>
+          <div class="footer__col">
+            <h4>Связь</h4>
+            <a href="#" data-demo-link data-demo-message="Telegram-канал появится позже.">Telegram</a>
+            <a href="#" data-demo-link data-demo-message="Discord появится позже.">Discord</a>
+            <a href="#" data-demo-link data-demo-message="Почта появится позже.">hello@kuroha.org</a>
+          </div>
+        </div>
+        <div class="footer__bottom">
+          <span>© 2026 Kuroha</span>
+          <span class="age-badge">18+</span>
+          <span>Прототип: тайтлы и главы вымышлены.</span>
+          <a href="admin.html">Админка</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+    <div class="search-dialog__panel">
+      <button class="search-dialog__close" type="button" data-search-close aria-label="Закрыть поиск">×</button>
+      <p class="search-dialog__label">Поиск по библиотеке</p>
+      <h2 id="search-title">Что будем читать?</h2>
+      <form id="search-form">
+        <label class="sr-only" for="search-input">Название, автор или жанр</label>
+        <input id="search-input" name="q" type="search" placeholder="Название, автор или жанр" autocomplete="off">
+        <div class="search-dialog__foot">
+          <span class="search-dialog__hint">Например: «Пепел и луна»</span>
+          <button class="btn btn--primary" type="submit">Искать</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="data.js?v=age1" defer></script>
+  <script src="search-data.js?v=search1" defer></script>
+  <script src="app.js?v=search1" defer></script>
+  <script src="studio.js?v=studio6" defer></script>
+  <script src="pwa.js" defer></script>
+</body>
+</html>
+
+
+
+
+
