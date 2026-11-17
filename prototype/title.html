@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="tokens.css?v=brand3">
   <link rel="stylesheet" href="styles.css?v=design2">
-  <link rel="stylesheet" href="detail.css?v=age3">
+  <link rel="stylesheet" href="detail.css?v=age4">
   <link rel="stylesheet" href="age-gate.css?v=age1">
   <link rel="stylesheet" href="reports.css?v=report2">
   <link rel="stylesheet" href="ratings.css?v=brand5">
@@ -31,6 +31,9 @@
         : savedTheme;
       if (initialTheme === "night" || initialTheme === "paper" || initialTheme === "graphite") {
         document.documentElement.dataset.theme = initialTheme;
+      }
+      if (new URLSearchParams(window.location.search).get("titleSlug")) {
+        document.documentElement.classList.add("is-title-api");
       }
     } catch (error) {}
   </script>
@@ -521,7 +524,7 @@
   <script src="lists.js?v=brand3" defer></script>
   <script src="teams-data.js?v=teams3" defer></script>
   <script src="age-gate.js?v=age1" defer></script>
-  <script src="detail.js?v=age2" defer></script>
+  <script src="detail.js?v=age4" defer></script>
   <script src="reports.js?v=report1" defer></script>
   <script src="notifications.js?v=notif1" defer></script>
   <script src="pwa.js" defer></script>

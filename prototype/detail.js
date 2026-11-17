@@ -2,11 +2,46 @@
 (() => {
   "use strict";
 
-  const titles = window.KUROHA_TITLES || [];
-  if (!titles.length) return;
-
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+
+  const API_TYPE_LABELS = {
+    manga: "манга",
+    manhwa: "манхва",
+    manhua: "маньхуа",
+    novel: "новелла"
+  };
+  const API_TITLE_STATUS_LABELS = {
+    published: "опубликовано",
+    draft: "черновик",
+    hidden: "скрыто",
+    removed: "снято"
+  };
+  const API_RIGHTS_LABELS = {
+    licensed: "лицензия",
+    permission: "разрешение автора",
+    public_domain: "общественное достояние",
+    cc: "Creative Commons",
+    unverified: "права не подтверждены"
+  };
+
+  const params = new URLSearchParams(window.location.search);
+  const currentPage =
+    document.body.dataset.page ||
+    ($("#reader-text") ? "reader" : "title");
+  const apiTitleSlug = (params.get("titleSlug") || "").trim();
+
+  if (apiTitleSlug && currentPage === "title") {
+    initApiTitlePage(apiTitleSlug, params.get("api"));
+    return;
+  }
+
+  if (apiTitleSlug && params.get("chapterId") && currentPage === "reader") {
+    alignApiReaderTitleLinks(apiTitleSlug, params.get("api"));
+  }
+
+  const titles = window.KUROHA_TITLES || [];
+  if (!titles.length) return;
 
   const TYPE_LABELS = {
     manga: "манга",
@@ -102,7 +137,6 @@
     position: "kuroha-reader-position"
   };
 
-  const params = new URLSearchParams(window.location.search);
   const slug = params.get("slug");
   const item =
     titles.find((title) => title.slug === slug) ||
@@ -142,10 +176,6 @@
       null
     );
   }
-
-  const currentPage =
-    document.body.dataset.page ||
-    ($("#reader-text") ? "reader" : "title");
 
   function escapeHTML(value) {
     const characters = {
@@ -1669,6 +1699,588 @@
     bindChapterDiscussion(chapter);
   }
 
+  /* --------------------------------------------------------------------------
+     API title page — title.html?titleSlug=…&api=…
+     Demo mode (title.html?slug=…) is rendered exactly as before.
+     -------------------------------------------------------------------------- */
+  function apiBaseFromParam(raw) {
+    const value = String(raw || "").trim();
+    return (value || "http://127.0.0.1:4180/api").replace(/\/+$/, "");
+  }
+
+  function apiTypeLabel(type) {
+    return API_TYPE_LABELS[type] || type || "тайтл";
+  }
+
+  function apiTitleStatusLabel(status) {
+    return API_TITLE_STATUS_LABELS[status] || status || "—";
+  }
+
+  function apiRightsLabel(status) {
+    return API_RIGHTS_LABELS[status] || status || "не указаны";
+  }
+
+  function apiSafeUrl(value) {
+    const raw = String(value || "").trim();
+    if (!raw) return "";
+    try {
+      const url = new URL(raw);
+      if (url.protocol === "http:" || url.protocol === "https:") return raw;
+    } catch (error) {}
+    return "";
+  }
+
+  function apiReaderHref(api, slug, chapterId) {
+    return (
+      "reader.html?chapterId=" + encodeURIComponent(chapterId) +
+      "&api=" + encodeURIComponent(api) +
+      "&titleSlug=" + encodeURIComponent(slug)
+    );
+  }
+
+  function apiTitleHref(api, slug) {
+    return (
+      "title.html?titleSlug=" + encodeURIComponent(slug) +
+      "&api=" + encodeURIComponent(api)
+    );
+  }
+
+  function alignApiReaderTitleLinks(rawSlug, rawApi) {
+    const slug = String(rawSlug || "").trim();
+    if (!slug) return;
+    const href = apiTitleHref(apiBaseFromParam(rawApi), slug);
+
+    window.addEventListener("load", () => {
+      ["#reader-back", "#reader-close", "#reader-to-title"].forEach((selector) => {
+        const link = $(selector);
+        if (link) link.href = href;
+      });
+      $$(".reader-images__action").forEach((link) => {
+        if (link.tagName === "A") link.href = href;
+      });
+    });
+  }
+
+  function initApiTitlePage(rawSlug, rawApi) {
+    const main = $("#main");
+    if (!main) return;
+
+    const api = apiBaseFromParam(rawApi);
+    const slug = String(rawSlug || "").trim();
+    const hero = $("#title-hero");
+    const continueBlock = $("#title-continue");
+    const layout = $(".title-layout");
+    const similar = $(".similar-section");
+    const state = document.createElement("section");
+    let attempt = 0;
+
+    document.body.dataset.titleApi = "true";
+    state.className = "title-api-state container";
+    state.id = "title-api-state";
+    state.setAttribute("role", "status");
+    state.setAttribute("aria-live", "polite");
+    main.insertBefore(state, main.firstChild);
+
+    [hero, continueBlock, layout, similar].forEach((block) => {
+      if (block) block.hidden = true;
+    });
+
+    /* Demo scripts may have opened a gate or queued a report for the demo slug. */
+    $$(".age-gate").forEach((dialog) => dialog.remove());
+
+    load();
+
+    function skeletonRow() {
+      return (
+        '<div class="title-api-skeleton__row">' +
+        "<span></span><span></span><span></span>" +
+        "</div>"
+      );
+    }
+
+    function showSkeleton() {
+      document.title = "Загрузка тайтла — Kuroha";
+      state.innerHTML =
+        '<div class="title-api-skeleton" aria-hidden="true">' +
+        '<div class="title-api-skeleton__cover"></div>' +
+        '<div class="title-api-skeleton__body">' +
+        '<span class="title-api-skeleton__line title-api-skeleton__line--eyebrow"></span>' +
+        '<span class="title-api-skeleton__line title-api-skeleton__line--heading"></span>' +
+        '<span class="title-api-skeleton__line"></span>' +
+        '<span class="title-api-skeleton__line"></span>' +
+        '<span class="title-api-skeleton__line title-api-skeleton__line--short"></span>' +
+        "</div>" +
+        "</div>" +
+        '<div class="title-api-skeleton__chapters" aria-hidden="true">' +
+        skeletonRow() + skeletonRow() + skeletonRow() + skeletonRow() +
+        "</div>" +
+        '<p class="sr-only">Загружаем тайтл…</p>';
+      main.setAttribute("aria-busy", "true");
+      document.documentElement.classList.add("is-title-api");
+    }
+
+    async function load() {
+      const ticket = ++attempt;
+      showSkeleton();
+
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 10000);
+      let response;
+      let payload = null;
+
+      try {
+        response = await fetch(api + "/titles/" + encodeURIComponent(slug), {
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+          signal: controller.signal
+        });
+        try {
+          payload = await response.json();
+        } catch (error) {}
+      } catch (error) {
+        window.clearTimeout(timer);
+        if (ticket !== attempt) return;
+        showError(error);
+        return;
+      }
+      window.clearTimeout(timer);
+      if (ticket !== attempt) return;
+
+      if (!response.ok) {
+        const details =
+          payload && payload.error && typeof payload.error === "object"
+            ? payload.error
+            : null;
+        showError({
+          status: response.status,
+          code: details ? details.code : "",
+          message:
+            details && details.message
+              ? details.message
+              : typeof payload?.error === "string"
+                ? payload.error
+                : ""
+        });
+        return;
+      }
+
+      if (!payload || payload.ok !== true || !payload.title) {
+        showError({ status: 200, code: "BAD_RESPONSE" });
+        return;
+      }
+
+      render(payload);
+      main.removeAttribute("aria-busy");
+    }
+
+    function showError(error) {
+      const status = Number(error && error.status) || 0;
+      let heading = "Тайтл не загрузился";
+      let text = "Попробуй ещё раз — страница не потерялась.";
+
+      if (status === 404) {
+        heading = "Тайтл не найден";
+        text = "Возможно, ссылка устарела или тайтл снят с публикации.";
+      } else if (status === 401) {
+        heading = "Нужен вход";
+        text = "Эта страница доступна после входа в аккаунт команды.";
+      } else if (status === 403) {
+        heading = "Страница закрыта";
+        text = "Тайтл доступен только команде перевода и модерации.";
+      } else if (status === 200) {
+        text = "API ответил неполными данными. Проверь адрес API и попробуй снова.";
+      } else if (status >= 500) {
+        text = "Сервер временно не справился с запросом. Попробуй ещё раз через минуту.";
+      } else if (!status) {
+        heading = "Сервер не отвечает";
+        text =
+          "Проверь, что API запущен на " + api + ", и попробуй снова.";
+      }
+
+      document.title = heading + " — Kuroha";
+      main.removeAttribute("aria-busy");
+      document.documentElement.classList.add("is-title-api");
+      state.innerHTML =
+        '<div class="title-api-state__panel">' +
+        '<p class="eyebrow">API</p>' +
+        '<h1 class="title-api-state__title">' + escapeHTML(heading) + "</h1>" +
+        '<p class="title-api-state__text">' + escapeHTML(text) + "</p>" +
+        '<div class="title-api-state__actions">' +
+        '<button class="btn btn--secondary" type="button" data-api-retry>Повторить</button>' +
+        '<a class="btn btn--ghost" href="catalog.html">В каталог</a>' +
+        "</div>" +
+        "</div>";
+
+      const retry = state.querySelector("[data-api-retry]");
+      if (retry) retry.addEventListener("click", () => load());
+    }
+
+    function publishedVersion(chapter) {
+      const versions = Array.isArray(chapter.versions) ? chapter.versions : [];
+      return versions.find((version) => version && version.status === "published") || null;
+    }
+
+    function coverLines(value) {
+      const title = String(value || "").trim();
+      const words = title.split(/\s+/).filter(Boolean);
+      if (words.length < 2) return [title, ""];
+
+      let bestIndex = 1;
+      let bestScore = Infinity;
+      for (let index = 1; index < words.length; index += 1) {
+        const left = words.slice(0, index).join(" ");
+        const right = words.slice(index).join(" ");
+        const score = Math.abs(left.length - right.length);
+        if (score < bestScore) {
+          bestScore = score;
+          bestIndex = index;
+        }
+      }
+      return [
+        words.slice(0, bestIndex).join(" "),
+        words.slice(bestIndex).join(" ")
+      ];
+    }
+
+    function coverHTML(title) {
+      const lines = coverLines(title.titleRu || "Без названия");
+      const first = escapeHTML(lines[0] || "");
+      const second = lines[1] ? "<br>" + escapeHTML(lines[1]) : "";
+      return (
+        '<div class="cover cover--lg cover--low" data-art="line" ' +
+        'style="--c1:var(--kh-ink-700);--c2:var(--kh-ink-950);--c-accent:var(--kh-red)" aria-hidden="true">' +
+        '<span class="cover__type">' + escapeHTML(apiTypeLabel(title.type)) + "</span>" +
+        '<span class="cover__title">' + first + second + "</span>" +
+        "</div>"
+      );
+    }
+
+    function hideDemoControls() {
+      [
+        "#shelf-picker",
+        "#lists-picker",
+        "[data-bookmark]",
+        ".title-rating",
+        ".title-tabs",
+        "#title-continue",
+        ".similar-section",
+        "#side-shelf",
+        ".side-bookmark",
+        "#title-genres"
+      ].forEach((selector) => {
+        $$(selector).forEach((element) => {
+          element.hidden = true;
+        });
+      });
+
+      const sideProgress = $("#side-progress");
+      if (sideProgress) {
+        const block = sideProgress.closest(".side-block");
+        if (block) block.hidden = true;
+      }
+
+      const sideGenres = $("#side-genres");
+      if (sideGenres) {
+        const block = sideGenres.closest(".side-block");
+        if (block) block.hidden = true;
+      }
+
+      $$(".side-report").forEach((block) => block.remove());
+
+      $$("[data-title-panel]").forEach((panel) => {
+        panel.hidden = panel.dataset.titlePanel !== "chapters";
+      });
+      const chaptersPanel = $("#title-chapters");
+      if (chaptersPanel) chaptersPanel.hidden = false;
+    }
+
+    function hideSideRow(selector) {
+      const node = $(selector);
+      if (!node) return;
+      const row = node.closest("div");
+      if (row) row.hidden = true;
+    }
+
+    function renderRights(title) {
+      const titleMain = $(".title-main");
+      if (!titleMain) return;
+
+      const status = title.rightsStatus || "unverified";
+      const statusKey = Object.prototype.hasOwnProperty.call(API_RIGHTS_LABELS, status)
+        ? status
+        : "unverified";
+      const rows = [];
+
+      if (title.rightsHolder) {
+        rows.push(
+          '<div class="title-rights__row"><dt>Правообладатель</dt><dd>' +
+          escapeHTML(title.rightsHolder) + "</dd></div>"
+        );
+      }
+      if (title.licenseCode) {
+        rows.push(
+          '<div class="title-rights__row"><dt>Лицензия</dt><dd>' +
+          escapeHTML(title.licenseCode) + "</dd></div>"
+        );
+      }
+
+      const licenseUrl = apiSafeUrl(title.licenseUrl);
+      if (licenseUrl) {
+        rows.push(
+          '<div class="title-rights__row"><dt>Условия лицензии</dt><dd>' +
+          '<a href="' + escapeHTML(licenseUrl) + '" target="_blank" rel="noopener noreferrer">' +
+          escapeHTML(licenseUrl) + "</a></dd></div>"
+        );
+      }
+
+      const sourceUrl = apiSafeUrl(title.sourceUrl);
+      if (sourceUrl) {
+        rows.push(
+          '<div class="title-rights__row"><dt>Источник</dt><dd>' +
+          '<a href="' + escapeHTML(sourceUrl) + '" target="_blank" rel="noopener noreferrer">' +
+          escapeHTML(sourceUrl) + "</a></dd></div>"
+        );
+      }
+
+      if (!rows.length) {
+        rows.push(
+          '<div class="title-rights__row"><dt>Сведения</dt><dd>' +
+          "Правообладатель и лицензия не указаны.</dd></div>"
+        );
+      }
+
+      const warning =
+        statusKey === "unverified"
+          ? '<p class="title-rights__warning" role="note">' +
+            "<b>Права не подтверждены.</b> Мы показываем страницу без уверенности, " +
+            'что публикация согласована. Если ты правообладатель, напиши нам через ' +
+            '<a href="dmca.html">страницу DMCA</a>.' +
+            "</p>"
+          : "";
+
+      const block = document.createElement("section");
+      block.className = "title-rights";
+      block.id = "api-rights";
+      block.setAttribute("aria-labelledby", "api-rights-title");
+      block.innerHTML =
+        '<div class="title-rights__head">' +
+        "<div>" +
+        '<p class="eyebrow">Права</p>' +
+        '<h2 class="title-rights__title" id="api-rights-title">Права и источник</h2>' +
+        "</div>" +
+        '<span class="title-rights__status title-rights__status--' + statusKey + '">' +
+        escapeHTML(apiRightsLabel(status)) + "</span>" +
+        "</div>" +
+        '<dl class="title-rights__list">' + rows.join("") + "</dl>" +
+        warning;
+
+      titleMain.insertBefore(block, titleMain.firstChild);
+    }
+
+    function renderChapters(chapters) {
+      const list = $("#chapter-list");
+      const more = $("#chapter-more");
+      if (more) more.hidden = true;
+
+      const setText = (selector, value) => {
+        const element = $(selector);
+        if (element) element.textContent = value;
+      };
+
+      setText("#chapter-count", chapters.length + " " + plural(chapters.length, ["глава", "главы", "глав"]));
+      setText("#chapter-tab-count", String(chapters.length));
+
+      const heading = $("#chapters-title");
+      if (heading) {
+        heading.textContent = chapters.length ? "Опубликованные главы" : "Глав пока нет";
+      }
+      const lead = $("#title-chapters .section-head > div > p:last-of-type");
+      if (lead) {
+        lead.textContent = chapters.length
+          ? "Только опубликованные главы — в порядке номеров."
+          : "Как только команда опубликует первую главу, она появится здесь.";
+      }
+
+      if (!list) return;
+
+      if (!chapters.length) {
+        list.innerHTML =
+          '<div class="title-api-empty">' +
+          "<b>Опубликованных глав пока нет.</b>" +
+          "<p>Страница уже существует, но читать пока нечего.</p>" +
+          "</div>";
+        return;
+      }
+
+      list.innerHTML = chapters
+        .map((chapter) => {
+          const version = publishedVersion(chapter);
+          const rawNumber = chapter.number == null ? "" : String(chapter.number).replace(".", ",");
+          const number = rawNumber
+            ? /^\d+$/.test(rawNumber)
+              ? rawNumber.padStart(2, "0")
+              : rawNumber
+            : "—";
+          const meta = [];
+          if (version && version.team && version.team.name) meta.push(version.team.name);
+          if (version && Number(version.pageCount) > 0) {
+            meta.push(
+              Number(version.pageCount) + " " +
+              plural(Number(version.pageCount), ["страница", "страницы", "страниц"])
+            );
+          }
+          const name = chapter.name || (rawNumber ? "Глава " + rawNumber : "Без названия");
+          return (
+            '<div class="chapter-row chapter-row--api">' +
+            '<span class="chapter-row__num">' + escapeHTML(number) + "</span>" +
+            '<span class="chapter-row__title">' + escapeHTML(name) + "</span>" +
+            '<span class="chapter-row__meta">' + escapeHTML(meta.join(" · ")) + "</span>" +
+            '<a class="chapter-row__read" href="' +
+            escapeHTML(apiReaderHref(api, slug, chapter.id)) + '" aria-label="Читать главу ' +
+            escapeHTML(rawNumber || number) + ": " + escapeHTML(name) + '">Читать</a>' +
+            "</div>"
+          );
+        })
+        .join("");
+    }
+
+    function render(payload) {
+      const title = payload.title || {};
+      const chapters = (Array.isArray(payload.chapters) ? payload.chapters : [])
+        .filter((chapter) => chapter && chapter.status === "published" && chapter.id)
+        .sort((left, right) => Number(left.number) - Number(right.number));
+
+      const setText = (selector, value) => {
+        const element = $(selector);
+        if (element) element.textContent = value;
+      };
+
+      document.title = (title.titleRu || "Тайтл") + " — Kuroha";
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.setAttribute(
+          "content",
+          (title.titleRu || "Тайтл") + " — читать в Kuroha."
+        );
+      }
+
+      setText("#title-breadcrumb-type", apiTypeLabel(title.type));
+      setText(
+        "#title-type",
+        apiTypeLabel(title.type) + " · " + apiTitleStatusLabel(title.status)
+      );
+      setText("#title-name", title.titleRu || "Без названия");
+
+      const author = $("#title-author");
+      if (author) {
+        if (title.titleOriginal) {
+          author.textContent = "Оригинал: " + title.titleOriginal;
+          author.hidden = false;
+        } else if (title.authorName) {
+          author.textContent = title.authorName;
+          author.hidden = false;
+        } else {
+          author.hidden = true;
+        }
+      }
+
+      setText(
+        "#title-description",
+        title.description || "Описание пока не добавлено."
+      );
+
+      const age = Number(title.ageRating);
+      const ageLabel = Number.isFinite(age) ? age + "+" : "";
+      const meta = [
+        apiTypeLabel(title.type),
+        ageLabel,
+        chapters.length + " " + plural(chapters.length, ["глава", "главы", "глав"]),
+        apiTitleStatusLabel(title.status)
+      ].filter(Boolean);
+      setText("#title-meta", meta.join(" · "));
+
+      const cover = $("#title-cover");
+      if (cover) cover.innerHTML = coverHTML(title);
+      setText("#title-cover-code", "API");
+
+      if (hero) {
+        hero.hidden = false;
+        hero.style.setProperty("--title-c1", "var(--kh-surface-raised)");
+      }
+      if (continueBlock) continueBlock.hidden = true;
+      if (similar) similar.hidden = true;
+      if (layout) layout.hidden = false;
+
+      hideDemoControls();
+      renderRights(title);
+      renderChapters(chapters);
+
+      setText("#side-type", apiTypeLabel(title.type));
+      setText("#side-status", apiTitleStatusLabel(title.status));
+      setText("#side-chapters", String(chapters.length));
+      hideSideRow("#side-year");
+      hideSideRow("#side-rating");
+
+      const authorNames = [];
+      if (title.authorName) authorNames.push(title.authorName);
+      if (title.artistName) authorNames.push("художник: " + title.artistName);
+      if (authorNames.length) {
+        setText("#side-author", authorNames.join(" · "));
+      } else {
+        hideSideRow("#side-author");
+      }
+
+      const teamNames = [];
+      const seenTeams = new Set();
+      chapters.forEach((chapter) => {
+        const version = publishedVersion(chapter);
+        if (!version || !version.team || !version.team.name) return;
+        const key = version.team.id || version.team.name;
+        if (seenTeams.has(key)) return;
+        seenTeams.add(key);
+        teamNames.push(version.team.name);
+      });
+
+      const teamBlock = $("#side-team");
+      if (teamBlock) {
+        if (!teamNames.length) {
+          teamBlock.hidden = true;
+        } else {
+          teamBlock.hidden = false;
+          teamBlock.innerHTML =
+            "<h3>Команда</h3>" +
+            '<dl class="side-list">' +
+            teamNames
+              .map((name) => "<div><dt>Перевод</dt><dd>" + escapeHTML(name) + "</dd></div>")
+              .join("") +
+            "</dl>" +
+            '<p class="side-team__note">По опубликованным главам.</p>';
+        }
+      }
+
+      const read = $("#title-read");
+      if (read) {
+        if (chapters.length) {
+          read.href = apiReaderHref(api, slug, chapters[0].id);
+          read.textContent = "Начать читать";
+          read.removeAttribute("aria-disabled");
+          read.classList.remove("is-disabled");
+          read.removeAttribute("title");
+        } else {
+          read.removeAttribute("href");
+          read.setAttribute("aria-disabled", "true");
+          read.classList.add("is-disabled");
+          read.textContent = "Начать читать";
+          read.title = "Опубликованных глав пока нет";
+        }
+      }
+
+      state.remove();
+      document.documentElement.classList.remove("is-title-api");
+      main.removeAttribute("aria-busy");
+    }
+  }
+
   bindBookmarks();
   bindShelf();
   bindLists();
@@ -1681,5 +2293,5 @@
     scrollToStatsHash();
     scrollToReviewsHash();
   }
-  if (currentPage === "reader") renderReader();
+  if (currentPage === "reader" && !params.get("chapterId")) renderReader();
 })();

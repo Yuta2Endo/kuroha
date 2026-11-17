@@ -179,6 +179,11 @@
     return origin + (value.charAt(0) === "/" ? value : "/" + value);
   }
 
+  function titlePageHref(slug) {
+    return "title.html?titleSlug=" + encodeURIComponent(slug) +
+      "&api=" + encodeURIComponent(state.api);
+  }
+
   function isHttpUrl(value) {
     if (!value) return true;
     try {
@@ -956,6 +961,11 @@
       if (version && version.reviewNote && (status === "changes_requested" || status === "rejected")) {
         note = '<p class="studio-chapter__note">' + escapeHTML(version.reviewNote) + "</p>";
       }
+      var readLink = status === "published"
+        ? '<a class="studio-link" href="reader.html?chapterId=' + encodeURIComponent(chapter.id) +
+          "&api=" + encodeURIComponent(state.api) +
+          "&titleSlug=" + encodeURIComponent(title.slug) + '">Читать</a>'
+        : "";
       return [
         '<div class="studio-chapter">',
         '<span class="studio-chapter__number">', escapeHTML(chapter.number), "</span>",
@@ -966,6 +976,7 @@
         "</div>",
         '<div class="studio-chapter__side">',
         '<span class="studio-status-chip ', statusClass(status), '">', escapeHTML(statusLabel(status)), "</span>",
+        readLink,
         '<button class="studio-link" type="button" data-open-chapter="', escapeHTML(chapter.id), '">Открыть</button>',
         "</div>",
         "</div>"
@@ -986,6 +997,9 @@
       "<span>Права: <b>", escapeHTML(rightsLabel(title.rightsStatus)), "</b></span>",
       "<span>Глав: <b>", chapters.length, "</b></span>",
       "<span>Опубликовано: <b>", publishedCount, "</b></span>",
+      title.status === "published"
+        ? '<a class="studio-link" href="' + escapeHTML(titlePageHref(title.slug)) + '">Открыть страницу тайтла</a>'
+        : "",
       canAddChapter(title)
         ? '<button class="studio-link" type="button" data-add-chapter="' + escapeHTML(title.slug) + '">Добавить главу</button>'
         : "",
@@ -1262,7 +1276,10 @@
       '<span class="studio-badge">глава ', escapeHTML(chapter.number), "</span>",
       version && version.team ? '<span class="studio-badge">' + escapeHTML(version.team.name) + "</span>" : "",
       '<span class="studio-status-chip ', statusClass(status), '">', escapeHTML(statusLabel(status)), "</span>",
-      '<span class="studio-badge">', pages, " ", plural(pages, ["страница", "страницы", "страниц"]), "</span>"
+      '<span class="studio-badge">', pages, " ", plural(pages, ["страница", "страницы", "страниц"]), "</span>",
+      status === "published"
+        ? '<a class="studio-link" href="' + escapeHTML(titlePageHref(title.slug)) + '">Открыть страницу тайтла</a>'
+        : ""
     ].join("");
 
     var noteHTML = "";

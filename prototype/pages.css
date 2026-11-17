@@ -63,3 +63,233 @@
   .reader-page-nav { flex-wrap: wrap; gap: 8px; }
   .reader-page-nav__hint { width: 100%; text-align: center; }
 }
+
+/* --------------------------------------------------------------------------
+   API image chapter — reader.html?chapterId=…
+   -------------------------------------------------------------------------- */
+body[data-reader-images="true"] .reader-main {
+  max-width: 1040px;
+  padding-bottom: calc(var(--kh-space-9) + var(--kh-space-6));
+}
+body[data-reader-images="true"] .reader-top {
+  bottom: calc(var(--kh-space-9) + var(--kh-space-1));
+}
+body[data-reader-images="true"] .reader-head {
+  margin-bottom: var(--kh-space-5);
+}
+body[data-reader-images="true"] .reader-head h1 {
+  max-width: 24ch;
+}
+
+.reader-images {
+  display: grid;
+  gap: var(--kh-space-5);
+  max-width: 860px;
+  margin: 0 auto;
+}
+.reader-images[hidden] { display: none; }
+.reader-images__status {
+  margin: 0;
+  color: var(--kh-text-faint);
+  font-size: var(--kh-text-xs);
+  letter-spacing: var(--kh-tracking-wide);
+  text-align: center;
+  text-transform: uppercase;
+}
+.reader-images__status:empty { display: none; }
+.reader-images__feed {
+  display: grid;
+  gap: var(--kh-space-2);
+}
+
+.reader-image {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--kh-border);
+  border-radius: var(--kh-radius-paper);
+  background: var(--kh-surface);
+  scroll-margin-top: calc(var(--reader-bar-height, 64px) + var(--kh-space-4));
+}
+.reader-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-height: 120px;
+  background: var(--kh-bg-deep);
+}
+.reader-image--skeleton {
+  aspect-ratio: 2 / 3;
+  border-color: var(--kh-border);
+  background: linear-gradient(
+    120deg,
+    var(--kh-surface) 0%,
+    var(--kh-surface-raised) 50%,
+    var(--kh-surface) 100%
+  );
+  animation: reader-image-pulse calc(var(--kh-duration-draw) * 3) var(--kh-ease-in-out) infinite;
+}
+.reader-image.is-missing {
+  display: grid;
+  min-height: 240px;
+  padding: var(--kh-space-5);
+  place-items: center;
+}
+.reader-image.is-missing img { display: none; }
+.reader-image__missing {
+  margin: 0;
+  color: var(--kh-text-faint);
+  font-size: var(--kh-text-sm);
+  line-height: var(--kh-leading-relaxed);
+  text-align: center;
+}
+@keyframes reader-image-pulse {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+.reader-images__error {
+  max-width: 480px;
+  margin: var(--kh-space-7) auto;
+  padding: var(--kh-space-6) var(--kh-space-5);
+  border: 1px solid var(--kh-border);
+  border-radius: var(--kh-radius-card);
+  background: var(--kh-surface);
+  text-align: center;
+}
+.reader-images__error-label {
+  margin: 0 0 var(--kh-space-2);
+  color: var(--kh-text);
+  font-family: var(--kh-font-display);
+  font-size: var(--kh-text-lg);
+  font-weight: var(--kh-weight-display);
+  letter-spacing: var(--kh-tracking-tight);
+  line-height: var(--kh-leading-snug);
+}
+.reader-images__error-text {
+  margin: 0;
+  color: var(--kh-text-muted);
+  font-size: var(--kh-text-sm);
+  line-height: var(--kh-leading-relaxed);
+}
+.reader-images__error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--kh-space-3);
+  margin-top: var(--kh-space-5);
+}
+
+.reader-images__nav {
+  position: fixed;
+  bottom: var(--kh-space-5);
+  left: 50%;
+  z-index: 79;
+  display: flex;
+  align-items: center;
+  gap: var(--kh-space-1);
+  max-width: calc(100vw - var(--kh-space-6));
+  padding: var(--kh-space-1);
+  border: 1px solid var(--kh-border);
+  border-radius: var(--kh-radius-pill);
+  background: var(--kh-bg);
+  box-shadow: var(--kh-shadow-card);
+  transform: translateX(-50%);
+}
+@supports (background: color-mix(in srgb, red 50%, transparent)) {
+  .reader-images__nav {
+    background: color-mix(in srgb, var(--kh-bg) 90%, transparent);
+    backdrop-filter: blur(14px);
+  }
+}
+.reader-images__nav[hidden] { display: none; }
+.reader-images__btn {
+  display: grid;
+  min-width: 34px;
+  height: 34px;
+  padding: 0 var(--kh-space-2);
+  place-items: center;
+  border: 0;
+  border-radius: var(--kh-radius-pill);
+  background: transparent;
+  color: var(--kh-text-muted);
+  font: inherit;
+  font-size: var(--kh-text-sm);
+  line-height: 1;
+  cursor: pointer;
+  transition: color var(--kh-duration-fast) var(--kh-ease-out),
+    background var(--kh-duration-fast) var(--kh-ease-out);
+}
+.reader-images__btn:hover:not(:disabled) {
+  background: var(--kh-surface);
+  color: var(--kh-text);
+}
+.reader-images__btn:disabled {
+  cursor: default;
+  opacity: 0.32;
+}
+.reader-images__counter {
+  min-width: 64px;
+  color: var(--kh-text-faint);
+  font-size: var(--kh-text-xs);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--kh-tracking-wide);
+  text-align: center;
+}
+.reader-images__action {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--kh-space-3);
+  border: 1px solid var(--kh-border);
+  border-radius: var(--kh-radius-pill);
+  background: transparent;
+  color: var(--kh-text-muted);
+  font: inherit;
+  font-size: var(--kh-text-xs);
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--kh-duration-fast) var(--kh-ease-out),
+    border-color var(--kh-duration-fast) var(--kh-ease-out),
+    background var(--kh-duration-fast) var(--kh-ease-out);
+}
+.reader-images__action:hover {
+  border-color: var(--kh-accent);
+  color: var(--kh-text);
+}
+.reader-images__action--primary {
+  border-color: var(--kh-border-accent);
+  background: var(--kh-bg);
+  color: var(--kh-text);
+}
+.reader-images__btn:focus-visible,
+.reader-images__action:focus-visible {
+  outline: 2px solid var(--kh-accent);
+  outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+  .reader-images { gap: var(--kh-space-4); }
+  .reader-images__nav {
+    bottom: var(--kh-space-2);
+    max-width: calc(100vw - var(--kh-space-4));
+    gap: 0;
+  }
+  .reader-images__counter { min-width: 56px; }
+  .reader-images__action { padding: 0 var(--kh-space-2); }
+  body[data-reader-images="true"] .reader-top {
+    bottom: calc(var(--kh-space-9) + var(--kh-space-2));
+  }
+}
+
+@media (max-width: 760px) {
+  body[data-reader-images="true"] .reader-shell {
+    --reader-bar-height: 60px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reader-image--skeleton { animation: none; opacity: 0.8; }
+}
