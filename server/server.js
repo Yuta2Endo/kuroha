@@ -36,6 +36,9 @@ const CONFIGURED_ORIGINS = String(process.env.KUROHA_ALLOWED_ORIGINS || "")
   .map((origin) => origin.trim())
   .filter(Boolean);
 const ALLOWED_ORIGINS = new Set(CONFIGURED_ORIGINS.length ? CONFIGURED_ORIGINS : DEFAULT_ORIGINS);
+const ALLOW_REGISTRATION = String(
+  process.env.KUROHA_ALLOW_REGISTRATION == null ? "true" : process.env.KUROHA_ALLOW_REGISTRATION
+).trim().toLowerCase() !== "false";
 
 let db = loadDb();
 
@@ -1205,6 +1208,14 @@ function route(req, res) {
   }
 
   if (req.method === "POST" && pathname === "/api/register") {
+    if (!ALLOW_REGISTRATION) {
+      return fail(
+        res,
+        403,
+        "REGISTRATION_CLOSED",
+        "Регистрация закрыта. Войти можно только с существующим аккаунтом."
+      );
+    }
     return readBody(req).then((body) => {
       const name = clean(body.name, 40) || "Читатель";
       const email = clean(body.email, 120).toLowerCase();
@@ -1488,4 +1499,5 @@ const server = http.createServer((req, res) => {
 server.listen(PORT, HOST, () => {
   console.log(`Kuroha backend v0.1 → http://${HOST}:${PORT}`);
   console.log(`База: ${DB_PATH}`);
+  console.log(`Регистрация: ${ALLOW_REGISTRATION ? "открыта" : "закрыта"}`);
 });

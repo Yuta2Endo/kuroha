@@ -11,6 +11,7 @@ services:
       KUROHA_DB: /data/db.json
       KUROHA_UPLOADS: /data/uploads
       KUROHA_ALLOWED_ORIGINS: "https://yuta2endo.github.io,https://kuroha.org,https://www.kuroha.org"
+      KUROHA_ALLOW_REGISTRATION: "false"
     volumes:
       - kuroha_data:/data
 

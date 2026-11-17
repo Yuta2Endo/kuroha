@@ -753,6 +753,14 @@
         }
       } catch (error) {
         if (handleAuthError(error)) return;
+        if (error && error.code === "REGISTRATION_CLOSED") {
+          setStatus(
+            els.authStatus,
+            "Регистрация закрыта. Новые аккаунты создаёт администратор — войти можно только с существующим.",
+            "error"
+          );
+          return;
+        }
         setStatus(els.authStatus, error.message, "error");
       }
     });

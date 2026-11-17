@@ -27,6 +27,9 @@ VPS 82.147.89.193                         ▼
 | `server/.dockerignore` | не тащить в образ `db.json`, `uploads/`, `node_modules/` |
 | `deploy/docker-compose.yml` | стек Portainer: `api` + `caddy` + volumes |
 | `deploy/Caddyfile` | сайт `api.kuroha.org`, gzip/zstd, прокси на `api:4180` |
+| `deploy/backup.sh` | архив volume `kuroha_data` в `tar.gz` |
+| `deploy/restore.sh` | восстановление volume из архива |
+| `deploy/README.md` | cron, проверка восстановления, ограничения |
 | `.github/workflows/api-image.yml` | сборка и push образа в GHCR |
 
 ## 0. Что понадобится
@@ -121,8 +124,9 @@ docker pull ghcr.io/yuta2endo/kuroha-api:latest
 Если репозиторий приватный, включи **Authentication** и укажи GitHub-логин и
 PAT с доступом на чтение репозитория.
 
-Переменные окружения стека задавать не нужно: compose уже выставляет
-`KUROHA_ALLOWED_ORIGINS=https://yuta2endo.github.io,https://kuroha.org,https://www.kuroha.org`.
+Для обычного запуска переменные окружения стека задавать не нужно: compose уже
+выставляет `KUROHA_ALLOWED_ORIGINS=https://yuta2endo.github.io,https://kuroha.org,https://www.kuroha.org`
+и `KUROHA_ALLOW_REGISTRATION=false`.
 Если появится новый origin фронтенда, добавь его в эту строку в
 `deploy/docker-compose.yml` и обнови стек.
 
@@ -133,7 +137,8 @@ PAT с доступом на чтение репозитория.
 - `caddy` — `caddy:2-alpine`, порты `80`/`443` (TCP и UDP для HTTP/3), читает
   `deploy/Caddyfile`, хранит сертификаты в `caddy_data`, конфиг в
   `caddy_config`, стартует после `api`;
-- `api` пишет базу в `/data/db.json` и страницы в `/data/uploads`.
+- `api` пишет базу в `/data/db.json` и страницы в `/data/uploads`;
+- регистрация закрыта: `KUROHA_ALLOW_REGISTRATION=false`.
 
 Нажми **Deploy the stack**. Первый запуск занимает несколько секунд: Caddy
 получает сертификат, API создаёт пустую базу. Проверить, что контейнеры живы,
@@ -172,15 +177,64 @@ curl -fsS https://api.kuroha.org/api/health
 }
 ```
 
-Регистрация. **Первый зарегистрированный пользователь получает роль `admin`** —
-это правило демо-бэкенда. Сразу после деплоя зарегистрируй свой аккаунт, пока
-адрес никому не известен:
+### Регистрация закрыта
 
-```bash
-curl -fsS -X POST https://api.kuroha.org/api/register \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Админ Kuroha","email":"admin@kuroha.org","password":"замени-на-длинный-пароль"}'
+В production-стеке стоит `KUROHA_ALLOW_REGISTRATION: "false"`: публичная
+регистрация выключена. `POST /api/register` отвечает `403` в новом формате:
+
+```json
+{
+  "error": {
+    "code": "REGISTRATION_CLOSED",
+    "message": "Регистрация закрыта. Войти можно только с существующим аккаунтом."
+  }
+}
 ```
+
+Вход существующих пользователей (`POST /api/login`), `/api/me`, смена ролей и
+остальные маршруты работают как обычно. Закрытие регистрации не удаляет
+аккаунты и не сбрасывает сессии.
+
+### Временно открыть регистрацию
+
+Первый пользователь в пустой базе получает `admin`, поэтому создай свой
+аккаунт до того, как откроешь адрес кому-то ещё. Пока регистрация открыта,
+любой человек, знающий `api.kuroha.org`, может создать **reader**-аккаунт.
+
+1. Поменяй в `deploy/docker-compose.yml` у сервиса `api`:
+
+   ```yaml
+   KUROHA_ALLOW_REGISTRATION: "true"
+   ```
+
+   Стек `kuroha` развёрнут из Git, поэтому compose правится в репозитории:
+   запушь `true` в `main`, затем в Portainer открой стек и нажми **Pull and
+   redeploy** (в старых версиях — **Update the stack**). Редактор compose в
+   Portainer для Git-стека недоступен — он только для стеков из Web Editor.
+
+2. Создай аккаунт:
+
+   ```bash
+   curl -fsS -X POST https://api.kuroha.org/api/register \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"Админ Kuroha","email":"admin@kuroha.org","password":"замени-на-длинный-пароль"}'
+   ```
+
+   В пустой базе ответ содержит `"role":"admin"`. Если пользователи уже есть,
+   новый аккаунт будет `reader`; роль выдаёт админ через
+   `PATCH /api/users/:id/role`.
+
+3. Сразу верни `KUROHA_ALLOW_REGISTRATION: "false"`, запушь в `main`, снова
+   нажми **Pull and redeploy** и проверь, что регистрация закрыта:
+
+   ```bash
+   curl -s -o /dev/null -w '%{http_code}\n' -X POST https://api.kuroha.org/api/register \
+     -H 'Content-Type: application/json' \
+     -d '{"name":"Тест","email":"test@example.com","password":"testpass"}'
+   # 403
+   ```
+
+   `docker ps` покажет перезапуск `kuroha-api`; данные в volume сохраняются.
 
 CORS preflight с разрешённого origin:
 
@@ -256,32 +310,48 @@ docker volume ls | grep kuroha
 docker volume inspect kuroha_kuroha_data
 ```
 
-Бэкап (API лучше остановить, чтобы `db.json` не менялся во время копирования):
+Бэкап и восстановление делают скрипты `deploy/backup.sh` и
+`deploy/restore.sh`. После pull сделай их исполняемыми (git на Windows не
+всегда сохраняет бит):
+
+```bash
+chmod +x /opt/kuroha/deploy/backup.sh /opt/kuroha/deploy/restore.sh
+```
+
+Бэкап:
+
+```bash
+sudo BACKUP_DIR=/var/backups/kuroha RETENTION_DAYS=14 \
+  /opt/kuroha/deploy/backup.sh
+```
+
+Cron, ежедневно в 03:17:
+
+```cron
+17 3 * * * /opt/kuroha/deploy/backup.sh >> /var/log/kuroha-backup.log 2>&1
+```
+
+Восстановление — только при остановленном контейнере:
 
 ```bash
 docker stop kuroha-api
-docker run --rm \
-  -v kuroha_kuroha_data:/data \
-  -v "$PWD":/backup \
-  alpine tar czf /backup/kuroha-data-$(date +%F).tar.gz -C /data .
+sudo /opt/kuroha/deploy/restore.sh /var/backups/kuroha/kuroha-20261117-031700.tar.gz
 docker start kuroha-api
 ```
 
-Восстановление:
+`restore.sh` откажется работать с запущенным `kuroha-api`, сам сделает
+страховочный бэкап в `BACKUP_DIR/pre-restore`, очистит volume и распакует
+архив. Контейнеры он не запускает.
 
-```bash
-docker stop kuroha-api
-docker run --rm \
-  -v kuroha_kuroha_data:/data \
-  -v "$PWD":/backup \
-  alpine sh -c 'rm -rf /data/* && tar xzf /backup/kuroha-data-2026-11-17.tar.gz -C /data'
-docker start kuroha-api
-```
+Полная инструкция — cron, проверка восстановления на отдельном volume,
+ограничения — в [`deploy/README.md`](../deploy/README.md). Кратко: `db.json` и
+`uploads/` — demo-хранилище, для production нужны PostgreSQL и S3/R2 с их
+собственными бэкапами. Бэкап не останавливает API; для строго согласованного
+снимка останови `kuroha-api` перед запуском скрипта.
 
-Команда `rm -rf /data/*` удаляет только содержимое volume, но проверь имя
-volume перед запуском. Сертификаты Caddy лежат в `caddy_data`; их бэкап
-необязателен — при потере Caddy выпустит новые, но упрётся в лимиты
-Let's Encrypt при частых пересозданиях.
+Сертификаты Caddy лежат в `caddy_data`; их бэкап необязателен — при потере
+Caddy выпустит новые, но упрётся в лимиты Let's Encrypt при частых
+пересозданиях.
 
 ## 6. Ограничения
 
@@ -293,8 +363,9 @@ Let's Encrypt при частых пересозданиях.
   приватных bucket и подписанных URL;
 - нет rate limit, подтверждения email, восстановления пароля и ротации
   сессий;
-- первый зарегистрированный пользователь становится `admin` — держи адрес
-  закрытым до регистрации своего аккаунта;
+- публичная регистрация выключена (`KUROHA_ALLOW_REGISTRATION=false`), но
+  первый зарегистрированный в пустой базе становится `admin` — открывай
+  регистрацию только на время создания своего аккаунта;
 - нет горизонтального масштабирования: один контейнер и один volume, нельзя
   запускать несколько реплик на общую файловую базу;
 - TLS завершает Caddy, внутри compose-сети API общается по HTTP.
