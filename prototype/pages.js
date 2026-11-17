@@ -143,7 +143,7 @@
     const article = document.querySelector(".reader-article");
     if (!article) return;
 
-    const DEFAULT_API = "http://127.0.0.1:4180/api";
+    const DEFAULT_API = "https://api.kuroha.org/api";
     const TOKEN_KEY = "kuroha-api-token";
     const POSITION_KEY = "kuroha-reader-position";
     // No ":" in the key: home.js/evening.js read only slug:chapter positions.

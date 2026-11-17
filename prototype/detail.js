@@ -1705,7 +1705,7 @@
      -------------------------------------------------------------------------- */
   function apiBaseFromParam(raw) {
     const value = String(raw || "").trim();
-    return (value || "http://127.0.0.1:4180/api").replace(/\/+$/, "");
+    return (value || "https://api.kuroha.org/api").replace(/\/+$/, "");
   }
 
   function apiTypeLabel(type) {

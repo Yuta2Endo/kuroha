@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var DEFAULT_API = "http://127.0.0.1:4180/api";
+  var DEFAULT_API = "https://api.kuroha.org/api";
   var TOKEN_KEY = "kuroha-api-token";
   var USER_KEY = "kuroha-api-user";
   var MAX_FILES = 100;
