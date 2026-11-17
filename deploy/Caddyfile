@@ -1,0 +1,4 @@
+api.kuroha.org {
+	encode zstd gzip
+	reverse_proxy api:4180
+}

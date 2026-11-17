@@ -24,12 +24,18 @@ const MAX_PAGE_BYTES = 10 * 1024 * 1024;
 const MAX_PAGES = 100;
 const PAGE_BODY_LIMIT = 120 * 1024 * 1024;
 fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-const ALLOWED_ORIGINS = new Set([
+const DEFAULT_ORIGINS = [
   "http://127.0.0.1:4177",
   "http://localhost:4177",
   "http://127.0.0.1:4173",
-  "http://localhost:4173"
-]);
+  "http://localhost:4173",
+  "https://yuta2endo.github.io"
+];
+const CONFIGURED_ORIGINS = String(process.env.KUROHA_ALLOWED_ORIGINS || "")
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+const ALLOWED_ORIGINS = new Set(CONFIGURED_ORIGINS.length ? CONFIGURED_ORIGINS : DEFAULT_ORIGINS);
 
 let db = loadDb();
 
@@ -108,10 +114,12 @@ function getSession(req) {
 
 function cors(req, res) {
   const origin = req.headers.origin;
-  if (origin && ALLOWED_ORIGINS.has(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
+  if (origin) {
     res.setHeader("Vary", "Origin");
-  } else if (!origin) {
+    if (ALLOWED_ORIGINS.has(origin)) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+    }
+  } else {
     res.setHeader("Access-Control-Allow-Origin", "*");
   }
   res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");

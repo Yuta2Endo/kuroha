@@ -1,0 +1,35 @@
+services:
+  api:
+    image: ghcr.io/yuta2endo/kuroha-api:latest
+    container_name: kuroha-api
+    restart: unless-stopped
+    pull_policy: always
+    environment:
+      NODE_ENV: production
+      HOST: "0.0.0.0"
+      PORT: "4180"
+      KUROHA_DB: /data/db.json
+      KUROHA_UPLOADS: /data/uploads
+      KUROHA_ALLOWED_ORIGINS: "https://yuta2endo.github.io,https://kuroha.org,https://www.kuroha.org"
+    volumes:
+      - kuroha_data:/data
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: kuroha-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  kuroha_data:
+  caddy_data:
+  caddy_config:
