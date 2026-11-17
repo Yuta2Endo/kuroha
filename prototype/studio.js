@@ -22,6 +22,12 @@
     moderator: "модератор",
     admin: "администратор"
   };
+  var INVITE_STATUS_LABELS = {
+    active: "активна",
+    used: "использована",
+    expired: "истекла",
+    revoked: "отозвана"
+  };
   var STATUS_LABELS = {
     draft: "черновик",
     review: "на проверке",
@@ -63,6 +69,7 @@
     user: readUser(),
     teams: [],
     titles: [],
+    invites: [],
     queue: [],
     notes: new Map(),
     queueLoaded: false,
@@ -73,7 +80,10 @@
     authMode: "login",
     activeTab: "studio",
     workBusy: false,
-    titlesRequest: 0
+    titlesRequest: 0,
+    inviteToken: readInviteToken(),
+    invite: null,
+    invitesRequest: 0
   };
 
   var els = {};
@@ -91,6 +101,14 @@
       return parsed && typeof parsed === "object" ? parsed : null;
     } catch (error) {
       return null;
+    }
+  }
+
+  function readInviteToken() {
+    try {
+      return String(new URLSearchParams(window.location.search).get("invite") || "").trim();
+    } catch (error) {
+      return "";
     }
   }
 
@@ -450,6 +468,11 @@
 
     renderSession();
 
+    if (els.invitesCard) {
+      if (!logged || !hasAccess()) els.invitesCard.hidden = true;
+      else renderInviteControls();
+    }
+
     if (!logged || !hasAccess()) {
       els.tabs.hidden = true;
       return;
@@ -460,13 +483,15 @@
   }
 
   function setAuthMode(mode) {
-    state.authMode = mode === "register" ? "register" : "login";
+    var invited = Boolean(state.invite);
+    state.authMode = invited || mode === "register" ? "register" : "login";
     var register = state.authMode === "register";
 
     els.nameField.hidden = !register;
     els.authName.required = register;
     els.authPassword.autocomplete = register ? "new-password" : "current-password";
     els.authSubmit.textContent = register ? "Создать аккаунт" : "Войти";
+    if (els.authSwitch) els.authSwitch.hidden = invited;
 
     els.authModes.forEach(function (button) {
       var active = button.getAttribute("data-auth-mode") === state.authMode;
@@ -506,7 +531,7 @@
     els.titleForm.addEventListener("submit", onTitleSubmit);
     els.chapterForm.addEventListener("submit", onChapterSubmit);
 
-    [els.teamForm, els.titleForm, els.chapterForm].forEach(function (form) {
+    [els.teamForm, els.titleForm, els.chapterForm, els.inviteForm].forEach(function (form) {
       form.addEventListener("input", clearOneFieldError);
       form.addEventListener("change", clearOneFieldError);
     });
@@ -602,6 +627,14 @@
       if (event.target.name === "titleSlug") updateNextChapterNumber();
     });
 
+    els.inviteForm.addEventListener("submit", onInviteSubmit);
+    els.inviteRefresh.addEventListener("click", function () { loadInvites(); });
+    els.inviteCopy.addEventListener("click", copyInviteLink);
+    els.inviteList.addEventListener("click", function (event) {
+      var revoke = event.target.closest("[data-invite-revoke]");
+      if (revoke) revokeInvite(revoke.getAttribute("data-invite-revoke"), revoke);
+    });
+
     bindAutoSlug(els.teamForm.elements.namedItem("name"), els.teamForm.elements.namedItem("slug"));
     bindAutoSlug(els.titleForm.elements.namedItem("title"), els.titleForm.elements.namedItem("slug"));
 
@@ -624,7 +657,8 @@
     cacheElements();
     els.apiBase.textContent = state.api;
     bind();
-    setAuthMode("login");
+    if (state.inviteToken) await loadInvitePreview();
+    else setAuthMode("login");
     renderAccess();
     checkHealth();
 
@@ -657,7 +691,12 @@
       "studio-refresh-session", "studio-logout",
       "studio-auth", "studio-auth-form", "studio-auth-name", "studio-auth-email",
       "studio-auth-password", "studio-auth-submit", "studio-auth-status",
-      "studio-name-field", "studio-denied", "studio-denied-text", "studio-denied-logout",
+      "studio-auth-switch", "studio-name-field", "studio-denied", "studio-denied-text", "studio-denied-logout",
+      "studio-invite-auth", "studio-invite-auth-title", "studio-invite-auth-meta",
+      "studio-invites-card", "studio-invite-form", "studio-invite-status",
+      "studio-invite-result", "studio-invite-link", "studio-invite-copy",
+      "studio-invite-copy-status", "studio-invite-refresh", "studio-invite-list-state",
+      "studio-invite-list", "studio-invite-empty",
       "studio-workspace", "studio-tabs", "studio-tab-studio", "studio-tab-moderation",
       "studio-queue-count", "studio-panel-studio", "studio-panel-moderation",
       "studio-workbench", "studio-workbench-title", "studio-workbench-meta",
@@ -735,16 +774,22 @@
 
     await runForm(els.authForm, register ? "Создаём…" : "Входим…", async function () {
       try {
+        var payload = { name: name, email: email, password: password };
+        if (state.inviteToken) payload.inviteToken = state.inviteToken;
         var data = await request(register ? "/register" : "/login", {
           method: "POST",
-          body: JSON.stringify({ name: name, email: email, password: password })
+          body: JSON.stringify(payload)
         });
+        var acceptedInvite = Boolean(state.invite);
         setSession(data.token, data.user);
         els.authPassword.value = "";
+        if (acceptedInvite) clearInviteState(true);
         renderAccess();
 
         if (hasAccess()) {
-          toast(register ? "Аккаунт создан. Студия открыта." : "Ты вошёл в студию.");
+          toast(acceptedInvite
+            ? "Приглашение принято. Студия открыта."
+            : (register ? "Аккаунт создан. Студия открыта." : "Ты вошёл в студию."));
           await loadWorkspace();
         } else {
           toast(register
@@ -753,10 +798,22 @@
         }
       } catch (error) {
         if (handleAuthError(error)) return;
+        if (error && error.code === "INVITE_EMAIL_MISMATCH") {
+          setStatus(els.authStatus, "Email не совпадает с тем, на который выдано приглашение.", "error");
+          els.authEmail.focus();
+          return;
+        }
+        if (error && error.code && error.code.indexOf("INVITE_") === 0) {
+          var inviteError = error.message + " Войди, если аккаунт уже есть.";
+          clearInviteState(true);
+          setAuthMode("login");
+          setStatus(els.authStatus, inviteError, "error");
+          return;
+        }
         if (error && error.code === "REGISTRATION_CLOSED") {
           setStatus(
             els.authStatus,
-            "Регистрация закрыта. Новые аккаунты создаёт администратор — войти можно только с существующим.",
+            "Регистрация закрыта. Новые аккаунты открывает приглашение от админа или владельца команды.",
             "error"
           );
           return;
@@ -804,6 +861,65 @@
   }
 
   /* -------------------------------------------------------------------------
+     Invite registration
+     ------------------------------------------------------------------------- */
+  function inviteErrorMessage(error) {
+    var messages = {
+      INVITE_NOT_FOUND: "Приглашение не найдено. Возможно, ссылку уже отозвали.",
+      INVITE_EXPIRED: "Срок приглашения истёк. Попроси новую ссылку.",
+      INVITE_USED: "Приглашение уже использовано.",
+      INVITE_REVOKED: "Приглашение отозвано.",
+      INVITE_EMAIL_MISMATCH: "Email не совпадает с тем, на который выдано приглашение."
+    };
+    return messages[error && error.code] || ("Приглашение не открылось: " + (error && error.message ? error.message : "неизвестная ошибка."));
+  }
+
+  function renderInviteAuth() {
+    if (!els.inviteAuth) return;
+    if (!state.invite) {
+      els.inviteAuth.hidden = true;
+      return;
+    }
+    var team = state.invite.team;
+    var meta = [];
+    els.inviteAuth.hidden = false;
+    els.inviteAuthTitle.textContent = team ? team.name : "Kuroha Studio";
+    meta.push("Роль: " + roleLabel(state.invite.role));
+    meta.push(team ? "Команда: " + team.name : "Без команды");
+    meta.push("Действует до " + formatDate(state.invite.expiresAt));
+    if (state.invite.emailRequired) meta.push("Email должен совпадать с тем, на который выдана ссылка");
+    els.inviteAuthMeta.textContent = meta.join(" · ");
+  }
+
+  function clearInviteState(clearQuery) {
+    state.invite = null;
+    state.inviteToken = "";
+    if (els.inviteAuth) els.inviteAuth.hidden = true;
+    if (els.authSwitch) els.authSwitch.hidden = false;
+    if (!clearQuery) return;
+    try {
+      var url = new URL(window.location.href);
+      url.searchParams.delete("invite");
+      window.history.replaceState(null, "", url);
+    } catch (error) {}
+  }
+
+  async function loadInvitePreview() {
+    try {
+      var data = await request("/invites/" + encodeURIComponent(state.inviteToken));
+      state.invite = data.invite || null;
+      if (!state.invite) throw new ApiError(404, "INVITE_NOT_FOUND", "Приглашение не найдено.");
+      renderInviteAuth();
+      setAuthMode("register");
+    } catch (error) {
+      var message = inviteErrorMessage(error);
+      clearInviteState(true);
+      setAuthMode("login");
+      setStatus(els.authStatus, message, "error");
+    }
+  }
+
+  /* -------------------------------------------------------------------------
      Workspace loading
      ------------------------------------------------------------------------- */
   async function loadWorkspace() {
@@ -812,7 +928,7 @@
     if (canStudio()) {
       tasks.push((async function () {
         await loadTeams();
-        await loadTitles();
+        await Promise.all([loadTitles(), loadInvites()]);
       })());
     }
     if (canModerate()) tasks.push(loadQueue());
@@ -824,10 +940,12 @@
       var data = await request("/teams");
       state.teams = Array.isArray(data.teams) ? data.teams : [];
       populateTeamSelect();
+      renderInviteControls();
       updateChapterHint();
     } catch (error) {
       if (handleAuthError(error)) return;
       toast("Команды не загрузились: " + error.message);
+      renderInviteControls();
       updateChapterHint();
     }
   }
@@ -1254,6 +1372,207 @@
       }
     }
     return null;
+  }
+
+  /* -------------------------------------------------------------------------
+     Team invitations
+     ------------------------------------------------------------------------- */
+  function canManageInvites() {
+    return Boolean(state.user && (state.user.role === "admin" ||
+      state.teams.some(function (team) { return team.canManage; })));
+  }
+
+  function renderInviteControls() {
+    if (!els.invitesCard) return;
+    var allowed = canManageInvites();
+    els.invitesCard.hidden = !allowed;
+    if (!allowed) return;
+    populateInviteRoleSelect();
+    populateInviteTeamSelect();
+  }
+
+  function populateInviteRoleSelect() {
+    var select = field(els.inviteForm, "role");
+    if (!select) return;
+    var current = select.value;
+    var admin = state.user && state.user.role === "admin";
+    select.innerHTML = [
+      '<option value="translator">Переводчик</option>',
+      '<option value="moderator">Модератор</option>',
+      admin ? '<option value="admin">Администратор</option>' : ""
+    ].join("");
+    if (current && select.querySelector('option[value="' + current + '"]')) select.value = current;
+    if (!select.value) select.value = "translator";
+  }
+
+  function populateInviteTeamSelect() {
+    var select = field(els.inviteForm, "teamId");
+    if (!select) return;
+    var current = select.value;
+    var admin = state.user && state.user.role === "admin";
+    var teams = state.teams.filter(function (team) { return team.canManage; });
+    var options = [];
+    if (admin) options.push('<option value="">Без команды</option>');
+    teams.forEach(function (team) {
+      var suffix = team.status === "active" ? "" : " (заблокирована)";
+      options.push('<option value="' + escapeHTML(team.id) + '"' +
+        (team.status === "active" ? "" : " disabled") + ">" +
+        escapeHTML(team.name) + escapeHTML(suffix) + "</option>");
+    });
+    if (!options.length) options.push('<option value="">Нет своей команды</option>');
+    select.innerHTML = options.join("");
+    if (current && select.querySelector('option[value="' + current + '"]')) {
+      select.value = current;
+    } else {
+      select.value = admin ? "" : (teams.length ? teams[0].id : "");
+    }
+  }
+
+  async function loadInvites() {
+    if (!canManageInvites()) {
+      state.invites = [];
+      renderInviteList();
+      return;
+    }
+    var requestId = state.invitesRequest + 1;
+    state.invitesRequest = requestId;
+    els.inviteRefresh.disabled = true;
+    setStatus(els.inviteListState, "Загружаем приглашения…", "muted");
+
+    try {
+      var data = await request("/invites");
+      if (requestId !== state.invitesRequest) return;
+      state.invites = Array.isArray(data.invites) ? data.invites : [];
+      renderInviteList();
+      setStatus(els.inviteListState, "");
+    } catch (error) {
+      if (handleAuthError(error)) return;
+      if (requestId !== state.invitesRequest) return;
+      state.invites = [];
+      renderInviteList();
+      setStatus(els.inviteListState, "Приглашения не загрузились. " + error.message, "error");
+    } finally {
+      if (requestId === state.invitesRequest) els.inviteRefresh.disabled = false;
+    }
+  }
+
+  function inviteStatusLabel(status) {
+    return INVITE_STATUS_LABELS[status] || status || "—";
+  }
+
+  function renderInviteList() {
+    var invites = state.invites;
+    els.inviteEmpty.hidden = invites.length > 0;
+    if (!invites.length) {
+      els.inviteList.innerHTML = "";
+      return;
+    }
+
+    els.inviteList.innerHTML = invites.map(function (invite) {
+      var status = invite.status || "expired";
+      var team = invite.teamName || "Без команды";
+      var email = invite.email || "любой email";
+      var dates = "создана " + formatDate(invite.createdAt);
+      if (status === "used") dates += " · использована " + formatDate(invite.usedAt);
+      else if (status === "revoked") dates += " · отозвана " + formatDate(invite.revokedAt);
+      else dates += " · до " + formatDate(invite.expiresAt);
+      return [
+        '<div class="studio-invite">',
+        '<div class="studio-invite__body">',
+        "<b>", escapeHTML(roleLabel(invite.role)), "</b>",
+        "<span>", escapeHTML(team), " · ", escapeHTML(email), "</span>",
+        "<span>", escapeHTML(dates), "</span>",
+        "</div>",
+        '<div class="studio-invite__side">',
+        '<span class="studio-status-chip studio-invite__status" data-status="', escapeHTML(status), '">',
+        escapeHTML(inviteStatusLabel(status)), "</span>",
+        status === "active"
+          ? '<button class="studio-link studio-link--danger" type="button" data-invite-revoke="' +
+            escapeHTML(invite.id) + '">Отозвать</button>'
+          : "",
+        "</div>",
+        "</div>"
+      ].join("");
+    }).join("");
+  }
+
+  async function onInviteSubmit(event) {
+    event.preventDefault();
+    if (!state.user || !canManageInvites()) return;
+    var form = els.inviteForm;
+    var email = value(form, "email").toLowerCase();
+    var role = value(form, "role");
+    var teamId = value(form, "teamId");
+    var expiresInDays = Number(value(form, "expiresInDays"));
+    clearFieldErrors(form);
+    setStatus(els.inviteStatus, "");
+
+    var fields = {};
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) fields.email = "Укажи корректный email или оставь поле пустым.";
+    if (["translator", "moderator", "admin"].indexOf(role) === -1) fields.role = "Выбери роль.";
+    if (state.user.role !== "admin" && role === "admin") fields.role = "Пригласить администратора может только администратор.";
+    if (state.user.role !== "admin" && !teamId) fields.teamId = "Выбери свою команду.";
+    if ([7, 14, 30].indexOf(expiresInDays) === -1) fields.expiresInDays = "Выбери срок: 7, 14 или 30 дней.";
+    if (Object.keys(fields).length) {
+      showFieldErrors(form, fields);
+      setStatus(els.inviteStatus, "Проверь поля приглашения.", "error");
+      return;
+    }
+
+    await runForm(form, "Создаём…", async function () {
+      try {
+        var payload = { role: role, expiresInDays: expiresInDays };
+        if (email) payload.email = email;
+        if (teamId) payload.teamId = teamId;
+        var data = await request("/invites", { method: "POST", body: JSON.stringify(payload) });
+        var emailInput = field(form, "email");
+        if (emailInput) emailInput.value = "";
+        els.inviteLink.value = data.link || "";
+        els.inviteResult.hidden = !data.link;
+        setStatus(els.inviteCopyStatus, "");
+        setStatus(els.inviteStatus, "Ссылка создана. Она действует до " + formatDate(data.invite && data.invite.expiresAt) + ".", "success");
+        if (data.link) els.inviteLink.select();
+        toast("Приглашение создано.");
+        await loadInvites();
+      } catch (error) {
+        if (handleAuthError(error)) return;
+        showFieldErrors(form, error.fields);
+        setStatus(els.inviteStatus, error.message, "error");
+      }
+    });
+  }
+
+  async function copyInviteLink() {
+    var text = els.inviteLink.value;
+    if (!text) return;
+    try {
+      await navigator.clipboard.writeText(text);
+      setStatus(els.inviteCopyStatus, "Ссылка скопирована.", "success");
+    } catch (error) {
+      try {
+        els.inviteLink.select();
+        document.execCommand("copy");
+        setStatus(els.inviteCopyStatus, "Ссылка скопирована.", "success");
+      } catch (copyError) {
+        setStatus(els.inviteCopyStatus, "Браузер не разрешил скопировать. Выдели ссылку вручную.", "error");
+      }
+    }
+  }
+
+  async function revokeInvite(inviteId, button) {
+    if (!inviteId || button.disabled) return;
+    button.disabled = true;
+    setStatus(els.inviteListState, "Отзываем…", "muted");
+    try {
+      await request("/invites/" + encodeURIComponent(inviteId), { method: "DELETE" });
+      toast("Приглашение отозвано.");
+      await loadInvites();
+    } catch (error) {
+      if (handleAuthError(error)) return;
+      setStatus(els.inviteListState, error.message, "error");
+      button.disabled = false;
+      if (error.status === 409) await loadInvites();
+    }
   }
 
   /* -------------------------------------------------------------------------
@@ -1816,8 +2135,10 @@
   function resetWorkspaceData() {
     state.teams = [];
     state.titles = [];
+    state.invites = [];
     state.queue = [];
     state.queueLoaded = false;
+    state.invitesRequest += 1;
     state.notes.clear();
     state.activeChapterId = null;
     state.activePages = [];
@@ -1837,6 +2158,14 @@
     if (els.queueState) setStatus(els.queueState, "Загружаем очередь…", "muted");
     if (els.queueCount) els.queueCount.hidden = true;
     if (els.queueTotal) els.queueTotal.textContent = "0 глав в очереди";
+    if (els.invitesCard) els.invitesCard.hidden = true;
+    if (els.inviteList) els.inviteList.innerHTML = "";
+    if (els.inviteEmpty) els.inviteEmpty.hidden = true;
+    if (els.inviteListState) setStatus(els.inviteListState, "");
+    if (els.inviteResult) els.inviteResult.hidden = true;
+    if (els.inviteLink) els.inviteLink.value = "";
+    if (els.inviteCopyStatus) setStatus(els.inviteCopyStatus, "");
+    if (els.inviteForm) els.inviteForm.reset();
     if (els.chapterForm) {
       var titleSelect = field(els.chapterForm, "titleSlug");
       if (titleSelect) titleSelect.innerHTML = '<option value="">Сначала создай тайтл</option>';

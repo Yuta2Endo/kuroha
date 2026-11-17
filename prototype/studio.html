@@ -13,7 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="tokens.css?v=brand3">
   <link rel="stylesheet" href="styles.css?v=design2">
-  <link rel="stylesheet" href="studio.css?v=studio6">
+  <link rel="stylesheet" href="studio.css?v=studio7">
   <script>
     try {
       var urlTheme = new URLSearchParams(window.location.search).get("theme");
@@ -173,7 +173,7 @@
           <div class="studio-auth__intro">
             <p class="eyebrow">Вход</p>
             <h2>Сначала аккаунт</h2>
-            <p>Одна сессия для студии и очереди. Регистрация создаёт читателя; роль переводчика или модератора выдаёт администратор.</p>
+            <p>Одна сессия для студии и очереди. Публичная регистрация закрыта: новый аккаунт открывает одноразовая ссылка от админа или владельца команды.</p>
             <ul class="studio-auth__notes">
               <li><b>Переводчик</b> — команды, тайтлы, главы и страницы.</li>
               <li><b>Модератор</b> — очередь и решение по главам.</li>
@@ -182,7 +182,12 @@
           </div>
 
           <form class="studio-card studio-auth__form" id="studio-auth-form" novalidate>
-            <div class="studio-auth__switch" role="group" aria-label="Вход или регистрация">
+            <div class="studio-invite-auth" id="studio-invite-auth" hidden>
+              <p class="eyebrow">Приглашение</p>
+              <b id="studio-invite-auth-title">Доступ по ссылке</b>
+              <p id="studio-invite-auth-meta"></p>
+            </div>
+            <div class="studio-auth__switch" id="studio-auth-switch" role="group" aria-label="Вход или регистрация">
               <button class="studio-auth__mode is-active" type="button" data-auth-mode="login" aria-pressed="true">Вход</button>
               <button class="studio-auth__mode" type="button" data-auth-mode="register" aria-pressed="false">Регистрация</button>
             </div>
@@ -335,6 +340,67 @@
                       <span class="studio-status" id="studio-team-status" role="status" aria-live="polite"></span>
                     </div>
                   </form>
+                </section>
+
+                <section class="studio-card studio-invites" id="studio-invites-card" aria-labelledby="studio-invites-title" hidden>
+                  <div class="studio-card__head">
+                    <div>
+                      <p class="eyebrow">Доступ</p>
+                      <h2 id="studio-invites-title">Приглашения</h2>
+                      <p>Одноразовая ссылка создаёт аккаунт с нужной ролью. Публичная регистрация закрыта.</p>
+                    </div>
+                  </div>
+
+                  <form class="studio-form" id="studio-invite-form" novalidate>
+                    <label class="studio-field">
+                      <span>Email — необязательно</span>
+                      <input name="email" type="email" maxlength="120" autocomplete="off" placeholder="you@example.com">
+                      <small class="studio-field__error" data-error="email"></small>
+                    </label>
+                    <label class="studio-field">
+                      <span>Команда</span>
+                      <select name="teamId"></select>
+                      <small class="studio-field__error" data-error="teamId"></small>
+                    </label>
+                    <div class="studio-form__row">
+                      <label class="studio-field">
+                        <span>Роль</span>
+                        <select name="role"></select>
+                        <small class="studio-field__error" data-error="role"></small>
+                      </label>
+                      <label class="studio-field">
+                        <span>Срок</span>
+                        <select name="expiresInDays">
+                          <option value="7">7 дней</option>
+                          <option value="14">14 дней</option>
+                          <option value="30">30 дней</option>
+                        </select>
+                        <small class="studio-field__error" data-error="expiresInDays"></small>
+                      </label>
+                    </div>
+                    <div class="studio-actions">
+                      <button class="btn btn--secondary" type="submit">Создать ссылку</button>
+                      <span class="studio-status" id="studio-invite-status" role="status" aria-live="polite"></span>
+                    </div>
+                  </form>
+
+                  <div class="studio-invite-result" id="studio-invite-result" hidden>
+                    <p class="studio-invite-result__label">Одноразовая ссылка</p>
+                    <div class="studio-invite-result__row">
+                      <input id="studio-invite-link" type="text" readonly aria-label="Ссылка приглашения">
+                      <button class="btn btn--small btn--ghost" type="button" id="studio-invite-copy">Скопировать</button>
+                    </div>
+                    <p class="studio-note studio-note--tight">Ссылка показывается один раз. Передай её лично: после регистрации она перестанет работать.</p>
+                    <span class="studio-status" id="studio-invite-copy-status" role="status" aria-live="polite"></span>
+                  </div>
+
+                  <div class="studio-subhead">
+                    <h3>Выданные</h3>
+                    <button class="studio-link" type="button" id="studio-invite-refresh">Обновить</button>
+                  </div>
+                  <p class="studio-status" id="studio-invite-list-state" role="status" aria-live="polite"></p>
+                  <div class="studio-invite-list" id="studio-invite-list"></div>
+                  <p class="studio-empty studio-empty--inline" id="studio-invite-empty" hidden>Приглашений пока нет.</p>
                 </section>
 
                 <section class="studio-card studio-create" aria-labelledby="studio-title-form-title">
@@ -581,7 +647,7 @@
   <script src="data.js?v=age1" defer></script>
   <script src="search-data.js?v=search1" defer></script>
   <script src="app.js?v=search1" defer></script>
-  <script src="studio.js?v=studio10" defer></script>
+  <script src="studio.js?v=studio11" defer></script>
   <script src="pwa.js" defer></script>
 </body>
 </html>

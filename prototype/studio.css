@@ -1067,6 +1067,115 @@
 .queue__actions .studio-status { flex: 1 1 160px; }
 
 /* --------------------------------------------------------------------------
+   Invitations
+   -------------------------------------------------------------------------- */
+.studio-invite-auth {
+  margin-bottom: var(--kh-space-4);
+  padding-bottom: var(--kh-space-4);
+  border-bottom: 1px solid var(--kh-border);
+}
+.studio-invite-auth b {
+  display: block;
+  margin-top: var(--kh-space-2);
+  color: var(--kh-text);
+  font-family: var(--kh-font-display);
+  font-size: var(--kh-text-lg);
+  font-weight: 600;
+  line-height: var(--kh-leading-snug);
+  letter-spacing: var(--kh-tracking-tight);
+  overflow-wrap: anywhere;
+}
+.studio-invite-auth p {
+  margin: var(--kh-space-2) 0 0;
+  color: var(--kh-text-muted);
+  font-size: 11px;
+  line-height: var(--kh-leading-normal);
+  overflow-wrap: anywhere;
+}
+
+.studio-invite-result {
+  margin-top: var(--kh-space-4);
+  padding: var(--kh-space-3);
+  border: 1px solid var(--kh-border-accent);
+  border-radius: var(--kh-radius-paper);
+  background: var(--kh-bg);
+}
+.studio-invite-result__label {
+  margin: 0 0 var(--kh-space-2);
+  color: var(--kh-text-faint);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.studio-invite-result__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--kh-space-2);
+  align-items: center;
+}
+.studio-invite-result__row input {
+  width: 100%;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0 var(--kh-space-2);
+  border: 1px solid var(--kh-border-strong);
+  border-radius: var(--kh-radius-input);
+  background: var(--kh-surface);
+  color: var(--kh-text-muted);
+  font-family: var(--kh-font-ui);
+  font-size: 10px;
+  line-height: var(--kh-leading-normal);
+}
+.studio-invite-result__row input:focus {
+  border-color: var(--kh-accent);
+  outline: none;
+  box-shadow: 0 0 0 2px var(--kh-border-accent);
+}
+.studio-invite-result .studio-status:not(:empty) { display: block; margin-top: var(--kh-space-2); }
+
+.studio-invite-list {
+  display: grid;
+  margin-top: var(--kh-space-2);
+}
+.studio-invite-list:empty { display: none; }
+.studio-invite {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--kh-space-2) var(--kh-space-3);
+  align-items: start;
+  padding-block: var(--kh-space-3);
+  border-top: 1px solid var(--kh-border);
+}
+.studio-invite:last-child { padding-bottom: 0; }
+.studio-invite__body { min-width: 0; }
+.studio-invite__body b {
+  display: block;
+  color: var(--kh-text);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: var(--kh-leading-snug);
+}
+.studio-invite__body span {
+  display: block;
+  margin-top: var(--kh-space-1);
+  color: var(--kh-text-faint);
+  font-size: 9px;
+  line-height: var(--kh-leading-normal);
+  overflow-wrap: anywhere;
+}
+.studio-invite__side {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--kh-space-2);
+}
+.studio-invite__status[data-status="active"] { border-color: currentColor; color: var(--kh-success); }
+.studio-invite__status[data-status="revoked"] { border-color: currentColor; color: var(--kh-danger); }
+.studio-invite__status[data-status="used"],
+.studio-invite__status[data-status="expired"] { color: var(--kh-text-faint); }
+
+/* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
 @media (max-width: 1100px) {
@@ -1114,6 +1223,10 @@
   .studio-stat { padding: var(--kh-space-2); }
   .studio-stat b { font-size: 22px; }
   .studio-thumbs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .studio-invite-result__row { grid-template-columns: minmax(0, 1fr); }
+  .studio-invite-result__row .btn { width: 100%; }
+  .studio-invite { grid-template-columns: minmax(0, 1fr); }
+  .studio-invite__side { justify-content: flex-start; }
   .queue__facts { grid-template-columns: minmax(0, 1fr); }
   .queue__actions .btn { flex: 1 1 100%; }
   .studio-actions .btn { flex: 1 1 100%; }

@@ -38,16 +38,19 @@
 
 Исключение — `403 REGISTRATION_CLOSED` у `POST /api/register`: он отвечает
 объектным `error`, чтобы студия показала человеческий текст, а не JSON-строку.
+Ошибки `INVITE_*` у того же маршрута тоже объектные; ошибки полей и занятого
+email остаются в старом формате.
 
 ### Коды HTTP
 
 | Код | Когда | Типичные `code` |
 |---:|---|---|
-| 400 | битый JSON, неверные поля, пустая глава, больше 100 страниц | `BAD_JSON`, `VALIDATION_ERROR`, `EMPTY_CHAPTER`, `TOO_MANY_PAGES` |
+| 400 | битый JSON, неверные поля, пустая глава, больше 100 страниц, неверное приглашение | `BAD_JSON`, `VALIDATION_ERROR`, `EMPTY_CHAPTER`, `TOO_MANY_PAGES`, `INVALID_INVITE` |
 | 401 | нет или истёк Bearer-токен | `UNAUTHORIZED` |
-| 403 | доступ запрещён; регистрация закрыта | `FORBIDDEN`, `REGISTRATION_CLOSED` |
-| 404 | объекта нет или он скрыт от пользователя | `NOT_FOUND` |
-| 409 | конфликт состояния или уникальности | `SLUG_TAKEN`, `CHAPTER_EXISTS`, `ALREADY_MEMBER`, `TEAM_SUSPENDED`, `NO_VERSION`, `INVALID_TRANSITION`, `ALREADY_PUBLISHED`, `RIGHTS_UNVERIFIED`, `SELF_ROLE`, `LAST_ADMIN` |
+| 403 | доступ запрещён; регистрация закрыта | `FORBIDDEN`, `REGISTRATION_CLOSED`, `INVITE_EMAIL_MISMATCH` |
+| 404 | объекта нет или он скрыт от пользователя | `NOT_FOUND`, `INVITE_NOT_FOUND`, `TEAM_NOT_FOUND` |
+| 409 | конфликт состояния или уникальности | `SLUG_TAKEN`, `CHAPTER_EXISTS`, `ALREADY_MEMBER`, `TEAM_SUSPENDED`, `NO_VERSION`, `INVALID_TRANSITION`, `ALREADY_PUBLISHED`, `RIGHTS_UNVERIFIED`, `SELF_ROLE`, `LAST_ADMIN`, `INVITE_USED`, `INVITE_REVOKED`, `INVITE_ALREADY_USED` |
+| 410 | срок приглашения истёк | `INVITE_EXPIRED` |
 | 413 | тело запроса или страница больше лимита | `PAYLOAD_TOO_LARGE`, `PAGE_TOO_LARGE` |
 | 415 | формат страницы не JPEG/PNG/WebP или не совпал с содержимым | `UNSUPPORTED_MEDIA_TYPE`, `MIME_MISMATCH` |
 | 500 | внутренняя ошибка | `INTERNAL` |
@@ -80,25 +83,36 @@ Authorization: Bearer <token>
 Правила:
 
 - роль берётся только из БД, поле `role` в теле запроса игнорируется везде,
-  кроме служебного `PATCH /api/users/:id/role` (только admin);
+  кроме служебного `PATCH /api/users/:id/role` (только admin) и нового
+  `POST /api/invites` (только admin или owner команды);
 - первый зарегистрированный пользователь получает `admin` по legacy-правилу
-  `POST /api/register`, если база пуста. Правило действует только при открытой
-  регистрации; в production админ создаётся временным открытием регистрации или
-  миграцией;
+  `POST /api/register`, если база пуста. Правило действует и при регистрации по
+  приглашению: роль первого пользователя важнее роли из приглашения;
 - при открытой регистрации `POST /api/register` создаёт `reader` (или `admin`
-  для первого пользователя пустой базы);
+  для первого пользователя пустой базы); при регистрации по приглашению —
+  роль из приглашения (`translator`, `moderator` или `admin`);
 - регистрация управляется `KUROHA_ALLOW_REGISTRATION`: `false` закрывает
-  создание аккаунтов, значение по умолчанию — `true` (локальный запуск без
-  переменной работает как раньше);
-- закрытие регистрации не мешает `POST /api/login`, `/api/me`, сессиям и
-  смене ролей;
+  публичное создание аккаунтов, значение по умолчанию — `true` (локальный
+  запуск без переменной работает как раньше);
+- при закрытой регистрации новый аккаунт можно создать только по одноразовой
+  invite-ссылке. Без `inviteToken` маршрут отвечает `403 REGISTRATION_CLOSED`;
+- закрытие регистрации не мешает `POST /api/login`, `/api/me`, сессиям,
+  смене ролей и регистрации по приглашению;
 - переводчик видит только свои тайтлы и тайтлы, где у его команды есть версия;
 - модератор и админ видят всё;
 - чужой черновик не отдаётся ни в списке, ни по прямому slug.
 
 ### POST /api/register
 
-При закрытой регистрации маршрут отвечает `403` в объектном формате:
+Тело:
+
+```json
+{ "name": "Ая", "email": "aya@example.com", "password": "kuroha123", "inviteToken": "…" }
+```
+
+`name`, `email` и `password` обязательны, пароль от 6 символов.
+`inviteToken` необязателен: без него при закрытой регистрации маршрут отвечает
+`403` в объектном формате:
 
 ```json
 {
@@ -109,10 +123,142 @@ Authorization: Bearer <token>
 }
 ```
 
-При открытой регистрации тело — `{ "name", "email", "password" }`, пароль от
-6 символов. Ответ `201`: `{ ok, token, user }`. Первый пользователь пустой
-базы получает `admin`, остальные — `reader`. Повторный email — `409` в старом
-формате `{ ok: false, error }`.
+С `inviteToken` сервер проверяет хеш токена, срок, признаки `used/revoked` и,
+если приглашение выдано на email, совпадение email. Ошибки:
+
+| Код HTTP | `code` | Когда |
+|---:|---|---|
+| 403 | `INVITE_EMAIL_MISMATCH` | email не совпадает с приглашением |
+| 404 | `INVITE_NOT_FOUND` | токен не найден |
+| 409 | `INVITE_USED` | приглашение уже использовано |
+| 409 | `INVITE_REVOKED` | приглашение отозвано |
+| 409 | `TEAM_NOT_FOUND` | команда приглашения больше не существует |
+| 409 | `TEAM_SUSPENDED` | команда приглашения заблокирована |
+| 410 | `INVITE_EXPIRED` | срок истёк |
+
+Остальные ошибки полей и занятого email сохраняют старый формат
+`{ ok: false, error: "строка" }`, как и раньше.
+
+Ответ `201`: `{ ok, token, user }`. Пользователь получает роль из приглашения
+(или `admin`, если это первый пользователь пустой базы), а при наличии
+`teamId` — членство в команде с ролью `translator` или `moderator`. Владельцем
+команды приглашённый не становится. Токен помечается использованным
+(`usedAt`, `usedBy`) и повторно не работает. При открытой регистрации
+`inviteToken` тоже принимается и применяет роль и команду.
+
+### Приглашения
+
+Одноразовая ссылка — единственный способ регистрации при
+`KUROHA_ALLOW_REGISTRATION=false`. Сервер хранит только `sha256`-хеш токена;
+raw-токен возвращается один раз в ответе `POST /api/invites`.
+
+#### POST /api/invites
+
+Только `admin` или владелец команды.
+
+```json
+{ "email": "translator@example.com", "role": "translator", "teamId": "team_…", "expiresInDays": 7 }
+```
+
+| Поле | Обязательное | Правила |
+|---|---|---|
+| `role` | нет | `translator` (по умолчанию), `moderator`, `admin`; `reader` не приглашается |
+| `teamId` | для owner | команда должна существовать; owner приглашает только в свою |
+| `email` | нет | нормализуется в lower-case; при регистрации email должен совпасть |
+| `expiresInDays` | нет | целое от 1 до 30, по умолчанию 7 |
+
+Правила ролей:
+
+- `admin` может пригласить любую роль, `teamId` необязателен;
+- owner команды может пригласить только `translator` или `moderator` и только
+  в свою команду; `admin` и чужая команда — `403 FORBIDDEN`;
+- заблокированная команда — `409 TEAM_SUSPENDED`.
+
+Ответ `201`:
+
+```json
+{
+  "ok": true,
+  "invite": {
+    "id": "inv_…",
+    "role": "translator",
+    "teamId": "team_…",
+    "email": "translator@example.com",
+    "expiresAt": "2026-11-24T…",
+    "createdAt": "2026-11-17T…"
+  },
+  "token": "сырой-токен-только-здесь",
+  "link": "https://yuta2endo.github.io/kuroha/studio.html?invite=…"
+}
+```
+
+`link` — абсолютный URL. База ссылки задаётся `KUROHA_PUBLIC_URL`
+(по умолчанию `https://yuta2endo.github.io/kuroha`); локально можно указать
+`http://127.0.0.1:4173` и добавить `&api=http://127.0.0.1:4180/api`.
+
+Ошибки: `400 INVALID_INVITE` (роль, email или срок), `403 FORBIDDEN`,
+`404 TEAM_NOT_FOUND`, `409 TEAM_SUSPENDED`.
+
+#### GET /api/invites
+
+Только `admin` (все приглашения) или owner команды (только свои команды).
+Без raw-токена и хеша.
+
+```json
+{
+  "ok": true,
+  "invites": [
+    {
+      "id": "inv_…",
+      "role": "translator",
+      "teamId": "team_…",
+      "teamName": "Тихие страницы",
+      "email": "translator@example.com",
+      "createdAt": "2026-11-17T…",
+      "expiresAt": "2026-11-24T…",
+      "usedAt": null,
+      "revokedAt": null,
+      "status": "active"
+    }
+  ]
+}
+```
+
+`status`: `active`, `used`, `expired`, `revoked`. Сортировка — новые сверху.
+Owner без своих команд получает `403 FORBIDDEN`.
+
+#### DELETE /api/invites/:id
+
+Только `admin` или owner команды приглашения. Запись не удаляется физически:
+ставится `revokedAt`.
+
+- `404 INVITE_NOT_FOUND` — приглашения нет;
+- `403 FORBIDDEN` — чужая команда;
+- `409 INVITE_ALREADY_USED` — приглашение уже использовано;
+- `409 INVITE_REVOKED` — уже отозвано.
+
+Ответ `200`: `{ ok, invite }` в формате списка.
+
+#### GET /api/invites/:token
+
+Публичный просмотр без авторизации. Email не раскрывается.
+
+```json
+{
+  "ok": true,
+  "invite": {
+    "role": "translator",
+    "team": { "id": "team_…", "name": "Тихие страницы", "slug": "tihie-stranicy" },
+    "emailRequired": true,
+    "expiresAt": "2026-11-24T…",
+    "status": "active"
+  }
+}
+```
+
+`team` — `null`, если приглашение без команды. Ошибки:
+`404 INVITE_NOT_FOUND`, `409 INVITE_USED`, `409 INVITE_REVOKED`,
+`410 INVITE_EXPIRED`.
 
 ### Роли внутри команды
 
@@ -183,7 +329,9 @@ email.
 
 Ответ `201`: `{ ok, team, member }`.
 
-Приглашений по токену и смены роли участника в этом блоке нет.
+Приглашение по одноразовой ссылке — отдельный маршрут `POST /api/invites`
+(раздел 2); этот маршрут добавляет уже существующего пользователя по email.
+Смены роли участника в этом блоке нет.
 
 ## 4. Тайтлы
 
@@ -640,6 +788,8 @@ staff, автор тайтла или участник команды верси
 | Прогресс | — | да | да | да | да |
 | Создать команду | — | — | да | — | да |
 | Пригласить в команду | — | — | owner команды | — | да |
+| Создать invite-ссылку | — | — | owner команды (translator/moderator, своя команда) | — | да (любая роль) |
+| Отозвать invite-ссылку | — | — | owner команды | — | да |
 | Создать тайтл | — | — | да | — | да |
 | Создать главу | — | — | участник команды | — | да |
 | Загрузить страницы | — | — | участник команды | да | да |
@@ -662,6 +812,7 @@ staff, автор тайтла или участник команды верси
 | `chapterPages[versionId]` | `pages` |
 | `progress[userId:titleId]` | `reading_progress` |
 | `users[]`, `sessions{}` | `users`, `sessions` |
+| `invites[]` (только `tokenHash`) | `team_invites`, расширенная nullable `team_id`/`email` и глобальными ролями |
 | `uploads/<chapterId>/…` | `pages.image_key` (в будущем S3/R2) |
 
 Ограничения локального среза:
@@ -670,6 +821,8 @@ staff, автор тайтла или участник команды верси
 - несколько версий одной главы модель допускает, но API пока создаёт одну;
 - нет audit_log, уведомлений, жалоб на уровне версии, DMCA и снятия с
   публикации;
+- invite-ссылки не отправляются письмом: ссылку передаёт админ или owner
+  команды; письма и подтверждение email — следующий этап;
 - нет rate limit, TLS, cookie-сессий и CSRF;
 - статика `uploads/` публична;
 - один сервер, без блокировок и конкурентной записи.

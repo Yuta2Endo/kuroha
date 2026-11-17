@@ -39,6 +39,9 @@ const ALLOWED_ORIGINS = new Set(CONFIGURED_ORIGINS.length ? CONFIGURED_ORIGINS :
 const ALLOW_REGISTRATION = String(
   process.env.KUROHA_ALLOW_REGISTRATION == null ? "true" : process.env.KUROHA_ALLOW_REGISTRATION
 ).trim().toLowerCase() !== "false";
+const PUBLIC_SITE_URL = String(
+  process.env.KUROHA_PUBLIC_URL || "https://yuta2endo.github.io/kuroha"
+).trim().replace(/\/+$/, "");
 
 let db = loadDb();
 
@@ -53,7 +56,8 @@ function emptyDb() {
     titles: [],
     chapters: [],
     chapterPages: {},
-    progress: {}
+    progress: {},
+    invites: []
   };
 }
 
@@ -246,6 +250,9 @@ const RIGHTS_STATUSES = new Set(["licensed", "permission", "public_domain", "cc"
 const AGE_RATINGS = new Set([0, 6, 12, 16, 18]);
 const GLOBAL_ROLES = new Set(["reader", "translator", "moderator", "admin"]);
 const TEAM_MEMBER_ROLES = new Set(["translator", "moderator"]);
+const INVITE_ROLES = new Set(["translator", "moderator", "admin"]);
+const INVITE_MIN_DAYS = 1;
+const INVITE_MAX_DAYS = 30;
 const MODERATION_STATUSES = new Set(["published", "changes_requested", "rejected"]);
 const MIME_EXTENSIONS = {
   "image/png": "png",
@@ -419,6 +426,42 @@ function teamView(team, viewer) {
     canManage: Boolean(viewer && (viewer.role === "admin" || team.ownerId === viewer.id)),
     members: team.members.map(memberView)
   };
+}
+
+function inviteStatus(invite) {
+  if (invite.revokedAt) return "revoked";
+  if (invite.usedAt) return "used";
+  if (Date.parse(invite.expiresAt) <= Date.now()) return "expired";
+  return "active";
+}
+
+function hashInviteToken(token) {
+  return crypto.createHash("sha256").update(String(token)).digest("hex");
+}
+
+function inviteByToken(token) {
+  const hash = hashInviteToken(token);
+  return db.invites.find((invite) => invite.tokenHash === hash) || null;
+}
+
+function inviteView(invite) {
+  const team = invite.teamId ? teamById(invite.teamId) : null;
+  return {
+    id: invite.id,
+    role: invite.role,
+    teamId: invite.teamId || null,
+    teamName: team ? team.name : null,
+    email: invite.email || null,
+    createdAt: invite.createdAt,
+    expiresAt: invite.expiresAt,
+    usedAt: invite.usedAt || null,
+    revokedAt: invite.revokedAt || null,
+    status: inviteStatus(invite)
+  };
+}
+
+function inviteTeamRole(role) {
+  return role === "moderator" ? "moderator" : "translator";
 }
 
 function titleView(title) {
@@ -614,6 +657,144 @@ const handleTeamMemberAdd = api(async (req, res, url, teamId) => {
   team.updatedAt = member.joinedAt;
   saveDb();
   return send(res, 201, { ok: true, team: teamView(team, user), member: memberView(member) });
+});
+
+const handleInviteCreate = api(async (req, res) => {
+  const user = requireUser(req, res);
+  if (!user) return;
+  const body = await parseBody(req, res);
+  if (!body) return;
+
+  const role = clean(body.role, 20).toLowerCase() || "translator";
+  const email = clean(body.email, 120).toLowerCase();
+  const teamId = clean(body.teamId, 64) || null;
+  const expiresRaw = body.expiresInDays;
+  const expiresInDays = expiresRaw == null ? 7 : expiresRaw;
+  const fields = {};
+
+  if (!INVITE_ROLES.has(role)) fields.role = "Роль: translator, moderator или admin.";
+  if (email && !validEmail(email)) fields.email = "Укажи корректный email или оставь поле пустым.";
+  if (expiresRaw != null &&
+    (typeof expiresRaw !== "number" || !Number.isInteger(expiresRaw) ||
+      expiresRaw < INVITE_MIN_DAYS || expiresRaw > INVITE_MAX_DAYS)) {
+    fields.expiresInDays = "Срок: целое число от 1 до 30 дней.";
+  }
+
+  const team = teamId ? teamById(teamId) : null;
+  if (teamId && !team) return fail(res, 404, "TEAM_NOT_FOUND", "Команда не найдена.");
+
+  if (user.role !== "admin") {
+    if (role === "admin") {
+      return fail(res, 403, "FORBIDDEN", "Пригласить администратора может только администратор.");
+    }
+    if (!teamId) fields.teamId = "Владелец команды приглашает только в свою команду.";
+    else if (team.ownerId !== user.id) {
+      return fail(res, 403, "FORBIDDEN", "Приглашать можно только в свою команду.");
+    }
+  }
+
+  if (team && team.status !== "active") {
+    return fail(res, 409, "TEAM_SUSPENDED", "Команда заблокирована: приглашения недоступны.");
+  }
+  if (Object.keys(fields).length) return fail(res, 400, "INVALID_INVITE", "Проверь поля приглашения.", fields);
+
+  const token = crypto.randomBytes(32).toString("base64url");
+  const createdAt = isoNow();
+  const invite = {
+    id: id("inv"),
+    tokenHash: hashInviteToken(token),
+    role: role,
+    teamId: teamId,
+    email: email || null,
+    createdBy: user.id,
+    createdAt: createdAt,
+    expiresAt: new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000).toISOString(),
+    usedAt: null,
+    usedBy: null,
+    revokedAt: null,
+    revokedBy: null
+  };
+  db.invites.push(invite);
+  saveDb();
+
+  return send(res, 201, {
+    ok: true,
+    invite: {
+      id: invite.id,
+      role: invite.role,
+      teamId: invite.teamId,
+      email: invite.email,
+      expiresAt: invite.expiresAt,
+      createdAt: invite.createdAt
+    },
+    token: token,
+    link: PUBLIC_SITE_URL + "/studio.html?invite=" + encodeURIComponent(token)
+  });
+});
+
+const handleInvitesList = api(async (req, res) => {
+  const user = requireUser(req, res);
+  if (!user) return;
+
+  const ownedTeams = db.teams.filter((team) => team.ownerId === user.id);
+  if (user.role !== "admin" && !ownedTeams.length) {
+    return fail(res, 403, "FORBIDDEN", "Список приглашений доступен админу и владельцам команд.");
+  }
+  const allowedTeams = new Set(ownedTeams.map((team) => team.id));
+  const invites = db.invites
+    .filter((invite) => user.role === "admin" || (invite.teamId && allowedTeams.has(invite.teamId)))
+    .slice()
+    .sort((left, right) => String(right.createdAt).localeCompare(String(left.createdAt)))
+    .map(inviteView);
+
+  return send(res, 200, { ok: true, invites: invites });
+});
+
+const handleInviteRevoke = api(async (req, res, url, inviteId) => {
+  const user = requireUser(req, res);
+  if (!user) return;
+  const invite = db.invites.find((entry) => entry.id === inviteId);
+  if (!invite) return fail(res, 404, "INVITE_NOT_FOUND", "Приглашение не найдено.");
+
+  const team = invite.teamId ? teamById(invite.teamId) : null;
+  if (user.role !== "admin" && !(team && team.ownerId === user.id)) {
+    return fail(res, 403, "FORBIDDEN", "Отозвать приглашение может админ или владелец команды.");
+  }
+  if (invite.revokedAt) return fail(res, 409, "INVITE_REVOKED", "Приглашение уже отозвано.");
+  if (invite.usedAt) return fail(res, 409, "INVITE_ALREADY_USED", "Приглашение уже использовано.");
+
+  invite.revokedAt = isoNow();
+  invite.revokedBy = user.id;
+  saveDb();
+  return send(res, 200, { ok: true, invite: inviteView(invite) });
+});
+
+const handleInviteGet = api(async (req, res, url, token) => {
+  const invite = inviteByToken(clean(token, 200));
+  if (!invite) return fail(res, 404, "INVITE_NOT_FOUND", "Приглашение не найдено.");
+
+  const status = inviteStatus(invite);
+  if (status === "revoked") return fail(res, 409, "INVITE_REVOKED", "Приглашение отозвано.");
+  if (status === "used") return fail(res, 409, "INVITE_USED", "Приглашение уже использовано.");
+  if (status === "expired") return fail(res, 410, "INVITE_EXPIRED", "Срок приглашения истёк.");
+
+  const team = invite.teamId ? teamById(invite.teamId) : null;
+  if (invite.teamId && !team) {
+    return fail(res, 409, "TEAM_NOT_FOUND", "Команда приглашения больше не существует.");
+  }
+  if (team && team.status !== "active") {
+    return fail(res, 409, "TEAM_SUSPENDED", "Команда приглашения заблокирована.");
+  }
+  return send(res, 200, {
+    ok: true,
+    invite: {
+      role: invite.role,
+      team: team ? { id: team.id, name: team.name, slug: team.slug } : null,
+      emailRequired: Boolean(invite.email),
+      expiresAt: invite.expiresAt,
+      status: status
+    }
+  });
 });
 
 const handleTitlesList = api(async (req, res, url) => {
@@ -1208,32 +1389,77 @@ function route(req, res) {
   }
 
   if (req.method === "POST" && pathname === "/api/register") {
-    if (!ALLOW_REGISTRATION) {
-      return fail(
-        res,
-        403,
-        "REGISTRATION_CLOSED",
-        "Регистрация закрыта. Войти можно только с существующим аккаунтом."
-      );
-    }
     return readBody(req).then((body) => {
+      const inviteToken = clean(body.inviteToken, 200);
+      if (!ALLOW_REGISTRATION && !inviteToken) {
+        return fail(
+          res,
+          403,
+          "REGISTRATION_CLOSED",
+          "Регистрация закрыта. Войти можно только с существующим аккаунтом."
+        );
+      }
+
       const name = clean(body.name, 40) || "Читатель";
       const email = clean(body.email, 120).toLowerCase();
       const password = String(body.password || "");
       if (!validEmail(email)) return error(res, 400, "Укажи корректный email.");
       if (password.length < 6) return error(res, 400, "Пароль должен быть не короче 6 символов.");
+
+      let invite = null;
+      let inviteTeam = null;
+      if (inviteToken) {
+        invite = inviteByToken(inviteToken);
+        if (!invite) return fail(res, 404, "INVITE_NOT_FOUND", "Приглашение не найдено.");
+        const status = inviteStatus(invite);
+        if (status === "revoked") return fail(res, 409, "INVITE_REVOKED", "Приглашение отозвано.");
+        if (status === "used") return fail(res, 409, "INVITE_USED", "Приглашение уже использовано.");
+        if (status === "expired") return fail(res, 410, "INVITE_EXPIRED", "Срок приглашения истёк.");
+        if (invite.email && invite.email !== email) {
+          return fail(
+            res,
+            403,
+            "INVITE_EMAIL_MISMATCH",
+            "Регистрация возможна только с email, на который выдано приглашение."
+          );
+        }
+        if (invite.teamId) {
+          inviteTeam = teamById(invite.teamId);
+          if (!inviteTeam) {
+            return fail(res, 409, "TEAM_NOT_FOUND", "Команда приглашения больше не существует.");
+          }
+          if (inviteTeam.status !== "active") {
+            return fail(res, 409, "TEAM_SUSPENDED", "Команда приглашения заблокирована.");
+          }
+        }
+      }
+
       if (userByEmail(email)) return error(res, 409, "Такой email уже зарегистрирован.");
       const salt = crypto.randomBytes(16).toString("hex");
+      // Первый пользователь пустой базы всегда admin, даже если приглашение
+      // выдано на другую роль: это legacy-правило важнее роли приглашения.
+      const role = db.users.length === 0 ? "admin" : (invite ? invite.role : "reader");
       const user = {
         id: id("usr"),
         email: email,
         name: name,
-        role: db.users.length === 0 ? "admin" : "reader",
+        role: role,
         salt: salt,
         passwordHash: hashPassword(password, salt),
         createdAt: new Date().toISOString()
       };
       db.users.push(user);
+
+      if (invite) {
+        invite.usedAt = isoNow();
+        invite.usedBy = user.id;
+        if (inviteTeam && !teamMember(inviteTeam, user.id)) {
+          const joinedAt = isoNow();
+          inviteTeam.members.push({ userId: user.id, role: inviteTeamRole(invite.role), joinedAt: joinedAt });
+          inviteTeam.updatedAt = joinedAt;
+        }
+      }
+
       const token = createSession(user.id);
       saveDb();
       send(res, 201, { ok: true, token: token, user: publicUser(user) });
@@ -1436,6 +1662,20 @@ function route(req, res) {
   const teamMemberMatch = pathname.match(/^\/api\/teams\/([^/]+)\/members$/);
   if (req.method === "POST" && teamMemberMatch) {
     return handleTeamMemberAdd(req, res, url, teamMemberMatch[1]);
+  }
+
+  if (req.method === "GET" && pathname === "/api/invites") {
+    return handleInvitesList(req, res);
+  }
+  if (req.method === "POST" && pathname === "/api/invites") {
+    return handleInviteCreate(req, res);
+  }
+  const inviteMatch = pathname.match(/^\/api\/invites\/([^/]+)$/);
+  if (inviteMatch && req.method === "DELETE") {
+    return handleInviteRevoke(req, res, url, inviteMatch[1]);
+  }
+  if (inviteMatch && req.method === "GET") {
+    return handleInviteGet(req, res, url, inviteMatch[1]);
   }
 
   if (req.method === "GET" && pathname === "/api/titles") {
